@@ -23,6 +23,7 @@ CREATE TABLE Products(
 CREATE TABLE Orders(
 	id INT PRIMARY KEY NOT NULL,
 	customerID INT NOT NULL,
+	paymentMethodID INT,
 	orderDate DATETIME	NOT NULL DEFAULT getDate(),
 	FOREIGN KEY (customerID) REFERENCES Customers(id)
 )
@@ -33,4 +34,8 @@ CREATE TABLE OrderDetails (
     quantity INT,
     FOREIGN KEY (orderID) REFERENCES Orders(id),
     FOREIGN KEY (productID) REFERENCES Products(id)
+);
+CREATE TABLE PaymentMethods (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    name VARCHAR(50) NOT NULL UNIQUE
 );

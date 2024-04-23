@@ -25,6 +25,7 @@ CREATE TABLE Orders(
 	customerID INT NOT NULL,
 	paymentMethodID INT,
 	orderDate DATETIME	NOT NULL DEFAULT getDate(),
+	modificationDate DATETIME DEFAULT getDate(),
 	FOREIGN KEY (customerID) REFERENCES Customers(id)
 )
 

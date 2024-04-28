@@ -12,7 +12,7 @@ namespace MarketPos
 {
     public partial class ProductCard : UserControl
     {
-        private string[] imageFiles;
+        private string[] imageFiles = [];
         public ProductCard()
         {
             InitializeComponent();
@@ -28,13 +28,21 @@ namespace MarketPos
         }
         private void GetPicture(string pathname)
         {
-            if (Directory.Exists(Form1.Imgpath))
+            var imgString = Form1.Imgpath + @"\" + pathname;
+            if (Directory.Exists(imgString))
             {
-                var imgString = Form1.Imgpath + @"\" + pathname;
                 imageFiles = Directory.GetFiles(imgString, "*.jpg");
                 ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
-
             }
+        }
+        public void init()
+        {
+            lbName.Text = string.Empty;
+            lbOrigin.Text = "生產地:";
+            lbPrice.Text = "價格:";
+            lbStock.Text = "庫存:";
+            ptbProduct.Image=null ;
+            this.Visible = false;
         }
     }
 }

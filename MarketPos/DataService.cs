@@ -68,7 +68,7 @@ namespace MarketPos
             return products;
         }
 
-        public async void DS_insertProduct()
+        public async void DS_insertProduct(ProductsData productsData)
         {
             if (await DataService.DS_ConnectionSql(Form1.ConnString))
             {
@@ -85,7 +85,7 @@ namespace MarketPos
                 using SqlCommand comInsert = new(sqlInsert, conn);
                 try
                 {
-                    comInsert.Parameters.AddWithValue("@name", txbAddP_name.Text.Trim());
+                    comInsert.Parameters.AddWithValue("@name", productsData.Name);
                     comInsert.Parameters.AddWithValue("@category", categorysDict[cbAddP_category.Text]);
                     comInsert.Parameters.AddWithValue("@price", txbAddP_price.Text.Trim());
                     comInsert.Parameters.AddWithValue("@description", rtbAddP_description.Text);

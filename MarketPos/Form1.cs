@@ -66,7 +66,19 @@ namespace MarketPos
         {
             if (await DataService.DS_ConnectionSql(ConnString))
             {
+                ProductsData productData = new ProductsData
+                {
+                    Name = txbAddP_name.Text.Trim(),
+                    Weight = Double.Parse(txbAddP_weight.Text.Trim()),
+                    Price = Decimal.Parse(txbAddP_price.Text.Trim()),
+                    Category = cbAddP_category.Text.Trim(),
+                    Description = rtbAddP_description.Text,
+                    Stock = cbAddP_stock.SelectedIndex,
+                    Origin = cbAddP_origin.Text
+                };
+                DataService.DS_insertProduct(productData);
 
+                productsData = new ProductsData();
                 using SqlConnection conn = new(ConnString);
                 string sqlInsert = @"INSERT INTO Products([name],[category],[price],[description],[weight],[origin],[stock])
                                 VALUES(@name,@category,@price,@description,@weight,@origin,@stock)";
@@ -76,6 +88,7 @@ namespace MarketPos
                                      JOIN Origin ON origin.id=origin
                                      WHERE Products.name=@name";
                 conn.Open();
+                
                 using SqlCommand comInsert = new(sqlInsert, conn);
                 try
                 {

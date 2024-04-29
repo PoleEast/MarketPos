@@ -34,6 +34,7 @@
             lbStock = new Label();
             lbOrigin = new Label();
             lbScore = new Label();
+            lbWeight = new Label();
             ((System.ComponentModel.ISupportInitialize)ptbProduct).BeginInit();
             SuspendLayout();
             // 
@@ -58,7 +59,7 @@
             // lbPrice
             // 
             lbPrice.AutoSize = true;
-            lbPrice.Location = new Point(101, 277);
+            lbPrice.Location = new Point(121, 277);
             lbPrice.Name = "lbPrice";
             lbPrice.Size = new Size(34, 15);
             lbPrice.TabIndex = 3;
@@ -76,7 +77,7 @@
             // lbOrigin
             // 
             lbOrigin.AutoSize = true;
-            lbOrigin.Location = new Point(16, 225);
+            lbOrigin.Location = new Point(16, 222);
             lbOrigin.Name = "lbOrigin";
             lbOrigin.Size = new Size(43, 15);
             lbOrigin.TabIndex = 5;
@@ -91,10 +92,20 @@
             lbScore.TabIndex = 6;
             lbScore.Text = "評分:";
             // 
+            // lbWeight
+            // 
+            lbWeight.AutoSize = true;
+            lbWeight.Location = new Point(121, 222);
+            lbWeight.Name = "lbWeight";
+            lbWeight.Size = new Size(63, 15);
+            lbWeight.TabIndex = 7;
+            lbWeight.Text = "重量:/公克";
+            // 
             // ProductCard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(lbWeight);
             Controls.Add(lbScore);
             Controls.Add(lbOrigin);
             Controls.Add(lbStock);
@@ -116,5 +127,6 @@
         private Label lbStock;
         private Label lbOrigin;
         private Label lbScore;
+        private Label lbWeight;
     }
 }

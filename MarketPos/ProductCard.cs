@@ -23,6 +23,7 @@ namespace MarketPos
             lbOrigin.Text += productsData.Origin;
             lbPrice.Text += productsData.Price.ToString() + "$";
             lbStock.Text += productsData.Stock.ToString();
+            lbWeight.Text += productsData.Weight.ToString() + "/公克";
             GetPicture(productsData.Name);
             this.Visible = true;
         }
@@ -41,7 +42,8 @@ namespace MarketPos
             lbOrigin.Text = "生產地:";
             lbPrice.Text = "價格:";
             lbStock.Text = "庫存:";
-            ptbProduct.Image=null ;
+            ptbProduct.Image = null;
+            lbWeight.Text = "重量:";
             this.Visible = false;
         }
     }

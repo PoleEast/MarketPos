@@ -30,6 +30,10 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            lbPage = new Label();
+            cbPage = new ComboBox();
+            btnBackPage = new Button();
+            btnNextPage = new Button();
             productCard8 = new ProductCard();
             productCard7 = new ProductCard();
             productCard6 = new ProductCard();
@@ -42,11 +46,14 @@
             label1 = new Label();
             tabControl2 = new TabControl();
             tabPage3 = new TabPage();
+            cbAddCategoryType = new Button();
+            label2 = new Label();
+            cbAddP_origin = new ComboBox();
+            btnAddOriginType = new Button();
             btntest = new Button();
             cbAddP_stock = new ComboBox();
             btnAddProduct = new Button();
             rtbAddP_description = new RichTextBox();
-            txbAddP_origin = new TextBox();
             txbAddP_weight = new TextBox();
             txbAddP_price = new TextBox();
             txbAddP_name = new TextBox();
@@ -78,6 +85,10 @@
             // tabPage1
             // 
             tabPage1.BorderStyle = BorderStyle.FixedSingle;
+            tabPage1.Controls.Add(lbPage);
+            tabPage1.Controls.Add(cbPage);
+            tabPage1.Controls.Add(btnBackPage);
+            tabPage1.Controls.Add(btnNextPage);
             tabPage1.Controls.Add(productCard8);
             tabPage1.Controls.Add(productCard7);
             tabPage1.Controls.Add(productCard6);
@@ -93,6 +104,45 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lbPage
+            // 
+            lbPage.AutoSize = true;
+            lbPage.Font = new Font("Microsoft JhengHei UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbPage.Location = new Point(895, 705);
+            lbPage.Name = "lbPage";
+            lbPage.Size = new Size(42, 17);
+            lbPage.TabIndex = 20;
+            lbPage.Text = "/10頁";
+            // 
+            // cbPage
+            // 
+            cbPage.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbPage.FormattingEnabled = true;
+            cbPage.Location = new Point(839, 690);
+            cbPage.Name = "cbPage";
+            cbPage.Size = new Size(50, 32);
+            cbPage.TabIndex = 19;
+            // 
+            // btnBackPage
+            // 
+            btnBackPage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnBackPage.Location = new Point(727, 685);
+            btnBackPage.Name = "btnBackPage";
+            btnBackPage.Size = new Size(96, 43);
+            btnBackPage.TabIndex = 18;
+            btnBackPage.Text = "上一頁";
+            btnBackPage.UseVisualStyleBackColor = true;
+            // 
+            // btnNextPage
+            // 
+            btnNextPage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnNextPage.Location = new Point(951, 685);
+            btnNextPage.Name = "btnNextPage";
+            btnNextPage.Size = new Size(96, 43);
+            btnNextPage.TabIndex = 17;
+            btnNextPage.Text = "下一頁";
+            btnNextPage.UseVisualStyleBackColor = true;
             // 
             // productCard8
             // 
@@ -200,11 +250,14 @@
             // tabPage3
             // 
             tabPage3.BorderStyle = BorderStyle.FixedSingle;
+            tabPage3.Controls.Add(cbAddCategoryType);
+            tabPage3.Controls.Add(label2);
+            tabPage3.Controls.Add(cbAddP_origin);
+            tabPage3.Controls.Add(btnAddOriginType);
             tabPage3.Controls.Add(btntest);
             tabPage3.Controls.Add(cbAddP_stock);
             tabPage3.Controls.Add(btnAddProduct);
             tabPage3.Controls.Add(rtbAddP_description);
-            tabPage3.Controls.Add(txbAddP_origin);
             tabPage3.Controls.Add(txbAddP_weight);
             tabPage3.Controls.Add(txbAddP_price);
             tabPage3.Controls.Add(txbAddP_name);
@@ -224,6 +277,49 @@
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // cbAddCategoryType
+            // 
+            cbAddCategoryType.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbAddCategoryType.Location = new Point(278, 118);
+            cbAddCategoryType.Name = "cbAddCategoryType";
+            cbAddCategoryType.Size = new Size(63, 25);
+            cbAddCategoryType.TabIndex = 20;
+            cbAddCategoryType.Text = "新增類別";
+            cbAddCategoryType.UseVisualStyleBackColor = true;
+            cbAddCategoryType.Click += cbAddCategoryType_Click;
+            // 
+            // label2
+            // 
+            label2.AutoEllipsis = true;
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft JhengHei UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label2.Location = new Point(269, 245);
+            label2.Name = "label2";
+            label2.Size = new Size(59, 19);
+            label2.TabIndex = 19;
+            label2.Text = "公克(g)";
+            // 
+            // cbAddP_origin
+            // 
+            cbAddP_origin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbAddP_origin.FormattingEnabled = true;
+            cbAddP_origin.Location = new Point(93, 300);
+            cbAddP_origin.Name = "cbAddP_origin";
+            cbAddP_origin.Size = new Size(170, 23);
+            cbAddP_origin.TabIndex = 18;
+            cbAddP_origin.HandleCreated += cbAddP_origin_HandleCreated;
+            // 
+            // btnAddOriginType
+            // 
+            btnAddOriginType.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnAddOriginType.Location = new Point(278, 299);
+            btnAddOriginType.Name = "btnAddOriginType";
+            btnAddOriginType.Size = new Size(63, 25);
+            btnAddOriginType.TabIndex = 17;
+            btnAddOriginType.Text = "新增產地";
+            btnAddOriginType.UseVisualStyleBackColor = true;
+            btnAddOriginType.Click += btnAddOriginType_Click;
+            // 
             // btntest
             // 
             btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
@@ -237,7 +333,9 @@
             // 
             // cbAddP_stock
             // 
+            cbAddP_stock.DropDownStyle = ComboBoxStyle.DropDownList;
             cbAddP_stock.FormattingEnabled = true;
+            cbAddP_stock.ImeMode = ImeMode.NoControl;
             cbAddP_stock.Location = new Point(93, 354);
             cbAddP_stock.Name = "cbAddP_stock";
             cbAddP_stock.Size = new Size(170, 23);
@@ -263,16 +361,10 @@
             rtbAddP_description.TabIndex = 13;
             rtbAddP_description.Text = "";
             // 
-            // txbAddP_origin
-            // 
-            txbAddP_origin.Location = new Point(93, 299);
-            txbAddP_origin.Name = "txbAddP_origin";
-            txbAddP_origin.Size = new Size(170, 23);
-            txbAddP_origin.TabIndex = 11;
-            // 
             // txbAddP_weight
             // 
             txbAddP_weight.Location = new Point(93, 240);
+            txbAddP_weight.MaxLength = 8;
             txbAddP_weight.Name = "txbAddP_weight";
             txbAddP_weight.Size = new Size(170, 23);
             txbAddP_weight.TabIndex = 10;
@@ -280,19 +372,23 @@
             // txbAddP_price
             // 
             txbAddP_price.Location = new Point(93, 180);
+            txbAddP_price.MaxLength = 8;
             txbAddP_price.Name = "txbAddP_price";
             txbAddP_price.Size = new Size(170, 23);
             txbAddP_price.TabIndex = 9;
+            txbAddP_price.KeyPress += txbAddP_price_KeyPress;
             // 
             // txbAddP_name
             // 
             txbAddP_name.Location = new Point(93, 59);
+            txbAddP_name.MaxLength = 30;
             txbAddP_name.Name = "txbAddP_name";
             txbAddP_name.Size = new Size(170, 23);
             txbAddP_name.TabIndex = 8;
             // 
             // cbAddP_category
             // 
+            cbAddP_category.DropDownStyle = ComboBoxStyle.DropDownList;
             cbAddP_category.FormattingEnabled = true;
             cbAddP_category.Location = new Point(93, 118);
             cbAddP_category.Name = "cbAddP_category";
@@ -400,6 +496,7 @@
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
             tabControl2.ResumeLayout(false);
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
@@ -433,12 +530,19 @@
         private TabPage tabPage4;
         private ComboBox cbAddP_category;
         private RichTextBox rtbAddP_description;
-        private TextBox txbAddP_origin;
         private TextBox txbAddP_weight;
         private TextBox txbAddP_price;
         private TextBox txbAddP_name;
         private Button btnAddProduct;
         private ComboBox cbAddP_stock;
         private Button btntest;
+        private Button btnAddOriginType;
+        private ComboBox cbAddP_origin;
+        private Label label2;
+        private Button cbAddCategoryType;
+        private Label lbPage;
+        private ComboBox cbPage;
+        private Button btnBackPage;
+        private Button btnNextPage;
     }
 }

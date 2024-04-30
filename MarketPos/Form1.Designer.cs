@@ -45,7 +45,7 @@
             tabPage2 = new TabPage();
             label1 = new Label();
             tabControl2 = new TabControl();
-            tabPage3 = new TabPage();
+            tbpControl = new TabPage();
             cbAddCategoryType = new Button();
             label2 = new Label();
             cbAddP_origin = new ComboBox();
@@ -65,11 +65,26 @@
             lbAddP_price = new Label();
             lbAddP_category = new Label();
             lbAddP_name = new Label();
-            tabPage4 = new TabPage();
+            tbpMemSerch = new TabPage();
+            label3 = new Label();
+            txbS_Name = new TextBox();
+            comboBox1 = new ComboBox();
+            label4 = new Label();
+            label5 = new Label();
+            txbS_Price = new TextBox();
+            button1 = new Button();
+            button2 = new Button();
+            textBox3 = new TextBox();
+            label6 = new Label();
+            button3 = new Button();
+            button4 = new Button();
+            label7 = new Label();
+            comboBox2 = new ComboBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tabControl2.SuspendLayout();
-            tabPage3.SuspendLayout();
+            tbpControl.SuspendLayout();
+            tbpMemSerch.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -123,6 +138,7 @@
             cbPage.Name = "cbPage";
             cbPage.Size = new Size(50, 32);
             cbPage.TabIndex = 19;
+            cbPage.SelectedIndexChanged += cbPage_SelectedIndexChanged;
             // 
             // btnBackPage
             // 
@@ -133,6 +149,7 @@
             btnBackPage.TabIndex = 18;
             btnBackPage.Text = "上一頁";
             btnBackPage.UseVisualStyleBackColor = true;
+            btnBackPage.Click += btnBackPage_Click;
             // 
             // btnNextPage
             // 
@@ -143,6 +160,7 @@
             btnNextPage.TabIndex = 17;
             btnNextPage.Text = "下一頁";
             btnNextPage.UseVisualStyleBackColor = true;
+            btnNextPage.Click += btnNextPage_Click;
             // 
             // productCard8
             // 
@@ -239,43 +257,43 @@
             // 
             // tabControl2
             // 
-            tabControl2.Controls.Add(tabPage3);
-            tabControl2.Controls.Add(tabPage4);
+            tabControl2.Controls.Add(tbpMemSerch);
+            tabControl2.Controls.Add(tbpControl);
             tabControl2.Location = new Point(1114, 49);
             tabControl2.Name = "tabControl2";
             tabControl2.SelectedIndex = 0;
             tabControl2.Size = new Size(470, 782);
             tabControl2.TabIndex = 10;
             // 
-            // tabPage3
+            // tbpControl
             // 
-            tabPage3.BorderStyle = BorderStyle.FixedSingle;
-            tabPage3.Controls.Add(cbAddCategoryType);
-            tabPage3.Controls.Add(label2);
-            tabPage3.Controls.Add(cbAddP_origin);
-            tabPage3.Controls.Add(btnAddOriginType);
-            tabPage3.Controls.Add(btntest);
-            tabPage3.Controls.Add(cbAddP_stock);
-            tabPage3.Controls.Add(btnAddProduct);
-            tabPage3.Controls.Add(rtbAddP_description);
-            tabPage3.Controls.Add(txbAddP_weight);
-            tabPage3.Controls.Add(txbAddP_price);
-            tabPage3.Controls.Add(txbAddP_name);
-            tabPage3.Controls.Add(cbAddP_category);
-            tabPage3.Controls.Add(lbAddP_description);
-            tabPage3.Controls.Add(lbAddP_stock);
-            tabPage3.Controls.Add(lbAddP_origin);
-            tabPage3.Controls.Add(lbAddP_weight);
-            tabPage3.Controls.Add(lbAddP_price);
-            tabPage3.Controls.Add(lbAddP_category);
-            tabPage3.Controls.Add(lbAddP_name);
-            tabPage3.Location = new Point(4, 24);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(462, 754);
-            tabPage3.TabIndex = 0;
-            tabPage3.Text = "tabPage3";
-            tabPage3.UseVisualStyleBackColor = true;
+            tbpControl.BorderStyle = BorderStyle.FixedSingle;
+            tbpControl.Controls.Add(cbAddCategoryType);
+            tbpControl.Controls.Add(label2);
+            tbpControl.Controls.Add(cbAddP_origin);
+            tbpControl.Controls.Add(btnAddOriginType);
+            tbpControl.Controls.Add(btntest);
+            tbpControl.Controls.Add(cbAddP_stock);
+            tbpControl.Controls.Add(btnAddProduct);
+            tbpControl.Controls.Add(rtbAddP_description);
+            tbpControl.Controls.Add(txbAddP_weight);
+            tbpControl.Controls.Add(txbAddP_price);
+            tbpControl.Controls.Add(txbAddP_name);
+            tbpControl.Controls.Add(cbAddP_category);
+            tbpControl.Controls.Add(lbAddP_description);
+            tbpControl.Controls.Add(lbAddP_stock);
+            tbpControl.Controls.Add(lbAddP_origin);
+            tbpControl.Controls.Add(lbAddP_weight);
+            tbpControl.Controls.Add(lbAddP_price);
+            tbpControl.Controls.Add(lbAddP_category);
+            tbpControl.Controls.Add(lbAddP_name);
+            tbpControl.Location = new Point(4, 24);
+            tbpControl.Name = "tbpControl";
+            tbpControl.Padding = new Padding(3);
+            tbpControl.Size = new Size(462, 754);
+            tbpControl.TabIndex = 0;
+            tbpControl.Text = "管理者";
+            tbpControl.UseVisualStyleBackColor = true;
             // 
             // cbAddCategoryType
             // 
@@ -473,15 +491,166 @@
             lbAddP_name.TabIndex = 0;
             lbAddP_name.Text = "名稱";
             // 
-            // tabPage4
+            // tbpMemSerch
             // 
-            tabPage4.Location = new Point(4, 24);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(462, 754);
-            tabPage4.TabIndex = 1;
-            tabPage4.Text = "tabPage4";
-            tabPage4.UseVisualStyleBackColor = true;
+            tbpMemSerch.Controls.Add(comboBox2);
+            tbpMemSerch.Controls.Add(label7);
+            tbpMemSerch.Controls.Add(button3);
+            tbpMemSerch.Controls.Add(button4);
+            tbpMemSerch.Controls.Add(textBox3);
+            tbpMemSerch.Controls.Add(label6);
+            tbpMemSerch.Controls.Add(button2);
+            tbpMemSerch.Controls.Add(button1);
+            tbpMemSerch.Controls.Add(txbS_Price);
+            tbpMemSerch.Controls.Add(label5);
+            tbpMemSerch.Controls.Add(label4);
+            tbpMemSerch.Controls.Add(comboBox1);
+            tbpMemSerch.Controls.Add(txbS_Name);
+            tbpMemSerch.Controls.Add(label3);
+            tbpMemSerch.Location = new Point(4, 24);
+            tbpMemSerch.Name = "tbpMemSerch";
+            tbpMemSerch.Padding = new Padding(3);
+            tbpMemSerch.Size = new Size(462, 754);
+            tbpMemSerch.TabIndex = 1;
+            tbpMemSerch.Text = "商品查詢";
+            tbpMemSerch.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            label3.AutoEllipsis = true;
+            label3.AutoSize = true;
+            label3.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label3.Location = new Point(61, 108);
+            label3.Name = "label3";
+            label3.Size = new Size(48, 24);
+            label3.TabIndex = 1;
+            label3.Text = "名稱";
+            // 
+            // txbS_Name
+            // 
+            txbS_Name.Location = new Point(115, 108);
+            txbS_Name.MaxLength = 30;
+            txbS_Name.Name = "txbS_Name";
+            txbS_Name.Size = new Size(170, 23);
+            txbS_Name.TabIndex = 9;
+            // 
+            // comboBox1
+            // 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(115, 158);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(170, 23);
+            comboBox1.TabIndex = 10;
+            // 
+            // label4
+            // 
+            label4.AutoEllipsis = true;
+            label4.AutoSize = true;
+            label4.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label4.Location = new Point(61, 158);
+            label4.Name = "label4";
+            label4.Size = new Size(48, 24);
+            label4.TabIndex = 11;
+            label4.Text = "種類";
+            // 
+            // label5
+            // 
+            label5.AutoEllipsis = true;
+            label5.AutoSize = true;
+            label5.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label5.Location = new Point(61, 210);
+            label5.Name = "label5";
+            label5.Size = new Size(48, 24);
+            label5.TabIndex = 12;
+            label5.Text = "價格";
+            // 
+            // txbS_Price
+            // 
+            txbS_Price.Location = new Point(115, 210);
+            txbS_Price.MaxLength = 30;
+            txbS_Price.Name = "txbS_Price";
+            txbS_Price.Size = new Size(170, 23);
+            txbS_Price.TabIndex = 13;
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button1.Location = new Point(298, 210);
+            button1.Name = "button1";
+            button1.Size = new Size(63, 23);
+            button1.TabIndex = 21;
+            button1.Text = "新增類別";
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            button2.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button2.Location = new Point(367, 210);
+            button2.Name = "button2";
+            button2.Size = new Size(63, 23);
+            button2.TabIndex = 22;
+            button2.Text = "新增類別";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(115, 262);
+            textBox3.MaxLength = 30;
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(170, 23);
+            textBox3.TabIndex = 24;
+            // 
+            // label6
+            // 
+            label6.AutoEllipsis = true;
+            label6.AutoSize = true;
+            label6.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label6.Location = new Point(61, 262);
+            label6.Name = "label6";
+            label6.Size = new Size(48, 24);
+            label6.TabIndex = 23;
+            label6.Text = "重量";
+            // 
+            // button3
+            // 
+            button3.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button3.Location = new Point(367, 262);
+            button3.Name = "button3";
+            button3.Size = new Size(63, 23);
+            button3.TabIndex = 26;
+            button3.Text = "新增類別";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            button4.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button4.Location = new Point(298, 262);
+            button4.Name = "button4";
+            button4.Size = new Size(63, 23);
+            button4.TabIndex = 25;
+            button4.Text = "新增類別";
+            button4.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            label7.AutoEllipsis = true;
+            label7.AutoSize = true;
+            label7.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label7.Location = new Point(61, 311);
+            label7.Name = "label7";
+            label7.Size = new Size(48, 24);
+            label7.TabIndex = 27;
+            label7.Text = "產地";
+            // 
+            // comboBox2
+            // 
+            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new Point(115, 311);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(170, 23);
+            comboBox2.TabIndex = 28;
             // 
             // Form1
             // 
@@ -498,8 +667,10 @@
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             tabControl2.ResumeLayout(false);
-            tabPage3.ResumeLayout(false);
-            tabPage3.PerformLayout();
+            tbpControl.ResumeLayout(false);
+            tbpControl.PerformLayout();
+            tbpMemSerch.ResumeLayout(false);
+            tbpMemSerch.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -519,7 +690,7 @@
         private TabPage tabPage2;
         private Label label1;
         private TabControl tabControl2;
-        private TabPage tabPage3;
+        private TabPage tbpControl;
         private Label lbAddP_description;
         private Label lbAddP_stock;
         private Label lbAddP_origin;
@@ -527,7 +698,7 @@
         private Label lbAddP_price;
         private Label lbAddP_category;
         private Label lbAddP_name;
-        private TabPage tabPage4;
+        private TabPage tbpMemSerch;
         private ComboBox cbAddP_category;
         private RichTextBox rtbAddP_description;
         private TextBox txbAddP_weight;
@@ -544,5 +715,19 @@
         private ComboBox cbPage;
         private Button btnBackPage;
         private Button btnNextPage;
+        private ComboBox comboBox1;
+        private TextBox txbS_Name;
+        private Label label3;
+        private TextBox txbS_Price;
+        private Label label5;
+        private Label label4;
+        private Label label7;
+        private Button button3;
+        private Button button4;
+        private TextBox textBox3;
+        private Label label6;
+        private Button button2;
+        private Button button1;
+        private ComboBox comboBox2;
     }
 }

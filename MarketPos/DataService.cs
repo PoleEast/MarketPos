@@ -13,8 +13,9 @@ namespace MarketPos
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
         "Data Source=1.175.113.56,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
-        private static async Task<bool> DS_TryDS_ConnectionSql(SqlConnection conn)
+        private static async Task<bool> DS_ConnectionSql()
         {
+            using SqlConnection conn = new(ConnString);
             try
             {
                 await conn.OpenAsync();
@@ -27,14 +28,12 @@ namespace MarketPos
             }
         }
 
-        public static async Task<bool> DS_ConnectionSql()
-        {
-            using SqlConnection conn = new(ConnString);
-            return await DS_TryDS_ConnectionSql(conn);
-        }
-
-        //獲取商品卡片
-        public static async Task<List<ProductsData>> DS_getProductCardsData(int first)
+        /// <summary>
+        /// 獲取商品卡片
+        /// </summary>
+        /// <param name="first"></param>
+        /// <returns>從first列數到last之間的資料</returns>
+        public static async Task<List<ProductsData>> DS_getProductCardsDatas(int first, int last)
         {
             List<ProductsData> products = [];
             if (!await DS_ConnectionSql()) return products;
@@ -44,7 +43,7 @@ namespace MarketPos
                                 JOIN Category ON Category.id=category
                                 JOIN origin ON origin.id=origin
                                 ORDER BY Products.id
-                                OFFSET {first} ROWS FETCH NEXT 8 ROWS ONLY";
+                                OFFSET {first} ROWS FETCH NEXT {last} ROWS ONLY";
             conn.Open();
             try
             {
@@ -99,11 +98,12 @@ namespace MarketPos
 
         }
 
-        /// <param name="mode">
+        /// <summary>
         /// 1:利用id搜尋
         /// 2:利用name搜尋
-        /// </param>
-        public async Task<List<ProductsData>> DS_TSelectProducts<T>(T keyword, int mode)
+        /// </summary>
+        /// <returns>查到的資料列表</returns>
+        public static async Task<List<ProductsData>> DS_TSelectProducts<T>(T keyword, int mode)
         {
             List<ProductsData> productsDatas = [];
             if (!await DS_ConnectionSql() || keyword == null) return productsDatas;
@@ -155,87 +155,108 @@ namespace MarketPos
         }
         public static async void DS_GetCategoryType()
         {
-            if (await DS_ConnectionSql())
+            if (!await DS_ConnectionSql()) return;
+            categorysDict.Clear();
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * FROM Category";
+            conn.Open();
+            try
             {
-                categorysDict.Clear();
-                using SqlConnection conn = new SqlConnection(ConnString);
-                string sql = @"SELECT * FROM Category";
-                conn.Open();
-                try
+                using SqlCommand com = new(sql, conn);
+                using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
                 {
-                    using SqlCommand com = new(sql, conn);
-                    using SqlDataReader reader = com.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        DataService.categorysDict.Add((string)reader["name"], (int)reader["id"]);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"cbt獲取商品類型錯誤\n{ex}");
+                    DataService.categorysDict.Add((string)reader["name"], (int)reader["id"]);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"cbt獲取商品類型錯誤\n{ex}");
+            }
+
         }
         public static async void DS_GetOriginType()
         {
-            if (await DS_ConnectionSql())
+            if (!await DS_ConnectionSql()) return;
+
+            originsDict.Clear();
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * FROM Origin";
+            conn.Open();
+            try
             {
-                originsDict.Clear();
-                using SqlConnection conn = new SqlConnection(ConnString);
-                string sql = @"SELECT * FROM Origin";
-                conn.Open();
-                try
+                using SqlCommand com = new(sql, conn);
+                using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
                 {
-                    using SqlCommand com = new(sql, conn);
-                    using SqlDataReader reader = com.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        DataService.originsDict.Add((string)reader["name"], (int)reader["id"]);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"cbt獲取商品產地錯誤\n{ex}");
+                    DataService.originsDict.Add((string)reader["name"], (int)reader["id"]);
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"cbt獲取商品產地錯誤\n{ex}");
+            }
+
         }
 
         public static async void DS_AddCategoryType(string category)
         {
-            if (await DS_ConnectionSql())
+            if (!await DS_ConnectionSql()) return;
+
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"INSERT INTO Category([name])VALUES(@category)";
+            try
             {
-                using SqlConnection conn = new SqlConnection(ConnString);
-                string sql = @"INSERT INTO Category([name])VALUES(@category)";
-                try
-                {
-                    conn.Open();
-                    using SqlCommand com = new SqlCommand(sql, conn);
-                    com.Parameters.AddWithValue("@category", category);
-                    com.ExecuteNonQuery();
-                    MessageBox.Show($"增加類別 {category} 成功");
-                }
-                catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+                conn.Open();
+                using SqlCommand com = new SqlCommand(sql, conn);
+                com.Parameters.AddWithValue("@category", category);
+                com.ExecuteNonQuery();
+                MessageBox.Show($"增加類別 {category} 成功");
             }
+            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+
         }
 
         public static async void DS_AddOriginType(string origin)
         {
-            if (await DS_ConnectionSql())
+            if (!await DS_ConnectionSql()) return;
+
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"INSERT INTO Origin([name])VALUES(@origin)";
+            try
             {
-                using (SqlConnection conn = new SqlConnection(ConnString))
-                {
-                    string sql = @"INSERT INTO Origin([name])VALUES(@origin)";
-                    try
-                    {
-                        conn.Open();
-                        using SqlCommand com = new SqlCommand(sql, conn);
-                        com.Parameters.AddWithValue("@origin", origin);
-                        com.ExecuteNonQuery();
-                        MessageBox.Show($"增加產地 {origin} 成功");
-                    }
-                    catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
-                }
+                conn.Open();
+                using SqlCommand com = new SqlCommand(sql, conn);
+                com.Parameters.AddWithValue("@origin", origin);
+                com.ExecuteNonQuery();
+                MessageBox.Show($"增加產地 {origin} 成功");
             }
+            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+
+
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>查到的資料數量</returns>
+        public static async Task<int> DS_GetProductCount(string categoryId)
+        {
+            string sql = @"SELECT COUNT(*) AS count FROM Products";
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                sql += $@"WHERE category={categoryId}";
+            }
+            if (!await DS_ConnectionSql()) return 0;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            try
+            {
+                conn.Open();
+                using SqlCommand com = new SqlCommand(sql, conn);
+                SqlDataReader reader = com.ExecuteReader();
+                reader.Read();
+                return (int)reader["count"];
+            }
+            catch (Exception ex) { MessageBox.Show($"資料庫頁數查詢錯誤\n {ex}"); return 0; }
         }
     }
 }

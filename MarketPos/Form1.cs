@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
 
 namespace MarketPos
 {
@@ -29,15 +30,12 @@ namespace MarketPos
             productCards.Add(productCard7);
             productCards.Add(productCard8);
 
+            //UI初始化用
             setProductCardsDatas(1);
 
             //暫時使用
             Set_Page();
-        }
-
-        private void setcbPage()
-        {
-
+            cb_init();
         }
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace MarketPos
         /// </summary>
         private async void setProductCardsDatas(int page)
         {
-            int uip_Count = productsDatas.Count;
+            int uip_Count = productCards.Count;
             int first = uip_Count * page - uip_Count;
             productCards.ForEach(o => o.init());
             List<ProductsData> products = await DataService.DS_getProductCardsDatas(first, uip_Count);
@@ -104,16 +102,17 @@ namespace MarketPos
 
         private void btntest_Click(object sender, EventArgs e)
         {
+
         }
 
-
-        private void txbAddP_price_KeyPress(object sender, KeyPressEventArgs e)
+        //限制輸入為數字
+        private void check_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
         }
 
-        private void cbAddCategoryType_Click(object sender, EventArgs e)
+        private async void cbAddCategoryType_Click(object sender, EventArgs e)
         {
             UserInput userInput = new("請輸入新增的類別:")
             {
@@ -124,11 +123,11 @@ namespace MarketPos
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
-            DataService.DS_AddCategoryType(userInput.userinput);
-
+            await DataService.DS_AddCategoryType(userInput.userinput);
+            cb_init();
         }
 
-        private void btnAddOriginType_Click(object sender, EventArgs e)
+        private async void btnAddOriginType_Click(object sender, EventArgs e)
         {
             UserInput userInput = new("請輸入新增的產地:")
             {
@@ -140,7 +139,8 @@ namespace MarketPos
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
             //將新類別輸入資料庫
-            DataService.DS_AddOriginType(userInput.userinput);
+            await DataService.DS_AddOriginType(userInput.userinput);
+            cb_init();
         }
 
         private async void Set_Page()
@@ -177,21 +177,63 @@ namespace MarketPos
                 cbPage.SelectedIndex--;
         }
 
-        //一坨初始化用的
-        private void cbAddP_stock_HandleCreated(object sender, EventArgs e)
+        //將資料填入cb
+        private async void cb_init()
         {
+            cbAddP_category.Items.Clear();
+            cbAddP_origin.Items.Clear();
+            cbAddP_stock.Items.Clear();
+            cbS_Category.Items.Clear();
+            cbS_Origin.Items.Clear();
+            await DataService.DS_GetCategoryType();
+            await DataService.DS_GetOriginType();
             for (int i = 0; i < 100; i++)
                 cbAddP_stock.Items.Add(i);
-        }
-        private void cbAddP_category_HandleCreated(object sender, EventArgs e)
-        {
-            DataService.DS_GetCategoryType();
+
             cbAddP_category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
-        }
-        private void cbAddP_origin_HandleCreated(object sender, EventArgs e)
-        {
-            DataService.DS_GetOriginType();
+            cbS_Category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
             cbAddP_origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
+            cbS_Origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
+        }
+
+        private async void btnS_Search_Click(object sender, EventArgs e)
+        {
+            ProductsData productData = new ProductsData();
+            try
+            {
+                productData.Name = txbAddP_name.Text.Trim();
+                productData.Category = cbS_Category.Text;
+                productData.Price = Decimal.Parse(txbS_Price.Text.Trim());
+                productData.Weight = double.Parse(txbS_weight.Text.Trim());
+                productData.Origin = cbS_Origin.Text;
+            }
+            catch(Exception ex) { MessageBox.Show($"輸入錯誤{ex}");return; }
+
+            await DataService.DS_TSelectProducts(productData);
+        }
+
+        private void btnS_PriceUp_Click(object sender, EventArgs e)
+        {
+            btnS_PriceDown.Enabled = true;
+            btnS_PriceUp.Enabled = false;
+        }
+        private void btnS_PriceDown_Click(object sender, EventArgs e)
+        {
+            btnS_PriceUp.Enabled = true;
+            btnS_PriceDown.Enabled = false;       
+        }
+
+        private void btnS_WeightUp_Click(object sender, EventArgs e)
+        {
+            btnS_WeightDown.Enabled = true;
+            btnS_WeightUp.Enabled = false;
+        }
+
+        private void btnS_WeightDown_Click(object sender, EventArgs e)
+        {
+            btnS_WeightUp.Enabled = true;
+            btnS_WeightDown.Enabled = false;
         }
     }
 }
+

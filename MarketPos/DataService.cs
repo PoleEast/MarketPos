@@ -99,38 +99,49 @@ namespace MarketPos
         }
 
         /// <summary>
-        /// 1:利用id搜尋
-        /// 2:利用name搜尋
+        /// priceOrder true為以上，false為以下
+        /// weightOrder true為以上，false為以下
         /// </summary>
         /// <returns>查到的資料列表</returns>
-        public static async Task<List<ProductsData>> DS_TSelectProducts<T>(T keyword, int mode)
+        public static async Task<List<ProductsData>> DS_TSelectProducts(ProductsData productsData,bool pricesort, bool weightsort)
         {
             List<ProductsData> productsDatas = [];
-            if (!await DS_ConnectionSql() || keyword == null) return productsDatas;
+            if (!await DS_ConnectionSql()) return productsDatas;
             string sqlSelect = @"SELECT * ,Category.name AS categoryName,Origin.name AS originName
                                 FROM Products 
                                 JOIN Category ON Category.id=category
-                                JOIN Origin ON origin.id=origin";
-            switch (mode)
-            {
-                //id
-                case 1:
-                    if (keyword.GetType() != typeof(int)) return productsDatas;
-                    sqlSelect += @"WHERE Products.id=@keyword";
-                    break;
-                //name
-                case 2:
-                    if (keyword.GetType() != typeof(string)) return productsDatas;
-                    sqlSelect += @"WHERE Products.name=@keyword";
-                    break;
-                default:
-                    return productsDatas;
-            }
+                                JOIN Origin ON origin.id=origin 
+                                WHERE 1=1";
+            string priceSortString = pricesort ? ">=" : "<=";
+            string weightSortStrng = weightsort ? ">=" : "<=";
+
+            //舊版
+            //switch (mode)
+            //{
+            //    //id
+            //    case 1:
+            //        if (keyword.GetType() != typeof(int)) return productsDatas;
+            //        sqlSelect += @"WHERE Products.id=@keyword";
+            //        break;
+            //    //name
+            //    case 2:
+            //        if (keyword.GetType() != typeof(string)) return productsDatas;
+            //        sqlSelect += @"WHERE Products.name=@keyword";
+            //        break;
+            //    default:
+            //        return productsDatas;
+            //}
+
             using SqlConnection conn = new(ConnString);
             conn.Open();
             using SqlCommand comInsert = new(sqlSelect, conn);
             try
             {
+                if (string.IsNullOrEmpty(productsData.Name)) sqlSelect += "AND Products.name LIKE @Name";
+                if (string.IsNullOrEmpty(productsData.Category)) sqlSelect += "AND categoryName = @Category";
+                if (string.IsNullOrEmpty(productsData.Price.ToString())) sqlSelect += $"AND Price {priceSortString} @Price";
+                if (string.IsNullOrEmpty(productsData.Weight.ToString())) sqlSelect += $"AND Weight {weightSortStrng} @Weight";
+                if (string.IsNullOrEmpty(productsData.Origin)) sqlSelect += "AND originName = @Origin";
                 using SqlCommand comSelect = new(sqlSelect, conn);
                 comSelect.Parameters.AddWithValue("@keyword", keyword);
                 await using SqlDataReader reader = comSelect.ExecuteReader();
@@ -153,7 +164,7 @@ namespace MarketPos
             }
             catch { return productsDatas; }
         }
-        public static async void DS_GetCategoryType()
+        public static async Task DS_GetCategoryType()
         {
             if (!await DS_ConnectionSql()) return;
             categorysDict.Clear();
@@ -166,7 +177,7 @@ namespace MarketPos
                 using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                 {
-                    DataService.categorysDict.Add((string)reader["name"], (int)reader["id"]);
+                    categorysDict.Add((string)reader["name"], (int)reader["id"]);
                 }
             }
             catch (Exception ex)
@@ -175,10 +186,9 @@ namespace MarketPos
             }
 
         }
-        public static async void DS_GetOriginType()
+        public static async Task DS_GetOriginType()
         {
             if (!await DS_ConnectionSql()) return;
-
             originsDict.Clear();
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"SELECT * FROM Origin";
@@ -189,7 +199,7 @@ namespace MarketPos
                 using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                 {
-                    DataService.originsDict.Add((string)reader["name"], (int)reader["id"]);
+                    originsDict.Add((string)reader["name"], (int)reader["id"]);
                 }
             }
             catch (Exception ex)
@@ -199,7 +209,7 @@ namespace MarketPos
 
         }
 
-        public static async void DS_AddCategoryType(string category)
+        public static async Task DS_AddCategoryType(string category)
         {
             if (!await DS_ConnectionSql()) return;
 
@@ -217,7 +227,7 @@ namespace MarketPos
 
         }
 
-        public static async void DS_AddOriginType(string origin)
+        public static async Task DS_AddOriginType(string origin)
         {
             if (!await DS_ConnectionSql()) return;
 

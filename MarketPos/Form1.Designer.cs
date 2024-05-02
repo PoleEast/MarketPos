@@ -32,6 +32,10 @@ namespace MarketPos
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            ptb_Sort = new PictureBox();
+            cb_Sort = new ComboBox();
+            lb_Sort2 = new Label();
+            lb_Sort = new Label();
             lbPage = new Label();
             cbPage = new ComboBox();
             btnBackPage = new Button();
@@ -67,6 +71,7 @@ namespace MarketPos
             lbAddP_price = new Label();
             btntest = new Button();
             tbpMemSerch = new TabPage();
+            btnS_Clear = new Button();
             btnS_Search = new Button();
             cbS_Origin = new ComboBox();
             lbS_Origin = new Label();
@@ -81,9 +86,9 @@ namespace MarketPos
             lbS_Category = new Label();
             lbS_Name = new Label();
             tabControl2 = new TabControl();
-            btnS_Clear = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
             tbpControl.SuspendLayout();
             tbpMemSerch.SuspendLayout();
             tabControl2.SuspendLayout();
@@ -102,6 +107,10 @@ namespace MarketPos
             // tabPage1
             // 
             tabPage1.BorderStyle = BorderStyle.FixedSingle;
+            tabPage1.Controls.Add(ptb_Sort);
+            tabPage1.Controls.Add(cb_Sort);
+            tabPage1.Controls.Add(lb_Sort2);
+            tabPage1.Controls.Add(lb_Sort);
             tabPage1.Controls.Add(lbPage);
             tabPage1.Controls.Add(cbPage);
             tabPage1.Controls.Add(btnBackPage);
@@ -119,8 +128,55 @@ namespace MarketPos
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(1076, 754);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "tabPage1";
+            tabPage1.Text = "v";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // ptb_Sort
+            // 
+            ptb_Sort.BackgroundImageLayout = ImageLayout.Stretch;
+            ptb_Sort.Cursor = Cursors.Hand;
+            ptb_Sort.Image = Properties.Resources.descendingOrder;
+            ptb_Sort.Location = new Point(671, 690);
+            ptb_Sort.Name = "ptb_Sort";
+            ptb_Sort.Size = new Size(32, 32);
+            ptb_Sort.TabIndex = 30;
+            ptb_Sort.TabStop = false;
+            ptb_Sort.Tag = "descendingOrder";
+            ptb_Sort.Click += ptb_Sort_Click;
+            // 
+            // cb_Sort
+            // 
+            cb_Sort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cb_Sort.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cb_Sort.FormattingEnabled = true;
+            cb_Sort.Items.AddRange(new object[] { "名稱", "種類", "價格", "重量", "產地" });
+            cb_Sort.Location = new Point(522, 690);
+            cb_Sort.Name = "cb_Sort";
+            cb_Sort.Size = new Size(89, 32);
+            cb_Sort.TabIndex = 29;
+            cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
+            // 
+            // lb_Sort2
+            // 
+            lb_Sort2.AutoEllipsis = true;
+            lb_Sort2.AutoSize = true;
+            lb_Sort2.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lb_Sort2.Location = new Point(617, 693);
+            lb_Sort2.Name = "lb_Sort2";
+            lb_Sort2.Size = new Size(48, 24);
+            lb_Sort2.TabIndex = 22;
+            lb_Sort2.Text = "排序";
+            // 
+            // lb_Sort
+            // 
+            lb_Sort.AutoEllipsis = true;
+            lb_Sort.AutoSize = true;
+            lb_Sort.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lb_Sort.Location = new Point(468, 693);
+            lb_Sort.Name = "lb_Sort";
+            lb_Sort.Size = new Size(48, 24);
+            lb_Sort.TabIndex = 21;
+            lb_Sort.Text = "依照";
             // 
             // lbPage
             // 
@@ -134,6 +190,8 @@ namespace MarketPos
             // 
             // cbPage
             // 
+            cbPage.BackColor = SystemColors.Window;
+            cbPage.DropDownStyle = ComboBoxStyle.DropDownList;
             cbPage.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
             cbPage.FormattingEnabled = true;
             cbPage.Location = new Point(839, 690);
@@ -505,6 +563,17 @@ namespace MarketPos
             tbpMemSerch.Text = "商品查詢";
             tbpMemSerch.UseVisualStyleBackColor = true;
             // 
+            // btnS_Clear
+            // 
+            btnS_Clear.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnS_Clear.Location = new Point(213, 355);
+            btnS_Clear.Name = "btnS_Clear";
+            btnS_Clear.Size = new Size(96, 43);
+            btnS_Clear.TabIndex = 30;
+            btnS_Clear.Text = "清除條件";
+            btnS_Clear.UseVisualStyleBackColor = true;
+            btnS_Clear.Click += btnS_Clear_Click;
+            // 
             // btnS_Search
             // 
             btnS_Search.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
@@ -648,17 +717,6 @@ namespace MarketPos
             tabControl2.Size = new Size(470, 782);
             tabControl2.TabIndex = 10;
             // 
-            // btnS_Clear
-            // 
-            btnS_Clear.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_Clear.Location = new Point(213, 355);
-            btnS_Clear.Name = "btnS_Clear";
-            btnS_Clear.Size = new Size(96, 43);
-            btnS_Clear.TabIndex = 30;
-            btnS_Clear.Text = "清除條件";
-            btnS_Clear.UseVisualStyleBackColor = true;
-            btnS_Clear.Click += btnS_Clear_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -673,6 +731,7 @@ namespace MarketPos
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ptb_Sort).EndInit();
             tbpControl.ResumeLayout(false);
             tbpControl.PerformLayout();
             tbpMemSerch.ResumeLayout(false);
@@ -736,5 +795,9 @@ namespace MarketPos
         private TabControl tabControl2;
         private Button btnS_Search;
         private Button btnS_Clear;
+        private Label lb_Sort;
+        private ComboBox cb_Sort;
+        private Label lb_Sort2;
+        private PictureBox ptb_Sort;
     }
 }

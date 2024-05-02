@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
+using MarketPos.Properties;
 
 namespace MarketPos
 {
@@ -32,9 +33,10 @@ namespace MarketPos
 
             //UI初始化用
             await DataService.DS_getProductCardsDatas();
-            setProductCardsDatas(1);
+            cb_Sort.SelectedIndex = 0;
 
             //暫時使用
+            productSort("名稱");
             Set_Page();
             cb_init();
         }
@@ -84,6 +86,26 @@ namespace MarketPos
                 Origin = cbAddP_origin.Text
             };
             DataService.DS_insertProduct(productData);
+        }
+
+        public void productSort(string condition)
+        {
+            if (condition == "名稱")
+                productsDatas.Sort((a, b) => string.Compare(a.Name, b.Name));
+            else if (condition == "種類")
+                productsDatas.Sort((a, b) => a.Category.CompareTo(b.Category));
+            else if (condition == "價格")
+                productsDatas.Sort((a, b) => a.Price.CompareTo(b.Price));
+            else if (condition == "重量")
+                productsDatas.Sort((a, b) => a.Weight.CompareTo(b.Weight));
+            else if (condition == "產地")
+                productsDatas.Sort((a, b) => a.Origin.CompareTo(b.Origin));
+            else
+            {
+                MessageBox.Show("商品排序出現錯誤");
+                return;
+            }
+            setProductCardsDatas(1);
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
@@ -250,6 +272,27 @@ namespace MarketPos
             txbS_weight.Text = "";
             cbS_Category.SelectedIndex = -1;
             cbS_Origin.SelectedIndex = -1;
+        }
+
+        private void cb_Sort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            productSort(cb_Sort.Text);
+            Set_Page();
+        }
+
+        private void ptb_Sort_Click(object sender, EventArgs e)
+        {
+            if (ptb_Sort.Tag == null) return;
+            if (ptb_Sort.Tag.ToString() == "descendingOrder")
+            {
+                ptb_Sort.Image = Resources.ascendingOrder;
+                ptb_Sort.Tag = "ascendingOrder";
+            }
+            else if (ptb_Sort.Tag.ToString() == "ascendingOrder")
+            {
+                ptb_Sort.Image = Resources.descendingOrder;
+                ptb_Sort.Tag = "descendingOrder";
+            }
         }
     }
 }

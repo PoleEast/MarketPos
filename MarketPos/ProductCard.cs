@@ -27,6 +27,7 @@ namespace MarketPos
             lbWeight.Text += productsData.Weight.ToString() + "/公克";
             GetPicture(productsData.Name);
             this.Visible = true;
+            MessageBox.Show(productsData.Name);
         }
         private void GetPicture(string pathname)
         {

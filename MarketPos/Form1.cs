@@ -36,7 +36,7 @@ namespace MarketPos
             cb_Sort.SelectedIndex = 0;
 
             //暫時使用
-            productSort("名稱");
+            productSort("名稱",true);
             Set_Page();
             cb_init();
         }
@@ -88,18 +88,23 @@ namespace MarketPos
             DataService.DS_insertProduct(productData);
         }
 
-        public void productSort(string condition)
+        /// <summary>
+        /// true為desc,false為asce
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="mode"></param>
+        public void productSort(string condition,bool mode)
         {
             if (condition == "名稱")
-                productsDatas.Sort((a, b) => string.Compare(a.Name, b.Name));
+                productsDatas.Sort((a, b) => mode ? (mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name)) : 0);
             else if (condition == "種類")
-                productsDatas.Sort((a, b) => a.Category.CompareTo(b.Category));
+                productsDatas.Sort((a, b) => mode ? (mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category)) : 0);
             else if (condition == "價格")
-                productsDatas.Sort((a, b) => a.Price.CompareTo(b.Price));
+                productsDatas.Sort((a, b) => mode ? (mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price)) : 0);
             else if (condition == "重量")
-                productsDatas.Sort((a, b) => a.Weight.CompareTo(b.Weight));
+                productsDatas.Sort((a, b) => mode ? (mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight)) : 0);
             else if (condition == "產地")
-                productsDatas.Sort((a, b) => a.Origin.CompareTo(b.Origin));
+                productsDatas.Sort((a, b) => mode ? (mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin)) : 0);
             else
             {
                 MessageBox.Show("商品排序出現錯誤");
@@ -276,7 +281,8 @@ namespace MarketPos
 
         private void cb_Sort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            productSort(cb_Sort.Text);
+            if (ptb_Sort.Tag == null) return;
+            productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
         }
 
@@ -287,12 +293,15 @@ namespace MarketPos
             {
                 ptb_Sort.Image = Resources.ascendingOrder;
                 ptb_Sort.Tag = "ascendingOrder";
+                productSort(cb_Sort.Text,false);
             }
             else if (ptb_Sort.Tag.ToString() == "ascendingOrder")
             {
                 ptb_Sort.Image = Resources.descendingOrder;
                 ptb_Sort.Tag = "descendingOrder";
+                productSort(cb_Sort.Text,true);
             }
+            Set_Page();
         }
     }
 }

@@ -12,13 +12,13 @@ namespace MarketPos
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
+        public static List<ProductsData> productsDatas = [];
         private List<ProductCard> productCards = [];
-        private List<ProductsData> productsDatas = [];
         public Form1()
         {
             InitializeComponent();
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             //抓取介面所有卡片
             productCards.Add(productCard1);
@@ -31,6 +31,7 @@ namespace MarketPos
             productCards.Add(productCard8);
 
             //UI初始化用
+            await DataService.DS_getProductCardsDatas();
             setProductCardsDatas(1);
 
             //暫時使用
@@ -41,13 +42,21 @@ namespace MarketPos
         /// <summary>
         /// 依照頁面商品數量來獲取資料並顯示出來
         /// </summary>
-        private async void setProductCardsDatas(int page)
+        private void setProductCardsDatas(int page)
         {
+            List<ProductsData> currentUI_Cards = [];
+
+            productCards.ForEach(o => o.init());
+
+            //計算需要哪個區間的商品
             int uip_Count = productCards.Count;
             int first = uip_Count * page - uip_Count;
-            productCards.ForEach(o => o.init());
-            List<ProductsData> products = await DataService.DS_getProductCardsDatas(first, uip_Count);
-            foreach (ProductsData product in products)
+            int last = productsDatas.Count - first < 8 ? productsDatas.Count : first + uip_Count;
+
+            //將商品顯示出來
+            for (int i = first; i < last; i++)
+                currentUI_Cards.Add(productsDatas[i]);
+            foreach (ProductsData product in currentUI_Cards)
             {
                 setProductCardsData(product);
             }
@@ -143,9 +152,9 @@ namespace MarketPos
             cb_init();
         }
 
-        private async void Set_Page()
+        private void Set_Page()
         {
-            int p_count = await DataService.DS_GetProductCount("");
+            int p_count = productsDatas.Count;
 
             //訂正page頁數
             int page = (int)Math.Floor(p_count / 8d);
@@ -156,7 +165,7 @@ namespace MarketPos
                 cbPage.Items.Add(i.ToString());
 
             //更改UI數值
-            cbPage.SelectedIndex = 0;
+            if (cbPage.Items.Count != 0) cbPage.SelectedIndex = 0;
             lbPage.Text = $"/{page}頁";
         }
 
@@ -201,38 +210,46 @@ namespace MarketPos
             ProductsData productData = new ProductsData();
             try
             {
-                productData.Name = txbAddP_name.Text.Trim();
+                productData.Name = txbS_Name.Text.Trim();
                 productData.Category = cbS_Category.Text;
-                productData.Price = Decimal.Parse(txbS_Price.Text.Trim());
-                productData.Weight = double.Parse(txbS_weight.Text.Trim());
+                Decimal.TryParse(txbS_Price.Text.Trim(), out decimal price);
+                productData.Price = price;
+                double.TryParse(txbS_weight.Text.Trim(), out double weight);
+                productData.Weight = weight;
                 productData.Origin = cbS_Origin.Text;
             }
-            catch(Exception ex) { MessageBox.Show($"輸入錯誤{ex}");return; }
+            catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
-            await DataService.DS_TSelectProducts(productData);
+            await DataService.DS_TSelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
+            if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
+            productCards.ForEach(card => card.init());
+            productsDatas.ForEach(setProductCardsData);
+            Set_Page();
         }
 
-        private void btnS_PriceUp_Click(object sender, EventArgs e)
+        private void btnS_WeightToggle_Click(object sender, EventArgs e)
         {
-            btnS_PriceDown.Enabled = true;
-            btnS_PriceUp.Enabled = false;
-        }
-        private void btnS_PriceDown_Click(object sender, EventArgs e)
-        {
-            btnS_PriceUp.Enabled = true;
-            btnS_PriceDown.Enabled = false;       
+            if (btnS_WeightToggle.Text == "以上")
+                btnS_WeightToggle.Text = "以下";
+            else if (btnS_WeightToggle.Text == "以下")
+                btnS_WeightToggle.Text = "以上";
         }
 
-        private void btnS_WeightUp_Click(object sender, EventArgs e)
+        private void btnS_PriceToggle_Click(object sender, EventArgs e)
         {
-            btnS_WeightDown.Enabled = true;
-            btnS_WeightUp.Enabled = false;
+            if (btnS_PriceToggle.Text == "以上")
+                btnS_PriceToggle.Text = "以下";
+            else if (btnS_PriceToggle.Text == "以下")
+                btnS_PriceToggle.Text = "以上";
         }
 
-        private void btnS_WeightDown_Click(object sender, EventArgs e)
+        private void btnS_Clear_Click(object sender, EventArgs e)
         {
-            btnS_WeightUp.Enabled = true;
-            btnS_WeightDown.Enabled = false;
+            txbS_Name.Text = "";
+            txbS_Price.Text = "";
+            txbS_weight.Text = "";
+            cbS_Category.SelectedIndex = -1;
+            cbS_Origin.SelectedIndex = -1;
         }
     }
 }

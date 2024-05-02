@@ -12,7 +12,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=1.175.113.56,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=1.175.88.32,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -31,19 +31,16 @@ namespace MarketPos
         /// <summary>
         /// 獲取商品卡片
         /// </summary>
-        /// <param name="first"></param>
-        /// <returns>從first列數到last之間的資料</returns>
-        public static async Task<List<ProductsData>> DS_getProductCardsDatas(int first, int last)
+        public static async Task DS_getProductCardsDatas()
         {
             List<ProductsData> products = [];
-            if (!await DS_ConnectionSql()) return products;
+            if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new(ConnString);
             string sql = @$"SELECT Products.name,Category.name AS  categoryName,price,shelveDate,description,weight,origin.name AS originname,stock
                                 FROM Products
                                 JOIN Category ON Category.id=category
                                 JOIN origin ON origin.id=origin
-                                ORDER BY Products.id
-                                OFFSET {first} ROWS FETCH NEXT {last} ROWS ONLY";
+                                ORDER BY Products.id;";
             conn.Open();
             try
             {
@@ -64,11 +61,9 @@ namespace MarketPos
                     };
                     products.Add(card);
                 }
-                return products;
+                Form1.productsDatas = products;
             }
             catch (Exception ex) { MessageBox.Show($"獲取商品資料發生錯誤\n {ex} "); }
-
-            return products;
         }
 
         public static async void DS_insertProduct(ProductsData productsData)
@@ -103,10 +98,10 @@ namespace MarketPos
         /// weightOrder true為以上，false為以下
         /// </summary>
         /// <returns>查到的資料列表</returns>
-        public static async Task<List<ProductsData>> DS_TSelectProducts(ProductsData productsData,bool pricesort, bool weightsort)
+        public static async Task DS_TSelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
         {
             List<ProductsData> productsDatas = [];
-            if (!await DS_ConnectionSql()) return productsDatas;
+            if (!await DS_ConnectionSql()) return;
             string sqlSelect = @"SELECT * ,Category.name AS categoryName,Origin.name AS originName
                                 FROM Products 
                                 JOIN Category ON Category.id=category
@@ -133,18 +128,40 @@ namespace MarketPos
             //}
 
             using SqlConnection conn = new(ConnString);
+            using SqlCommand cmd = conn.CreateCommand();
             conn.Open();
-            using SqlCommand comInsert = new(sqlSelect, conn);
             try
             {
-                if (string.IsNullOrEmpty(productsData.Name)) sqlSelect += "AND Products.name LIKE @Name";
-                if (string.IsNullOrEmpty(productsData.Category)) sqlSelect += "AND categoryName = @Category";
-                if (string.IsNullOrEmpty(productsData.Price.ToString())) sqlSelect += $"AND Price {priceSortString} @Price";
-                if (string.IsNullOrEmpty(productsData.Weight.ToString())) sqlSelect += $"AND Weight {weightSortStrng} @Weight";
-                if (string.IsNullOrEmpty(productsData.Origin)) sqlSelect += "AND originName = @Origin";
-                using SqlCommand comSelect = new(sqlSelect, conn);
-                comSelect.Parameters.AddWithValue("@keyword", keyword);
-                await using SqlDataReader reader = comSelect.ExecuteReader();
+                //設定搜尋字串
+                if (!string.IsNullOrEmpty(productsData.Name))
+                {
+                    sqlSelect += " AND Products.name LIKE @Name ";
+                    cmd.Parameters.AddWithValue("@name", $"%{productsData.Name}%");
+                }
+                if (!string.IsNullOrEmpty(productsData.Category))
+                {
+                    sqlSelect += " AND Category.name = @Category ";
+                    cmd.Parameters.AddWithValue("@Category", productsData.Category);
+                }
+                if (productsData.Price > decimal.Zero)
+                {
+                    sqlSelect += $" AND Price {priceSortString} @Price ";
+                    cmd.Parameters.AddWithValue("Price", productsData.Price);
+                }
+                if (productsData.Weight > 0.0)
+                {
+                    sqlSelect += $" AND Weight {weightSortStrng} @Weight ";
+                    cmd.Parameters.AddWithValue("@Weight", productsData.Weight.ToString());
+                }
+                if (!string.IsNullOrEmpty(productsData.Origin))
+                {
+                    sqlSelect += " AND Origin.name = @Origin ";
+                    cmd.Parameters.AddWithValue("@Origin", productsData.Origin);
+                }
+
+                cmd.Connection = conn;
+                cmd.CommandText = sqlSelect;
+                await using SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     ProductsData data = new()
@@ -160,9 +177,9 @@ namespace MarketPos
                     };
                     productsDatas.Add(data);
                 }
-                return productsDatas;
+                Form1.productsDatas = productsDatas;
             }
-            catch { return productsDatas; }
+            catch (Exception ex) { MessageBox.Show($"差尋錯誤:\n{ex}"); }
         }
         public static async Task DS_GetCategoryType()
         {
@@ -244,29 +261,6 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
 
 
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <returns>查到的資料數量</returns>
-        public static async Task<int> DS_GetProductCount(string categoryId)
-        {
-            string sql = @"SELECT COUNT(*) AS count FROM Products";
-            if (!string.IsNullOrEmpty(categoryId))
-            {
-                sql += $@"WHERE category={categoryId}";
-            }
-            if (!await DS_ConnectionSql()) return 0;
-            using SqlConnection conn = new SqlConnection(ConnString);
-            try
-            {
-                conn.Open();
-                using SqlCommand com = new SqlCommand(sql, conn);
-                SqlDataReader reader = com.ExecuteReader();
-                reader.Read();
-                return (int)reader["count"];
-            }
-            catch (Exception ex) { MessageBox.Show($"資料庫頁數查詢錯誤\n {ex}"); return 0; }
         }
     }
 }

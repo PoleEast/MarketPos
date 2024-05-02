@@ -70,19 +70,18 @@ namespace MarketPos
             btnS_Search = new Button();
             cbS_Origin = new ComboBox();
             lbS_Origin = new Label();
-            btnS_WeightDown = new Button();
             cbS_Category = new ComboBox();
-            btnS_WeightUp = new Button();
+            btnS_WeightToggle = new Button();
             txbS_weight = new TextBox();
             txbS_Price = new TextBox();
             txbS_Name = new TextBox();
             lbS_Weight = new Label();
-            btnS_PriceDown = new Button();
-            btnS_PriceUp = new Button();
+            btnS_PriceToggle = new Button();
             lbS_Price = new Label();
             lbS_Category = new Label();
             lbS_Name = new Label();
             tabControl2 = new TabControl();
+            btnS_Clear = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             tbpControl.SuspendLayout();
@@ -473,7 +472,7 @@ namespace MarketPos
             // btntest
             // 
             btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btntest.Location = new Point(219, 355);
+            btntest.Location = new Point(42, 355);
             btntest.Name = "btntest";
             btntest.Size = new Size(96, 43);
             btntest.TabIndex = 16;
@@ -483,19 +482,18 @@ namespace MarketPos
             // 
             // tbpMemSerch
             // 
+            tbpMemSerch.Controls.Add(btnS_Clear);
             tbpMemSerch.Controls.Add(btnS_Search);
             tbpMemSerch.Controls.Add(cbS_Origin);
             tbpMemSerch.Controls.Add(lbS_Origin);
             tbpMemSerch.Controls.Add(btntest);
-            tbpMemSerch.Controls.Add(btnS_WeightDown);
             tbpMemSerch.Controls.Add(cbS_Category);
-            tbpMemSerch.Controls.Add(btnS_WeightUp);
+            tbpMemSerch.Controls.Add(btnS_WeightToggle);
             tbpMemSerch.Controls.Add(txbS_weight);
             tbpMemSerch.Controls.Add(txbS_Price);
             tbpMemSerch.Controls.Add(txbS_Name);
             tbpMemSerch.Controls.Add(lbS_Weight);
-            tbpMemSerch.Controls.Add(btnS_PriceDown);
-            tbpMemSerch.Controls.Add(btnS_PriceUp);
+            tbpMemSerch.Controls.Add(btnS_PriceToggle);
             tbpMemSerch.Controls.Add(lbS_Price);
             tbpMemSerch.Controls.Add(lbS_Category);
             tbpMemSerch.Controls.Add(lbS_Name);
@@ -538,18 +536,6 @@ namespace MarketPos
             lbS_Origin.TabIndex = 27;
             lbS_Origin.Text = "產地";
             // 
-            // btnS_WeightDown
-            // 
-            btnS_WeightDown.Enabled = false;
-            btnS_WeightDown.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_WeightDown.Location = new Point(367, 262);
-            btnS_WeightDown.Name = "btnS_WeightDown";
-            btnS_WeightDown.Size = new Size(63, 23);
-            btnS_WeightDown.TabIndex = 26;
-            btnS_WeightDown.Text = "以下";
-            btnS_WeightDown.UseVisualStyleBackColor = true;
-            btnS_WeightDown.Click += btnS_WeightDown_Click;
-            // 
             // cbS_Category
             // 
             cbS_Category.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -559,16 +545,16 @@ namespace MarketPos
             cbS_Category.Size = new Size(170, 23);
             cbS_Category.TabIndex = 10;
             // 
-            // btnS_WeightUp
+            // btnS_WeightToggle
             // 
-            btnS_WeightUp.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_WeightUp.Location = new Point(298, 262);
-            btnS_WeightUp.Name = "btnS_WeightUp";
-            btnS_WeightUp.Size = new Size(63, 23);
-            btnS_WeightUp.TabIndex = 25;
-            btnS_WeightUp.Text = "以上";
-            btnS_WeightUp.UseVisualStyleBackColor = true;
-            btnS_WeightUp.Click += btnS_WeightUp_Click;
+            btnS_WeightToggle.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnS_WeightToggle.Location = new Point(298, 262);
+            btnS_WeightToggle.Name = "btnS_WeightToggle";
+            btnS_WeightToggle.Size = new Size(63, 23);
+            btnS_WeightToggle.TabIndex = 25;
+            btnS_WeightToggle.Text = "以上";
+            btnS_WeightToggle.UseVisualStyleBackColor = true;
+            btnS_WeightToggle.Click += btnS_WeightToggle_Click;
             // 
             // txbS_weight
             // 
@@ -607,28 +593,17 @@ namespace MarketPos
             lbS_Weight.TabIndex = 23;
             lbS_Weight.Text = "重量";
             // 
-            // btnS_PriceDown
+            // btnS_PriceToggle
             // 
-            btnS_PriceDown.Enabled = false;
-            btnS_PriceDown.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_PriceDown.Location = new Point(367, 210);
-            btnS_PriceDown.Name = "btnS_PriceDown";
-            btnS_PriceDown.Size = new Size(63, 23);
-            btnS_PriceDown.TabIndex = 22;
-            btnS_PriceDown.Text = "以下";
-            btnS_PriceDown.UseVisualStyleBackColor = true;
-            btnS_PriceDown.Click += btnS_PriceDown_Click;
-            // 
-            // btnS_PriceUp
-            // 
-            btnS_PriceUp.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_PriceUp.Location = new Point(298, 210);
-            btnS_PriceUp.Name = "btnS_PriceUp";
-            btnS_PriceUp.Size = new Size(63, 23);
-            btnS_PriceUp.TabIndex = 21;
-            btnS_PriceUp.Text = "以上";
-            btnS_PriceUp.UseVisualStyleBackColor = true;
-            btnS_PriceUp.Click += btnS_PriceUp_Click;
+            btnS_PriceToggle.BackColor = Color.Transparent;
+            btnS_PriceToggle.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnS_PriceToggle.Location = new Point(298, 210);
+            btnS_PriceToggle.Name = "btnS_PriceToggle";
+            btnS_PriceToggle.Size = new Size(63, 23);
+            btnS_PriceToggle.TabIndex = 21;
+            btnS_PriceToggle.Text = "以上";
+            btnS_PriceToggle.UseVisualStyleBackColor = false;
+            btnS_PriceToggle.Click += btnS_PriceToggle_Click;
             // 
             // lbS_Price
             // 
@@ -672,6 +647,17 @@ namespace MarketPos
             tabControl2.SelectedIndex = 0;
             tabControl2.Size = new Size(470, 782);
             tabControl2.TabIndex = 10;
+            // 
+            // btnS_Clear
+            // 
+            btnS_Clear.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnS_Clear.Location = new Point(213, 355);
+            btnS_Clear.Name = "btnS_Clear";
+            btnS_Clear.Size = new Size(96, 43);
+            btnS_Clear.TabIndex = 30;
+            btnS_Clear.Text = "清除條件";
+            btnS_Clear.UseVisualStyleBackColor = true;
+            btnS_Clear.Click += btnS_Clear_Click;
             // 
             // Form1
             // 
@@ -737,20 +723,18 @@ namespace MarketPos
         private TabPage tbpMemSerch;
         private ComboBox cbS_Origin;
         private Label lbS_Origin;
-        private Button btnS_WeightDown;
         private ComboBox cbS_Category;
-        private Button btnS_WeightUp;
+        private Button btnS_WeightToggle;
         private TextBox txbS_weight;
         private TextBox txbS_Price;
         private TextBox txbS_Name;
         private Label lbS_Weight;
-        private Button btnS_PriceDown;
-        private Button btnS_PriceUp;
+        private Button btnS_PriceToggle;
         private Label lbS_Price;
         private Label lbS_Category;
         private Label lbS_Name;
         private TabControl tabControl2;
-        private Button button2;
         private Button btnS_Search;
+        private Button btnS_Clear;
     }
 }

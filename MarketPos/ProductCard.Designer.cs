@@ -49,12 +49,13 @@
             // 
             // lbName
             // 
-            lbName.AutoSize = true;
             lbName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            lbName.Location = new Point(16, 187);
+            lbName.Location = new Point(17, 186);
+            lbName.Margin = new Padding(3);
             lbName.Name = "lbName";
-            lbName.Size = new Size(0, 24);
+            lbName.Size = new Size(200, 24);
             lbName.TabIndex = 2;
+            lbName.TextChanged += lbName_TextChanged;
             // 
             // lbPrice
             // 

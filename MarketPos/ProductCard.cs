@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,6 +46,22 @@ namespace MarketPos
             ptbProduct.Image = null;
             lbWeight.Text = "重量:";
             this.Visible = false;
+        }
+
+        private void lbName_TextChanged(object sender, EventArgs e)
+        {
+            // 計算文字寬度和標籤寬度的比例
+            int minFontSize = 6;
+            if (string.IsNullOrEmpty(lbName.Text)) return;
+            float ratio = 200f / TextRenderer.MeasureText(lbName.Text, lbName.Font).Width;
+
+            // 如果比例小於1，調整字體大小
+            if (ratio < 1)
+            {
+                int newSize = (int)(lbName.Font.Size * ratio);
+                newSize = Math.Max(newSize, minFontSize);
+                lbName.Font = new Font(lbName.Font.FontFamily, newSize, lbName.Font.Style);
+            }
         }
     }
 }

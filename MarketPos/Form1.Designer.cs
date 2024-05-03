@@ -154,7 +154,6 @@ namespace MarketPos
             cb_Sort.Name = "cb_Sort";
             cb_Sort.Size = new Size(89, 32);
             cb_Sort.TabIndex = 29;
-            cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
             // 
             // lb_Sort2
             // 

@@ -21,6 +21,8 @@ namespace MarketPos
         }
         private async void Form1_Load(object sender, EventArgs e)
         {
+            await DataService.DS_getProductCardsDatas();
+
             //抓取介面所有卡片
             productCards.Add(productCard1);
             productCards.Add(productCard2);
@@ -32,11 +34,11 @@ namespace MarketPos
             productCards.Add(productCard8);
 
             //UI初始化用
-            await DataService.DS_getProductCardsDatas();
             cb_Sort.SelectedIndex = 0;
+            cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
 
             //暫時使用
-            productSort("名稱",true);
+            productSort("名稱", true);
             Set_Page();
             cb_init();
         }
@@ -93,7 +95,7 @@ namespace MarketPos
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="mode"></param>
-        public void productSort(string condition,bool mode)
+        public void productSort(string condition, bool mode)
         {
             if (condition == "名稱")
                 productsDatas.Sort((a, b) => mode ? (mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name)) : 0);
@@ -110,7 +112,6 @@ namespace MarketPos
                 MessageBox.Show("商品排序出現錯誤");
                 return;
             }
-            setProductCardsDatas(1);
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
@@ -249,8 +250,6 @@ namespace MarketPos
 
             await DataService.DS_TSelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
             if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
-            productCards.ForEach(card => card.init());
-            productsDatas.ForEach(setProductCardsData);
             Set_Page();
         }
 
@@ -279,11 +278,11 @@ namespace MarketPos
             cbS_Origin.SelectedIndex = -1;
         }
 
-        private void cb_Sort_SelectedIndexChanged(object sender, EventArgs e)
+        private void cb_Sort_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (ptb_Sort.Tag == null) return;
+            if (ptb_Sort.Tag == null || sender == null) return;
             productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
-            Set_Page();
+            setProductCardsDatas(1);
         }
 
         private void ptb_Sort_Click(object sender, EventArgs e)
@@ -293,13 +292,13 @@ namespace MarketPos
             {
                 ptb_Sort.Image = Resources.ascendingOrder;
                 ptb_Sort.Tag = "ascendingOrder";
-                productSort(cb_Sort.Text,false);
+                productSort(cb_Sort.Text, false);
             }
             else if (ptb_Sort.Tag.ToString() == "ascendingOrder")
             {
                 ptb_Sort.Image = Resources.descendingOrder;
                 ptb_Sort.Tag = "descendingOrder";
-                productSort(cb_Sort.Text,true);
+                productSort(cb_Sort.Text, true);
             }
             Set_Page();
         }

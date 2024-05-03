@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace MarketPos
 {
-    public partial class UserInput : Form
+    public partial class UserInputForm : Form
     {
         public string userinput = string.Empty;
-        public UserInput(string Explain)
+        public UserInputForm(string Explain)
         {
             InitializeComponent();
             lbExplain.Text = Explain;

@@ -14,29 +14,25 @@ namespace MarketPos
     public partial class ProductCard : UserControl
     {
         private string[] imageFiles = [];
+        public int ProductID;
+        public event EventHandler CustomClick;
         public ProductCard()
         {
             InitializeComponent();
         }
-        public void SetCard(ProductsData productsData)
+        public void SetCard(ProductsData Data)
         {
-            lbName.Text = productsData.Name;
-            lbOrigin.Text += productsData.Origin;
-            lbPrice.Text += productsData.Price.ToString() + "$";
-            lbStock.Text += productsData.Stock.ToString();
-            lbWeight.Text += productsData.Weight.ToString() + "/公克";
-            GetPicture(productsData.Name);
+            ProductID = Data.Id;
+            lbName.Text = Data.Name;
+            lbOrigin.Text += Data.Origin;
+            lbPrice.Text += Math.Floor(Data.Price).ToString() + "$";
+            lbStock.Text += Data.Stock.ToString();
+            lbWeight.Text += Data.Weight.ToString() + "/公克";
+            imageFiles = DataService.DS_GetPictures(Data.Name);
+            ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
             this.Visible = true;
         }
-        private void GetPicture(string pathname)
-        {
-            var imgString = Form1.Imgpath + @"\" + pathname;
-            if (Directory.Exists(imgString))
-            {
-                imageFiles = Directory.GetFiles(imgString, "*.jpg");
-                ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
-            }
-        }
+
         public void init()
         {
             lbName.Text = string.Empty;
@@ -62,6 +58,15 @@ namespace MarketPos
                 newSize = Math.Max(newSize, minFontSize);
                 lbName.Font = new Font(lbName.Font.FontFamily, newSize, lbName.Font.Style);
             }
+        }
+
+        private async void ProductCard_Click(object sender, EventArgs e)
+        {
+            ProductsData? data = await DataService.DS_GetDetailProductCard(ProductID);
+            if (data == null) return;
+            Detail_PCard detail_PCard = new(data);
+            detail_PCard.StartPosition = FormStartPosition.CenterParent;
+            detail_PCard.ShowDialog();
         }
     }
 }

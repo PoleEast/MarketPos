@@ -7,6 +7,7 @@ using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using MarketPos.Properties;
+using MarketPos.FormPage;
 
 namespace MarketPos
 {
@@ -19,9 +20,11 @@ namespace MarketPos
         {
             InitializeComponent();
         }
+
         private async void Form1_Load(object sender, EventArgs e)
         {
             await DataService.DS_getProductCardsDatas();
+
 
             //抓取介面所有卡片
             productCards.Add(productCard1);
@@ -151,7 +154,7 @@ namespace MarketPos
 
         private async void cbAddCategoryType_Click(object sender, EventArgs e)
         {
-            UserInput userInput = new("請輸入新增的類別:")
+            UserInputForm userInput = new("請輸入新增的類別:")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -166,7 +169,7 @@ namespace MarketPos
 
         private async void btnAddOriginType_Click(object sender, EventArgs e)
         {
-            UserInput userInput = new("請輸入新增的產地:")
+            UserInputForm userInput = new("請輸入新增的產地:")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
@@ -248,7 +251,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
-            await DataService.DS_TSelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
+            await DataService.DS_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
             if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
             Set_Page();
         }
@@ -301,6 +304,13 @@ namespace MarketPos
                 productSort(cb_Sort.Text, true);
             }
             Set_Page();
+        }
+
+        private void btn_Login_Click(object sender, EventArgs e)
+        {
+            LoginForm loginForm = new LoginForm();
+            loginForm.StartPosition = FormStartPosition.CenterParent;
+            loginForm.ShowDialog();
         }
     }
 }

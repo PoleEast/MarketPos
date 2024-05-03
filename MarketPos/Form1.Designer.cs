@@ -30,8 +30,9 @@ namespace MarketPos
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl1 = new TabControl();
-            tabPage1 = new TabPage();
+            tbcProduct = new TabPage();
             ptb_Sort = new PictureBox();
             cb_Sort = new ComboBox();
             lb_Sort2 = new Label();
@@ -48,7 +49,6 @@ namespace MarketPos
             productCard3 = new ProductCard();
             productCard2 = new ProductCard();
             productCard1 = new ProductCard();
-            tabPage2 = new TabPage();
             label1 = new Label();
             tbpControl = new TabPage();
             cbAddCategoryType = new Button();
@@ -69,8 +69,12 @@ namespace MarketPos
             lbAddP_category = new Label();
             btnAddOriginType = new Button();
             lbAddP_price = new Label();
-            btntest = new Button();
             tbpMemSerch = new TabPage();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            shoppingCard1 = new ShoppingCard();
+            shoppingCard2 = new ShoppingCard();
+            shoppingCard3 = new ShoppingCard();
+            shoppingCard4 = new ShoppingCard();
             btnS_Clear = new Button();
             btnS_Search = new Button();
             cbS_Origin = new ComboBox();
@@ -86,50 +90,51 @@ namespace MarketPos
             lbS_Category = new Label();
             lbS_Name = new Label();
             tabControl2 = new TabControl();
+            btn_Login = new Button();
             tabControl1.SuspendLayout();
-            tabPage1.SuspendLayout();
+            tbcProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
             tbpControl.SuspendLayout();
             tbpMemSerch.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             tabControl2.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
             // 
-            tabControl1.Controls.Add(tabPage1);
-            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(tbcProduct);
             tabControl1.Location = new Point(28, 49);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(1084, 782);
             tabControl1.TabIndex = 8;
             // 
-            // tabPage1
+            // tbcProduct
             // 
-            tabPage1.BorderStyle = BorderStyle.FixedSingle;
-            tabPage1.Controls.Add(ptb_Sort);
-            tabPage1.Controls.Add(cb_Sort);
-            tabPage1.Controls.Add(lb_Sort2);
-            tabPage1.Controls.Add(lb_Sort);
-            tabPage1.Controls.Add(lbPage);
-            tabPage1.Controls.Add(cbPage);
-            tabPage1.Controls.Add(btnBackPage);
-            tabPage1.Controls.Add(btnNextPage);
-            tabPage1.Controls.Add(productCard8);
-            tabPage1.Controls.Add(productCard7);
-            tabPage1.Controls.Add(productCard6);
-            tabPage1.Controls.Add(productCard5);
-            tabPage1.Controls.Add(productCard4);
-            tabPage1.Controls.Add(productCard3);
-            tabPage1.Controls.Add(productCard2);
-            tabPage1.Controls.Add(productCard1);
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(1076, 754);
-            tabPage1.TabIndex = 0;
-            tabPage1.Text = "v";
-            tabPage1.UseVisualStyleBackColor = true;
+            tbcProduct.BorderStyle = BorderStyle.FixedSingle;
+            tbcProduct.Controls.Add(ptb_Sort);
+            tbcProduct.Controls.Add(cb_Sort);
+            tbcProduct.Controls.Add(lb_Sort2);
+            tbcProduct.Controls.Add(lb_Sort);
+            tbcProduct.Controls.Add(lbPage);
+            tbcProduct.Controls.Add(cbPage);
+            tbcProduct.Controls.Add(btnBackPage);
+            tbcProduct.Controls.Add(btnNextPage);
+            tbcProduct.Controls.Add(productCard8);
+            tbcProduct.Controls.Add(productCard7);
+            tbcProduct.Controls.Add(productCard6);
+            tbcProduct.Controls.Add(productCard5);
+            tbcProduct.Controls.Add(productCard4);
+            tbcProduct.Controls.Add(productCard3);
+            tbcProduct.Controls.Add(productCard2);
+            tbcProduct.Controls.Add(productCard1);
+            tbcProduct.Location = new Point(4, 24);
+            tbcProduct.Name = "tbcProduct";
+            tbcProduct.Padding = new Padding(3);
+            tbcProduct.Size = new Size(1076, 754);
+            tbcProduct.TabIndex = 0;
+            tbcProduct.Text = "商品";
+            tbcProduct.UseVisualStyleBackColor = true;
             // 
             // ptb_Sort
             // 
@@ -292,17 +297,6 @@ namespace MarketPos
             productCard1.Size = new Size(230, 304);
             productCard1.TabIndex = 8;
             productCard1.Visible = false;
-            // 
-            // tabPage2
-            // 
-            tabPage2.BorderStyle = BorderStyle.FixedSingle;
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1076, 754);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "tabPage2";
-            tabPage2.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -526,24 +520,13 @@ namespace MarketPos
             lbAddP_price.TabIndex = 2;
             lbAddP_price.Text = "價格";
             // 
-            // btntest
-            // 
-            btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btntest.Location = new Point(42, 355);
-            btntest.Name = "btntest";
-            btntest.Size = new Size(96, 43);
-            btntest.TabIndex = 16;
-            btntest.Text = "測試按鈕";
-            btntest.UseVisualStyleBackColor = true;
-            btntest.Click += btntest_Click;
-            // 
             // tbpMemSerch
             // 
+            tbpMemSerch.Controls.Add(flowLayoutPanel1);
             tbpMemSerch.Controls.Add(btnS_Clear);
             tbpMemSerch.Controls.Add(btnS_Search);
             tbpMemSerch.Controls.Add(cbS_Origin);
             tbpMemSerch.Controls.Add(lbS_Origin);
-            tbpMemSerch.Controls.Add(btntest);
             tbpMemSerch.Controls.Add(cbS_Category);
             tbpMemSerch.Controls.Add(btnS_WeightToggle);
             tbpMemSerch.Controls.Add(txbS_weight);
@@ -562,10 +545,59 @@ namespace MarketPos
             tbpMemSerch.Text = "商品查詢";
             tbpMemSerch.UseVisualStyleBackColor = true;
             // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanel1.Controls.Add(shoppingCard1);
+            flowLayoutPanel1.Controls.Add(shoppingCard2);
+            flowLayoutPanel1.Controls.Add(shoppingCard3);
+            flowLayoutPanel1.Controls.Add(shoppingCard4);
+            flowLayoutPanel1.Location = new Point(6, 371);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(431, 377);
+            flowLayoutPanel1.TabIndex = 31;
+            // 
+            // shoppingCard1
+            // 
+            shoppingCard1.BackColor = SystemColors.Menu;
+            shoppingCard1.BorderStyle = BorderStyle.FixedSingle;
+            shoppingCard1.Location = new Point(3, 3);
+            shoppingCard1.Name = "shoppingCard1";
+            shoppingCard1.Size = new Size(410, 91);
+            shoppingCard1.TabIndex = 0;
+            // 
+            // shoppingCard2
+            // 
+            shoppingCard2.BackColor = SystemColors.Menu;
+            shoppingCard2.BorderStyle = BorderStyle.FixedSingle;
+            shoppingCard2.Location = new Point(3, 100);
+            shoppingCard2.Name = "shoppingCard2";
+            shoppingCard2.Size = new Size(408, 89);
+            shoppingCard2.TabIndex = 1;
+            // 
+            // shoppingCard3
+            // 
+            shoppingCard3.BackColor = SystemColors.Menu;
+            shoppingCard3.BorderStyle = BorderStyle.FixedSingle;
+            shoppingCard3.Location = new Point(3, 195);
+            shoppingCard3.Name = "shoppingCard3";
+            shoppingCard3.Size = new Size(408, 89);
+            shoppingCard3.TabIndex = 2;
+            // 
+            // shoppingCard4
+            // 
+            shoppingCard4.BackColor = SystemColors.Menu;
+            shoppingCard4.BorderStyle = BorderStyle.FixedSingle;
+            shoppingCard4.Location = new Point(3, 290);
+            shoppingCard4.Name = "shoppingCard4";
+            shoppingCard4.Size = new Size(408, 89);
+            shoppingCard4.TabIndex = 3;
+            // 
             // btnS_Clear
             // 
             btnS_Clear.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_Clear.Location = new Point(213, 355);
+            btnS_Clear.Location = new Point(200, 303);
             btnS_Clear.Name = "btnS_Clear";
             btnS_Clear.Size = new Size(96, 43);
             btnS_Clear.TabIndex = 30;
@@ -576,7 +608,7 @@ namespace MarketPos
             // btnS_Search
             // 
             btnS_Search.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_Search.Location = new Point(334, 355);
+            btnS_Search.Location = new Point(320, 303);
             btnS_Search.Name = "btnS_Search";
             btnS_Search.Size = new Size(96, 43);
             btnS_Search.TabIndex = 29;
@@ -588,7 +620,7 @@ namespace MarketPos
             // 
             cbS_Origin.DropDownStyle = ComboBoxStyle.DropDownList;
             cbS_Origin.FormattingEnabled = true;
-            cbS_Origin.Location = new Point(115, 311);
+            cbS_Origin.Location = new Point(126, 254);
             cbS_Origin.Name = "cbS_Origin";
             cbS_Origin.Size = new Size(170, 23);
             cbS_Origin.TabIndex = 28;
@@ -598,7 +630,7 @@ namespace MarketPos
             lbS_Origin.AutoEllipsis = true;
             lbS_Origin.AutoSize = true;
             lbS_Origin.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbS_Origin.Location = new Point(61, 311);
+            lbS_Origin.Location = new Point(45, 254);
             lbS_Origin.Name = "lbS_Origin";
             lbS_Origin.Size = new Size(48, 24);
             lbS_Origin.TabIndex = 27;
@@ -608,7 +640,7 @@ namespace MarketPos
             // 
             cbS_Category.DropDownStyle = ComboBoxStyle.DropDownList;
             cbS_Category.FormattingEnabled = true;
-            cbS_Category.Location = new Point(115, 159);
+            cbS_Category.Location = new Point(126, 101);
             cbS_Category.Name = "cbS_Category";
             cbS_Category.Size = new Size(170, 23);
             cbS_Category.TabIndex = 10;
@@ -616,7 +648,7 @@ namespace MarketPos
             // btnS_WeightToggle
             // 
             btnS_WeightToggle.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_WeightToggle.Location = new Point(298, 262);
+            btnS_WeightToggle.Location = new Point(320, 202);
             btnS_WeightToggle.Name = "btnS_WeightToggle";
             btnS_WeightToggle.Size = new Size(63, 23);
             btnS_WeightToggle.TabIndex = 25;
@@ -626,7 +658,7 @@ namespace MarketPos
             // 
             // txbS_weight
             // 
-            txbS_weight.Location = new Point(115, 262);
+            txbS_weight.Location = new Point(126, 201);
             txbS_weight.MaxLength = 8;
             txbS_weight.Name = "txbS_weight";
             txbS_weight.Size = new Size(170, 23);
@@ -635,7 +667,7 @@ namespace MarketPos
             // 
             // txbS_Price
             // 
-            txbS_Price.Location = new Point(115, 210);
+            txbS_Price.Location = new Point(126, 150);
             txbS_Price.MaxLength = 8;
             txbS_Price.Name = "txbS_Price";
             txbS_Price.Size = new Size(170, 23);
@@ -644,7 +676,7 @@ namespace MarketPos
             // 
             // txbS_Name
             // 
-            txbS_Name.Location = new Point(115, 108);
+            txbS_Name.Location = new Point(126, 47);
             txbS_Name.MaxLength = 30;
             txbS_Name.Name = "txbS_Name";
             txbS_Name.Size = new Size(170, 23);
@@ -655,7 +687,7 @@ namespace MarketPos
             lbS_Weight.AutoEllipsis = true;
             lbS_Weight.AutoSize = true;
             lbS_Weight.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbS_Weight.Location = new Point(61, 262);
+            lbS_Weight.Location = new Point(45, 201);
             lbS_Weight.Name = "lbS_Weight";
             lbS_Weight.Size = new Size(48, 24);
             lbS_Weight.TabIndex = 23;
@@ -665,7 +697,7 @@ namespace MarketPos
             // 
             btnS_PriceToggle.BackColor = Color.Transparent;
             btnS_PriceToggle.Font = new Font("Microsoft JhengHei UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnS_PriceToggle.Location = new Point(298, 210);
+            btnS_PriceToggle.Location = new Point(320, 150);
             btnS_PriceToggle.Name = "btnS_PriceToggle";
             btnS_PriceToggle.Size = new Size(63, 23);
             btnS_PriceToggle.TabIndex = 21;
@@ -678,7 +710,7 @@ namespace MarketPos
             lbS_Price.AutoEllipsis = true;
             lbS_Price.AutoSize = true;
             lbS_Price.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbS_Price.Location = new Point(61, 210);
+            lbS_Price.Location = new Point(45, 149);
             lbS_Price.Name = "lbS_Price";
             lbS_Price.Size = new Size(48, 24);
             lbS_Price.TabIndex = 12;
@@ -689,7 +721,7 @@ namespace MarketPos
             lbS_Category.AutoEllipsis = true;
             lbS_Category.AutoSize = true;
             lbS_Category.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbS_Category.Location = new Point(61, 158);
+            lbS_Category.Location = new Point(45, 97);
             lbS_Category.Name = "lbS_Category";
             lbS_Category.Size = new Size(48, 24);
             lbS_Category.TabIndex = 11;
@@ -700,7 +732,7 @@ namespace MarketPos
             lbS_Name.AutoEllipsis = true;
             lbS_Name.AutoSize = true;
             lbS_Name.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbS_Name.Location = new Point(61, 108);
+            lbS_Name.Location = new Point(45, 47);
             lbS_Name.Name = "lbS_Name";
             lbS_Name.Size = new Size(48, 24);
             lbS_Name.TabIndex = 1;
@@ -716,34 +748,53 @@ namespace MarketPos
             tabControl2.Size = new Size(470, 782);
             tabControl2.TabIndex = 10;
             // 
+            // btn_Login
+            // 
+            btn_Login.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btn_Login.Location = new Point(1476, 12);
+            btn_Login.Name = "btn_Login";
+            btn_Login.Size = new Size(96, 43);
+            btn_Login.TabIndex = 30;
+            btn_Login.Text = "註冊/登入";
+            btn_Login.UseVisualStyleBackColor = true;
+            btn_Login.Click += btn_Login_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1584, 861);
+            Controls.Add(btn_Login);
             Controls.Add(tabControl2);
             Controls.Add(label1);
             Controls.Add(tabControl1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
-            Text = "Form1";
+            Text = "大港開吃";
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
-            tabPage1.PerformLayout();
+            tbcProduct.ResumeLayout(false);
+            tbcProduct.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).EndInit();
             tbpControl.ResumeLayout(false);
             tbpControl.PerformLayout();
             tbpMemSerch.ResumeLayout(false);
             tbpMemSerch.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
             tabControl2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
+        private void ProductCard8_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private TabControl tabControl1;
-        private TabPage tabPage1;
+        private TabPage tbcProduct;
         private ProductCard productCard8;
         private ProductCard productCard7;
         private ProductCard productCard6;
@@ -752,7 +803,6 @@ namespace MarketPos
         private ProductCard productCard3;
         private ProductCard productCard2;
         private ProductCard productCard1;
-        private TabPage tabPage2;
         private Label label1;
         private Label lbPage;
         private ComboBox cbPage;
@@ -775,7 +825,6 @@ namespace MarketPos
         private ComboBox cbAddP_category;
         private Label lbAddP_weight;
         private Label lbAddP_category;
-        private Button btntest;
         private Button btnAddOriginType;
         private Label lbAddP_price;
         private TabPage tbpMemSerch;
@@ -798,5 +847,11 @@ namespace MarketPos
         private ComboBox cb_Sort;
         private Label lb_Sort2;
         private PictureBox ptb_Sort;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private ShoppingCard shoppingCard1;
+        private ShoppingCard shoppingCard2;
+        private ShoppingCard shoppingCard3;
+        private ShoppingCard shoppingCard4;
+        private Button btn_Login;
     }
 }

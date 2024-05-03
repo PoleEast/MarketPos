@@ -1,6 +1,6 @@
 ﻿namespace MarketPos
 {
-    partial class UserInput
+    partial class UserInputForm
     {
         /// <summary>
         /// Required designer variable.

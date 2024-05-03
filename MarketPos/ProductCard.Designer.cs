@@ -46,6 +46,7 @@
             ptbProduct.SizeMode = PictureBoxSizeMode.StretchImage;
             ptbProduct.TabIndex = 0;
             ptbProduct.TabStop = false;
+            ptbProduct.Click += ProductCard_Click;
             // 
             // lbName
             // 
@@ -56,6 +57,7 @@
             lbName.Size = new Size(200, 24);
             lbName.TabIndex = 2;
             lbName.TextChanged += lbName_TextChanged;
+            lbName.Click += ProductCard_Click;
             // 
             // lbPrice
             // 
@@ -65,6 +67,7 @@
             lbPrice.Size = new Size(34, 15);
             lbPrice.TabIndex = 3;
             lbPrice.Text = "價格:";
+            lbPrice.Click += ProductCard_Click;
             // 
             // lbStock
             // 
@@ -74,6 +77,7 @@
             lbStock.Size = new Size(34, 15);
             lbStock.TabIndex = 4;
             lbStock.Text = "庫存:";
+            lbStock.Click += ProductCard_Click;
             // 
             // lbOrigin
             // 
@@ -83,6 +87,7 @@
             lbOrigin.Size = new Size(43, 15);
             lbOrigin.TabIndex = 5;
             lbOrigin.Text = "生產地";
+            lbOrigin.Click += ProductCard_Click;
             // 
             // lbScore
             // 
@@ -92,6 +97,7 @@
             lbScore.Size = new Size(34, 15);
             lbScore.TabIndex = 6;
             lbScore.Text = "評分:";
+            lbScore.Click += ProductCard_Click;
             // 
             // lbWeight
             // 
@@ -101,20 +107,23 @@
             lbWeight.Size = new Size(63, 15);
             lbWeight.TabIndex = 7;
             lbWeight.Text = "重量:/公克";
+            lbWeight.Click += ProductCard_Click;
             // 
             // ProductCard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(lbName);
+            Controls.Add(ptbProduct);
             Controls.Add(lbWeight);
             Controls.Add(lbScore);
             Controls.Add(lbOrigin);
             Controls.Add(lbStock);
             Controls.Add(lbPrice);
-            Controls.Add(lbName);
-            Controls.Add(ptbProduct);
+            Cursor = Cursors.Hand;
             Name = "ProductCard";
             Size = new Size(230, 300);
+            Click += ProductCard_Click;
             ((System.ComponentModel.ISupportInitialize)ptbProduct).EndInit();
             ResumeLayout(false);
             PerformLayout();

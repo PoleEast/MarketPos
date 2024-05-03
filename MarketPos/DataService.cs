@@ -36,7 +36,7 @@ namespace MarketPos
             List<ProductsData> products = [];
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new(ConnString);
-            string sql = @$"SELECT Products.name,Category.name AS  categoryName,price,shelveDate,description,weight,origin.name AS originname,stock
+            string sql = @$"SELECT Products.id,Products.name,Category.name AS  categoryName,price,shelveDate,description,weight,origin.name AS originname,stock
                                 FROM Products
                                 JOIN Category ON Category.id=category
                                 JOIN origin ON origin.id=origin
@@ -50,6 +50,7 @@ namespace MarketPos
                 {
                     ProductsData card = new()
                     {
+                        Id = reader.GetInt32("id"),
                         Name = (string)reader["name"],
                         Category = (string)reader["categoryName"],
                         Description = (string)reader["description"],
@@ -98,7 +99,7 @@ namespace MarketPos
         /// weightOrder true為以上，false為以下
         /// </summary>
         /// <returns>查到的資料列表</returns>
-        public static async Task DS_TSelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
+        public static async Task DS_SelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
         {
             List<ProductsData> productsDatas = [];
             if (!await DS_ConnectionSql()) return;
@@ -109,23 +110,6 @@ namespace MarketPos
                                 WHERE 1=1";
             string priceSortString = pricesort ? ">=" : "<=";
             string weightSortStrng = weightsort ? ">=" : "<=";
-
-            //舊版
-            //switch (mode)
-            //{
-            //    //id
-            //    case 1:
-            //        if (keyword.GetType() != typeof(int)) return productsDatas;
-            //        sqlSelect += @"WHERE Products.id=@keyword";
-            //        break;
-            //    //name
-            //    case 2:
-            //        if (keyword.GetType() != typeof(string)) return productsDatas;
-            //        sqlSelect += @"WHERE Products.name=@keyword";
-            //        break;
-            //    default:
-            //        return productsDatas;
-            //}
 
             using SqlConnection conn = new(ConnString);
             using SqlCommand cmd = conn.CreateCommand();
@@ -166,6 +150,7 @@ namespace MarketPos
                 {
                     ProductsData data = new()
                     {
+                        Id = (int)reader["id"],
                         Name = (string)reader["name"],
                         Category = (string)reader["categoryName"],
                         Description = (string)reader["description"],
@@ -259,8 +244,50 @@ namespace MarketPos
                 MessageBox.Show($"增加產地 {origin} 成功");
             }
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+        }
 
+        public static async Task<ProductsData?> DS_GetDetailProductCard(int productCard)
+        {
+            if (!await DS_ConnectionSql()) return null;
 
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * ,Category.name AS categoryName,Origin.name AS originName
+                                FROM Products 
+                                JOIN Category ON Category.id=category
+                                JOIN Origin ON origin.id=origin 
+                                WHERE Products.id=@id";
+            try
+            {
+                conn.Open();
+                SqlCommand com = new SqlCommand(sql, conn);
+                com.Parameters.AddWithValue("@id", productCard);
+
+                SqlDataReader reader = com.ExecuteReader();
+                reader.Read();
+                ProductsData data = new()
+                {
+                    Id = (int)reader["id"],
+                    Name = (string)reader["name"],
+                    Category = (string)reader["categoryName"],
+                    Description = (string)reader["description"],
+                    Weight = (long)reader["weight"],
+                    Price = (decimal)reader["price"],
+                    ShelveDate = (DateTime)reader["shelveDate"],
+                    Stock = (int)reader["stock"],
+                    Origin = (string)reader["originName"]
+                };
+                return data;
+            }
+            catch (Exception ex) { MessageBox.Show($"商品詳細資料獲取失敗\n{ex}"); return null; }
+        }
+        public static string[] DS_GetPictures(string pathname)
+        {
+            var imgString = Form1.Imgpath + @"\" + pathname;
+            if (Directory.Exists(imgString))
+            {
+                return Directory.GetFiles(imgString, "*.jpg");
+            }
+            return [];
         }
     }
 }

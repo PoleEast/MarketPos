@@ -750,13 +750,15 @@ namespace MarketPos
             // 
             // btn_Login
             // 
+            btn_Login.BackColor = SystemColors.GradientActiveCaption;
+            btn_Login.Cursor = Cursors.Hand;
             btn_Login.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btn_Login.Location = new Point(1476, 12);
+            btn_Login.Location = new Point(1442, 14);
             btn_Login.Name = "btn_Login";
             btn_Login.Size = new Size(96, 43);
             btn_Login.TabIndex = 30;
             btn_Login.Text = "註冊/登入";
-            btn_Login.UseVisualStyleBackColor = true;
+            btn_Login.UseVisualStyleBackColor = false;
             btn_Login.Click += btn_Login_Click;
             // 
             // Form1

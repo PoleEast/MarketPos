@@ -15,7 +15,6 @@ namespace MarketPos
     {
         private string[] imageFiles = [];
         public int ProductID;
-        public event EventHandler CustomClick;
         public ProductCard()
         {
             InitializeComponent();

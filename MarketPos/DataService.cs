@@ -1,8 +1,10 @@
 ﻿using Microsoft.SqlServer.Server;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Net.Http;
+using System.Transactions;
 using System.Windows;
 
 namespace MarketPos
@@ -12,7 +14,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=1.175.88.32,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=DESKTOP-QP45LEI\\SQLEXPRESS;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -27,6 +29,9 @@ namespace MarketPos
                 return false;
             }
         }
+
+        //------------------------------------------------------------------------------------------
+        //以下為sql商品相關功能
 
         /// <summary>
         /// 獲取商品卡片
@@ -288,6 +293,91 @@ namespace MarketPos
                 return Directory.GetFiles(imgString, "*.jpg");
             }
             return [];
+        }
+
+        //------------------------------------------------------------------------------------------
+        //以下為會員相關sql功能
+
+        public static async Task DS_Register(string hashPassword,string salt,string name,string account)
+        {
+            if (!await DS_ConnectionSql()) return ;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sqlAccount = @"INSERT INTO Account(account,[password],salt)
+                          VALUES(@account,@password,@salt);
+                          SELECT SCOPE_IDENTITY();";
+            int accountid = 0;
+
+            string sqlMember = @"INSERT INTO Member(name,account)
+                                 VALUES(@name,@account)";
+            conn.Open();
+            using SqlTransaction transaction = conn.BeginTransaction();
+            using (SqlCommand com = new SqlCommand(sqlAccount, conn, transaction))
+            {
+                try
+                {
+
+                    //建立帳號密碼
+                    com.Parameters.AddWithValue("@account", account);
+                    com.Parameters.AddWithValue("@password", hashPassword);
+                    com.Parameters.AddWithValue("@salt", salt);
+                    accountid = Convert.ToInt32(com.ExecuteScalar());
+
+                    //建立會員資料
+                    com.CommandText = sqlMember;
+                    com.Parameters.Clear();
+                    com.Parameters.AddWithValue("@name",name);
+                    com.Parameters.AddWithValue("@account", accountid);
+                    com.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    MessageBox.Show($"歡迎加入會員{name}");
+                }
+                catch (Exception ex) { 
+                    transaction.Rollback();
+                    MessageBox.Show($"帳號創建失敗\n{ex}");
+                    return; 
+                }
+            }
+            
+        }
+        public static async Task<string> DS_LoginGetSalt(string account)
+        {
+            if (!await DS_ConnectionSql()) return "";
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT salt
+                           FROM Account
+                           WHERE account=@account";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@account", account);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                if (!reader.HasRows) return "";
+                reader.Read();
+                return (string)reader["salt"];
+            }
+            catch (Exception ex) { MessageBox.Show($"獲取資料庫資源錯誤\n{ex}");return ""; }
+        }
+        public  static async Task<string> DS_Login(string account,string password)
+        {
+            if ( !await DS_ConnectionSql()) return "";
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT account 
+                           FROM Account 
+                           WHERE account=@account AND password=@password";
+            using SqlCommand com = new SqlCommand( sql, conn);
+            com.Parameters.AddWithValue("@account", account);
+            com.Parameters.AddWithValue("@password", password);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                if (!reader.HasRows) return "";
+                reader.Read();
+                return (string)reader["account"];
+            }
+            catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return ""; }
         }
     }
 }

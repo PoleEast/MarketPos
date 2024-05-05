@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Security.Cryptography;
+using Konscious.Security.Cryptography;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace MarketPos.FormPage
 {
@@ -15,12 +18,98 @@ namespace MarketPos.FormPage
         public LoginForm()
         {
             InitializeComponent();
-            tabControl1.ItemSize = new System.Drawing.Size(0, 1);
+            tbcLogic.ItemSize = new System.Drawing.Size(0, 1);
+        }
+
+        private async void btnR_Register_Click(object sender, EventArgs e)
+        {
+            string name = txbR_Name.Text.Trim();
+            string account = txbR_Account.Text.Trim();
+            string password = txbR_Number.Text.Trim();
+            string check = txbR_CheckN.Text.Trim();
+            List<string> list = [name, account, password, check];
+
+            if (list.Any(string.IsNullOrEmpty)) { MessageBox.Show("請輸入帳號密碼"); return; }
+            if (!password.Equals(check)) { MessageBox.Show("密碼輸入不一致"); return; }
+            if (password.Length < 6) { MessageBox.Show("請輸入正確的密碼格式"); return; }
+
+            //密碼加密
+            byte[] salt = createSalt();
+            string saltStr = Convert.ToBase64String(salt);
+            byte[] hashpassword = GHashPassword(password, salt);
+            string hashpasswordStr = Convert.ToBase64String(hashpassword);
+
+            await DataService.DS_Register(hashpasswordStr, saltStr, name, account);
+            tbcLogic.SelectedIndex = 0;
+        }
+
+        private async void btn_Login_Click(object sender, EventArgs e)
+        {
+            string account = txbL_Account.Text.Trim();
+            string password = txbL_Number.Text.Trim();
+
+            if (string.IsNullOrEmpty(account)) { MessageBox.Show("請輸入帳號密碼"); return; }
+            if (string.IsNullOrEmpty(password)) { MessageBox.Show("請輸入帳號密碼"); return; }
+
+            //密碼處理
+            string saltStr = await DataService.DS_LoginGetSalt(account);
+            if (string.IsNullOrEmpty(saltStr)) { MessageBox.Show("密碼或帳號錯誤"); return; }
+            byte[] salt = Convert.FromBase64String(saltStr);
+            var hashPassword = GHashPassword(password, salt);
+            string hashpasswordStr = Convert.ToBase64String(hashPassword);
+
+            //驗證帳號密碼
+            string checkMember = await DataService.DS_Login(account, hashpasswordStr);
+            if (string.IsNullOrEmpty(checkMember)) { MessageBox.Show("密碼或帳號錯誤"); return; }
+            
+            if(checkMember.Equals(account))
+                LoginSuccess?.Invoke(this, new UserDataEventArgs(user));
+
+        }
+        private void btnForget_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("請與客服聯絡\n聯絡方式:客服忙線中");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectedIndex = 1;
+            tbcLogic.SelectedIndex = 1;
         }
+
+        private void btnR_Cancel_Click(object sender, EventArgs e)
+        {
+            tbcLogic.SelectedIndex = 0;
+        }
+
+        //產生鹽巴
+        private byte[] createSalt()
+        {
+            byte[] buffer = new byte[16];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(buffer);
+            return buffer;
+        }
+
+        //hash來源https://ithelp.ithome.com.tw/articles/10266660
+        private byte[] GHashPassword(string password, byte[] salt)
+        {
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
+            argon2.Salt = salt;
+            argon2.DegreeOfParallelism = 4; // 4 核心就設成 8
+            argon2.Iterations = 3; // 迭代運算次數
+            argon2.MemorySize = 512 * 512; // 1 GB
+
+            return argon2.GetBytes(16);
+        }
+
+        private void txb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar >= 'a' && e.KeyChar <= 'z') ||
+                (e.KeyChar >= 'A' && e.KeyChar <= 'Z') || (char.IsControl(e.KeyChar)))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
+
     }
 }

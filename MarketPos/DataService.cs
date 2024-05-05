@@ -359,7 +359,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"獲取資料庫資源錯誤\n{ex}");return ""; }
         }
-        public  static async Task<string> DS_Login(string account,string password)
+        public static async Task<string> DS_Login(string account,string password)
         {
             if ( !await DS_ConnectionSql()) return "";
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -378,6 +378,26 @@ namespace MarketPos
                 return (string)reader["account"];
             }
             catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return ""; }
+        }
+        public static async Task<string> DS_GetMemberName(string account) 
+        {
+            if (!await DS_ConnectionSql()) return "";
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT name
+                           FROM Account
+                           JOIN [Member]
+                           ON [Member].account=Account.id
+                           WHERE Account.account=@account";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@account",account);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                reader.Read();
+                return (string)reader["name"];
+            }
+            catch (Exception ex) {MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return ""; }
         }
     }
 }

@@ -91,6 +91,7 @@ namespace MarketPos
             lbS_Name = new Label();
             tabControl2 = new TabControl();
             btn_Login = new Button();
+            lbMember = new Label();
             tabControl1.SuspendLayout();
             tbcProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -761,11 +762,22 @@ namespace MarketPos
             btn_Login.UseVisualStyleBackColor = false;
             btn_Login.Click += btn_Login_Click;
             // 
+            // lbMember
+            // 
+            lbMember.AutoEllipsis = true;
+            lbMember.AutoSize = true;
+            lbMember.Font = new Font("Microsoft JhengHei UI", 15.75F, FontStyle.Italic, GraphicsUnit.Point, 136);
+            lbMember.Location = new Point(1244, 20);
+            lbMember.Name = "lbMember";
+            lbMember.Size = new Size(0, 26);
+            lbMember.TabIndex = 31;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1584, 861);
+            Controls.Add(lbMember);
             Controls.Add(btn_Login);
             Controls.Add(tabControl2);
             Controls.Add(label1);
@@ -855,5 +867,6 @@ namespace MarketPos
         private ShoppingCard shoppingCard3;
         private ShoppingCard shoppingCard4;
         private Button btn_Login;
+        private Label lbMember;
     }
 }

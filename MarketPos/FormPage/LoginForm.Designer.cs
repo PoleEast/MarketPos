@@ -39,6 +39,7 @@
             lbL_Welcome = new Label();
             tbcLogic = new TabControl();
             tbLogin = new TabPage();
+            btnForget = new Button();
             tbRegister = new TabPage();
             lbR_Name = new Label();
             txbR_Name = new TextBox();
@@ -51,7 +52,6 @@
             lbR_Number = new Label();
             txbR_Account = new TextBox();
             txbR_Number = new TextBox();
-            btnForget = new Button();
             ((System.ComponentModel.ISupportInitialize)ptbLogo).BeginInit();
             tbcLogic.SuspendLayout();
             tbLogin.SuspendLayout();
@@ -173,6 +173,17 @@
             tbLogin.TabIndex = 0;
             tbLogin.Text = "tabPage1";
             tbLogin.UseVisualStyleBackColor = true;
+            // 
+            // btnForget
+            // 
+            btnForget.Font = new Font("Microsoft JhengHei UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnForget.Location = new Point(11, 252);
+            btnForget.Name = "btnForget";
+            btnForget.Size = new Size(69, 24);
+            btnForget.TabIndex = 36;
+            btnForget.Text = "忘記密碼";
+            btnForget.UseVisualStyleBackColor = true;
+            btnForget.Click += btnForget_Click;
             // 
             // tbRegister
             // 
@@ -310,17 +321,6 @@
             txbR_Number.Size = new Size(211, 28);
             txbR_Number.TabIndex = 36;
             txbR_Number.KeyPress += txb_KeyPress;
-            // 
-            // btnForget
-            // 
-            btnForget.Font = new Font("Microsoft JhengHei UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnForget.Location = new Point(11, 252);
-            btnForget.Name = "btnForget";
-            btnForget.Size = new Size(69, 24);
-            btnForget.TabIndex = 36;
-            btnForget.Text = "忘記密碼";
-            btnForget.UseVisualStyleBackColor = true;
-            btnForget.Click += btnForget_Click;
             // 
             // LoginForm
             // 

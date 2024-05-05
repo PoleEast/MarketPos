@@ -14,6 +14,7 @@ namespace MarketPos
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
+        private static (string, string) memberinfornation=("","");
         public static List<ProductsData> productsDatas = [];
         private List<ProductCard> productCards = [];
         public Form1()
@@ -308,9 +309,29 @@ namespace MarketPos
 
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            LoginForm loginForm = new LoginForm();
-            loginForm.StartPosition = FormStartPosition.CenterParent;
-            loginForm.ShowDialog();
+            if (memberinfornation == ("", ""))
+            {
+                LoginForm loginForm = new LoginForm();
+                loginForm.StartPosition = FormStartPosition.CenterParent;
+                loginForm.LoginSuccess += LoginForm_LoginSuccess;
+                loginForm.ShowDialog();
+            }else
+            {
+                //登出功能
+                btn_Login.Text = "註冊/登入";
+            }
+        }
+        private async void LoginForm_LoginSuccess(object? sender, (string,string) e)
+        {
+            if (sender == null) { MessageBox.Show("登入視窗為空"); return; }
+
+            string name = await DataService.DS_GetMemberName(e.Item1);
+            if(string.IsNullOrEmpty(name)) { MessageBox.Show("查無此用戶名稱"); return; };
+            memberinfornation = e;
+            lbMember.Text = $"歡迎回來: {name}";
+            if(sender is LoginForm loginForm)
+                loginForm.LoginSuccess -= LoginForm_LoginSuccess;
+            btn_Login.Text = "登出";
         }
     }
 }

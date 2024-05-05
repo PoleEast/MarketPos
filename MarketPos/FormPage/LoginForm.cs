@@ -15,6 +15,7 @@ namespace MarketPos.FormPage
 {
     public partial class LoginForm : Form
     {
+        public event EventHandler<(string, string)>? LoginSuccess;
         public LoginForm()
         {
             InitializeComponent();
@@ -61,10 +62,13 @@ namespace MarketPos.FormPage
             //驗證帳號密碼
             string checkMember = await DataService.DS_Login(account, hashpasswordStr);
             if (string.IsNullOrEmpty(checkMember)) { MessageBox.Show("密碼或帳號錯誤"); return; }
-            
-            if(checkMember.Equals(account))
-                LoginSuccess?.Invoke(this, new UserDataEventArgs(user));
 
+            if (checkMember.Equals(account))
+            {
+                MessageBox.Show("登入成功!!");
+                LoginSuccess?.Invoke(this, (account, hashpasswordStr));
+                this.Close();
+            }
         }
         private void btnForget_Click(object sender, EventArgs e)
         {

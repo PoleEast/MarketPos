@@ -257,6 +257,8 @@ namespace MarketPos
 
             await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
             if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
+            productSort("名稱", true);
+            cb_Sort.SelectedIndex = 0;
             Set_Page();
         }
 
@@ -276,13 +278,17 @@ namespace MarketPos
                 btnS_PriceToggle.Text = "以上";
         }
 
-        private void btnS_Clear_Click(object sender, EventArgs e)
+        private async void btnS_Clear_Click(object sender, EventArgs e)
         {
             txbS_Name.Text = "";
             txbS_Price.Text = "";
             txbS_weight.Text = "";
             cbS_Category.SelectedIndex = -1;
             cbS_Origin.SelectedIndex = -1;
+            cb_Sort.SelectedIndex = 0;
+            await DataService.P_getProductCardsDatas();
+            productSort("名稱", true);
+            Set_Page();
         }
 
         private void cb_Sort_SelectedIndexChanged(object? sender, EventArgs e)

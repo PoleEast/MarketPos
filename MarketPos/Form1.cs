@@ -110,20 +110,21 @@ namespace MarketPos
         public void productSort(string condition, bool mode)
         {
             if (condition == "名稱")
-                productsDatas.Sort((a, b) => mode ? (mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name)) : 0);
+                productsDatas.Sort((a, b) => mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name));
             else if (condition == "種類")
-                productsDatas.Sort((a, b) => mode ? (mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category)) : 0);
+                productsDatas.Sort((a, b) => mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category));
             else if (condition == "價格")
-                productsDatas.Sort((a, b) => mode ? (mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price)) : 0);
+                productsDatas.Sort((a, b) => mode ?  -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
             else if (condition == "重量")
-                productsDatas.Sort((a, b) => mode ? (mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight)) : 0);
+                productsDatas.Sort((a, b) => mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight));
             else if (condition == "產地")
-                productsDatas.Sort((a, b) => mode ? (mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin)) : 0);
+                productsDatas.Sort((a, b) => mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin));
             else
             {
                 MessageBox.Show("商品排序出現錯誤");
                 return;
             }
+            //UI設定
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
@@ -241,7 +242,7 @@ namespace MarketPos
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)
-        {
+        { 
             ProductsData productData = new ProductsData();
             try
             {
@@ -257,8 +258,12 @@ namespace MarketPos
 
             await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
             if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
-            productSort("名稱", true);
-            cb_Sort.SelectedIndex = 0;
+            if (ptb_Sort.Tag == null)
+            {
+                MessageBox.Show("找不到ptb_Sort.tag");
+                return;
+            }
+            productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
         }
 
@@ -287,7 +292,12 @@ namespace MarketPos
             cbS_Origin.SelectedIndex = -1;
             cb_Sort.SelectedIndex = 0;
             await DataService.P_getProductCardsDatas();
-            productSort("名稱", true);
+            if (ptb_Sort.Tag == null)
+            {
+                MessageBox.Show("找不到ptb_Sort.tag");
+                return;
+            }
+            productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
         }
 

@@ -61,7 +61,7 @@ namespace MarketPos
 
         private async void ProductCard_Click(object sender, EventArgs e)
         {
-            ProductsData? data = await DataService.DS_GetDetailProductCard(ProductID);
+            ProductsData? data = await DataService.P_GetDetailProductCard(ProductID);
             if (data == null) return;
             Detail_PCard detail_PCard = new(data);
             detail_PCard.StartPosition = FormStartPosition.CenterParent;

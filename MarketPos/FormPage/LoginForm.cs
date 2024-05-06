@@ -15,7 +15,7 @@ namespace MarketPos.FormPage
 {
     public partial class LoginForm : Form
     {
-        public event EventHandler<(string, string)>? LoginSuccess;
+        public event EventHandler<Member>? LoginSuccess;
         public LoginForm()
         {
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace MarketPos.FormPage
             byte[] hashpassword = GHashPassword(password, salt);
             string hashpasswordStr = Convert.ToBase64String(hashpassword);
 
-            await DataService.DS_Register(hashpasswordStr, saltStr, name, account);
+            await DataService.MeMem_GetMemberName(hashpasswordStr, saltStr, name, account);
             tbcLogic.SelectedIndex = 0;
         }
 
@@ -53,20 +53,20 @@ namespace MarketPos.FormPage
             if (string.IsNullOrEmpty(password)) { MessageBox.Show("請輸入帳號密碼"); return; }
 
             //密碼處理
-            string saltStr = await DataService.DS_LoginGetSalt(account);
+            string saltStr = await DataService.MeMem_LoginGetSalt(account);
             if (string.IsNullOrEmpty(saltStr)) { MessageBox.Show("密碼或帳號錯誤"); return; }
             byte[] salt = Convert.FromBase64String(saltStr);
             var hashPassword = GHashPassword(password, salt);
             string hashpasswordStr = Convert.ToBase64String(hashPassword);
 
             //驗證帳號密碼
-            string checkMember = await DataService.DS_Login(account, hashpasswordStr);
-            if (string.IsNullOrEmpty(checkMember)) { MessageBox.Show("密碼或帳號錯誤"); return; }
+            var checkMember = await DataService.Mem_Login(account, hashpasswordStr);
+            if (checkMember.Id == 0) { MessageBox.Show("密碼或帳號錯誤"); return; }
 
-            if (checkMember.Equals(account))
+            if (checkMember.Account.Equals(account))
             {
                 MessageBox.Show("登入成功!!");
-                LoginSuccess?.Invoke(this, (account, hashpasswordStr));
+                LoginSuccess?.Invoke(this, checkMember);
                 this.Close();
             }
         }

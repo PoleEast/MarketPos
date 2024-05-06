@@ -92,6 +92,7 @@ namespace MarketPos
             tabControl2 = new TabControl();
             btn_Login = new Button();
             lbMember = new Label();
+            btntest = new Button();
             tabControl1.SuspendLayout();
             tbcProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -523,6 +524,7 @@ namespace MarketPos
             // 
             // tbpMemSerch
             // 
+            tbpMemSerch.Controls.Add(btntest);
             tbpMemSerch.Controls.Add(flowLayoutPanel1);
             tbpMemSerch.Controls.Add(btnS_Clear);
             tbpMemSerch.Controls.Add(btnS_Search);
@@ -772,6 +774,17 @@ namespace MarketPos
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
             // 
+            // btntest
+            // 
+            btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btntest.Location = new Point(30, 303);
+            btntest.Name = "btntest";
+            btntest.Size = new Size(96, 43);
+            btntest.TabIndex = 32;
+            btntest.Text = "測試";
+            btntest.UseVisualStyleBackColor = true;
+            btntest.Click += btntest_Click_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -868,5 +881,6 @@ namespace MarketPos
         private ShoppingCard shoppingCard4;
         private Button btn_Login;
         private Label lbMember;
+        private Button btntest;
     }
 }

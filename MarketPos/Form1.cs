@@ -14,18 +14,26 @@ namespace MarketPos
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
-        private static (string, string) memberinfornation=("","");
+        private static Member? member;
         public static List<ProductsData> productsDatas = [];
         private List<ProductCard> productCards = [];
+        private int nextOrderNum;
         public Form1()
         {
             InitializeComponent();
+            //int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear + todayOrder.ToString("0000"));
+
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await DataService.DS_getProductCardsDatas();
+            await DataService.P_getProductCardsDatas();
 
+            //設定最新訂單編號 格式ex:"yydddoooo"
+            string latestOrderNum = (await DataService.getLatestOrderNum()).ToString();
+
+            nextOrderNum = latestOrderNum.Substring(0, 5) == DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") ?
+                int.Parse(latestOrderNum) - (int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + "0000")) + 1 : 1;
 
             //抓取介面所有卡片
             productCards.Add(productCard1);
@@ -91,7 +99,7 @@ namespace MarketPos
                 Stock = cbAddP_stock.SelectedIndex,
                 Origin = cbAddP_origin.Text
             };
-            DataService.DS_insertProduct(productData);
+            DataService.P_insertProduct(productData);
         }
 
         /// <summary>
@@ -141,11 +149,6 @@ namespace MarketPos
             insertProduct();
         }
 
-        private void btntest_Click(object sender, EventArgs e)
-        {
-
-        }
-
         //限制輸入為數字
         private void check_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -164,7 +167,7 @@ namespace MarketPos
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
-            await DataService.DS_AddCategoryType(userInput.userinput);
+            await DataService.P_AddCategoryType(userInput.userinput);
             cb_init();
         }
 
@@ -180,7 +183,7 @@ namespace MarketPos
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
             //將新類別輸入資料庫
-            await DataService.DS_AddOriginType(userInput.userinput);
+            await DataService.P_AddOriginType(userInput.userinput);
             cb_init();
         }
 
@@ -226,8 +229,8 @@ namespace MarketPos
             cbAddP_stock.Items.Clear();
             cbS_Category.Items.Clear();
             cbS_Origin.Items.Clear();
-            await DataService.DS_GetCategoryType();
-            await DataService.DS_GetOriginType();
+            await DataService.P_GetCategoryType();
+            await DataService.P_GetOriginType();
             for (int i = 0; i < 100; i++)
                 cbAddP_stock.Items.Add(i);
 
@@ -252,7 +255,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
-            await DataService.DS_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
+            await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
             if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
             Set_Page();
         }
@@ -309,29 +312,51 @@ namespace MarketPos
 
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            if (memberinfornation == ("", ""))
+            if (member == null)
             {
                 LoginForm loginForm = new LoginForm();
                 loginForm.StartPosition = FormStartPosition.CenterParent;
-                loginForm.LoginSuccess += LoginForm_LoginSuccess;
+                loginForm.LoginSuccess += LoginForMem_LoginSuccess;
                 loginForm.ShowDialog();
-            }else
+            }
+            else
             {
                 //登出功能
+                member = null;
                 btn_Login.Text = "註冊/登入";
             }
         }
-        private async void LoginForm_LoginSuccess(object? sender, (string,string) e)
+        private void LoginForMem_LoginSuccess(object? sender, Member e)
         {
             if (sender == null) { MessageBox.Show("登入視窗為空"); return; }
 
-            string name = await DataService.DS_GetMemberName(e.Item1);
-            if(string.IsNullOrEmpty(name)) { MessageBox.Show("查無此用戶名稱"); return; };
-            memberinfornation = e;
-            lbMember.Text = $"歡迎回來: {name}";
-            if(sender is LoginForm loginForm)
-                loginForm.LoginSuccess -= LoginForm_LoginSuccess;
+            if (e.Id == 0) { MessageBox.Show("查無此用戶名稱"); return; };
+            member = e;
+            lbMember.Text = $"歡迎回來: {member.Name}";
+            if (sender is LoginForm loginForm)
+                loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
+            getShoppingCard();
+        }
+
+        private async void getShoppingCard()
+        {
+            if (member == null) return;
+            int id = await DataService.Mem_GetMemberShopping(member.Id);
+            if (id == 0)
+            {
+                await DataService.Mem_CreateNewShopping(getlatestOrderNum(), member.Id);
+                id = await DataService.Mem_GetMemberShopping(member.Id);
+            }
+        }
+
+        private void btntest_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show(getlatestOrderNum().ToString());
+        }
+        private int getlatestOrderNum()
+        {
+            return int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + nextOrderNum.ToString("0000"));
         }
     }
 }

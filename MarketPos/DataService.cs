@@ -14,7 +14,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=DESKTOP-QP45LEI\\SQLEXPRESS;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=1.175.88.184,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -36,7 +36,7 @@ namespace MarketPos
         /// <summary>
         /// 獲取商品卡片
         /// </summary>
-        public static async Task DS_getProductCardsDatas()
+        public static async Task P_getProductCardsDatas()
         {
             List<ProductsData> products = [];
             if (!await DS_ConnectionSql()) return;
@@ -72,7 +72,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"獲取商品資料發生錯誤\n {ex} "); }
         }
 
-        public static async void DS_insertProduct(ProductsData productsData)
+        public static async void P_insertProduct(ProductsData productsData)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new(ConnString);
@@ -104,7 +104,7 @@ namespace MarketPos
         /// weightOrder true為以上，false為以下
         /// </summary>
         /// <returns>查到的資料列表</returns>
-        public static async Task DS_SelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
+        public static async Task P_SelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
         {
             List<ProductsData> productsDatas = [];
             if (!await DS_ConnectionSql()) return;
@@ -171,7 +171,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"差尋錯誤:\n{ex}"); }
         }
-        public static async Task DS_GetCategoryType()
+        public static async Task P_GetCategoryType()
         {
             if (!await DS_ConnectionSql()) return;
             categorysDict.Clear();
@@ -193,7 +193,7 @@ namespace MarketPos
             }
 
         }
-        public static async Task DS_GetOriginType()
+        public static async Task P_GetOriginType()
         {
             if (!await DS_ConnectionSql()) return;
             originsDict.Clear();
@@ -216,7 +216,7 @@ namespace MarketPos
 
         }
 
-        public static async Task DS_AddCategoryType(string category)
+        public static async Task P_AddCategoryType(string category)
         {
             if (!await DS_ConnectionSql()) return;
 
@@ -234,7 +234,7 @@ namespace MarketPos
 
         }
 
-        public static async Task DS_AddOriginType(string origin)
+        public static async Task P_AddOriginType(string origin)
         {
             if (!await DS_ConnectionSql()) return;
 
@@ -251,7 +251,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
         }
 
-        public static async Task<ProductsData?> DS_GetDetailProductCard(int productCard)
+        public static async Task<ProductsData?> P_GetDetailProductCard(int productCard)
         {
             if (!await DS_ConnectionSql()) return null;
 
@@ -298,9 +298,9 @@ namespace MarketPos
         //------------------------------------------------------------------------------------------
         //以下為會員相關sql功能
 
-        public static async Task DS_Register(string hashPassword,string salt,string name,string account)
+        public static async Task MeMem_GetMemberName(string hashPassword, string salt, string name, string account)
         {
-            if (!await DS_ConnectionSql()) return ;
+            if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sqlAccount = @"INSERT INTO Account(account,[password],salt)
                           VALUES(@account,@password,@salt);
@@ -325,22 +325,23 @@ namespace MarketPos
                     //建立會員資料
                     com.CommandText = sqlMember;
                     com.Parameters.Clear();
-                    com.Parameters.AddWithValue("@name",name);
+                    com.Parameters.AddWithValue("@name", name);
                     com.Parameters.AddWithValue("@account", accountid);
                     com.ExecuteNonQuery();
 
                     transaction.Commit();
                     MessageBox.Show($"歡迎加入會員{name}");
                 }
-                catch (Exception ex) { 
+                catch (Exception ex)
+                {
                     transaction.Rollback();
                     MessageBox.Show($"帳號創建失敗\n{ex}");
-                    return; 
+                    return;
                 }
             }
-            
+
         }
-        public static async Task<string> DS_LoginGetSalt(string account)
+        public static async Task<string> MeMem_LoginGetSalt(string account)
         {
             if (!await DS_ConnectionSql()) return "";
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -357,47 +358,99 @@ namespace MarketPos
                 reader.Read();
                 return (string)reader["salt"];
             }
-            catch (Exception ex) { MessageBox.Show($"獲取資料庫資源錯誤\n{ex}");return ""; }
+            catch (Exception ex) { MessageBox.Show($"獲取資料庫資源錯誤\n{ex}"); return ""; }
         }
-        public static async Task<string> DS_Login(string account,string password)
+        public static async Task<Member> Mem_Login(string account, string password)
         {
-            if ( !await DS_ConnectionSql()) return "";
+            Member member = new Member();
+            if (!await DS_ConnectionSql()) return member;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT account 
-                           FROM Account 
-                           WHERE account=@account AND password=@password";
-            using SqlCommand com = new SqlCommand( sql, conn);
+            string sql = @"SELECT Account.account,name,Member.id as ID, Account.password as password
+                           FROM Account
+                           JOIN [Member]
+                           ON [Member].account=Account.id
+                           WHERE Account.account=@account AND Account.password=@password";
+            using SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@account", account);
             com.Parameters.AddWithValue("@password", password);
             try
             {
                 conn.Open();
                 using SqlDataReader reader = com.ExecuteReader();
-                if (!reader.HasRows) return "";
+                if (!reader.HasRows) return member;
                 reader.Read();
-                return (string)reader["account"];
+                member.Id = (int)reader["id"];
+                member.Name = (string)reader["name"];
+                member.Account = (string)reader["account"];
+                member.HashPassword = (string)reader["password"];
+                return member;
             }
-            catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return ""; }
+            catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return member; }
         }
-        public static async Task<string> DS_GetMemberName(string account) 
+
+        //---------------------------------------------------------------------
+        //以下為訂單相關功能
+
+        /// <summary></summary>
+        /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
+        public static async Task<int> Mem_GetMemberShopping(int id)
         {
-            if (!await DS_ConnectionSql()) return "";
+            if (!await DS_ConnectionSql()) return -1;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT name
-                           FROM Account
-                           JOIN [Member]
-                           ON [Member].account=Account.id
-                           WHERE Account.account=@account";
+            string sql = @"SELECT Orders.id as id
+                           FROM Member
+                           JOIN Orders
+                           ON Member.id=Orders.memberID
+                           WHERE Member.id=@id AND Orders.isPaid=0";
             using SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@account",account);
+            com.Parameters.AddWithValue("@id", id);
             try
             {
                 conn.Open();
                 using SqlDataReader reader = com.ExecuteReader();
+                if (!reader.HasRows) return 0;
                 reader.Read();
-                return (string)reader["name"];
+                return (int)reader["id"];
             }
-            catch (Exception ex) {MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return ""; }
+            catch (Exception ex) { MessageBox.Show($"訂單獲取失敗{ex}"); return -1; };
+        }
+
+        /// <summary></summary>
+        /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
+        /// 
+        public static async Task<int> getLatestOrderNum()
+        {
+            if (!await DS_ConnectionSql()) return -1;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT MAX(id) AS id
+                           FROM Orders";
+            SqlCommand com = new SqlCommand(sql, conn);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                if (!reader.HasRows) return -1;
+                reader.Read();
+                return (int)reader["id"];
+            }
+            catch (Exception ex) { MessageBox.Show($"獲取最新訂單編號失敗\n{ex}"); return -1; }
+        }
+
+        public static async Task Mem_CreateNewShopping(int orderID, int memberid)
+        {
+            if (!await DS_ConnectionSql()) return;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"INSERT INTO Orders(id,memberID)
+                           VALUES(@id,@memberID)";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@id", orderID);
+            com.Parameters.AddWithValue("@memberID", memberid);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"創建新購物清單失敗\n{ex}"); return; }
         }
     }
 }

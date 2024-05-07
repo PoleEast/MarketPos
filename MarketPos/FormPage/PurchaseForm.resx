@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+  <!--
     Microsoft ResX Schema 
-    
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -117,23 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="shopping_cart" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\shopping-cart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="StoreIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\StoreIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ascendingOrder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sortingup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="descendingOrder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sortingdown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="buy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\buy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="order" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\order.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAG8AAABvAAAAAAAAAAAA
+        AAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAAAARsRBsgUDAQ/DAYAKjok
+        DZsKCgUx////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAsHBEWEUx7zHhMH0zok
+        DuDkjzX/JBYIxP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wAqGgq47pU3/69v
+        KfnslDf/TTAS5BYPB0X///8A////AP///wD///8A////AP///wD///8AAAAAKP///wAAAAAMSS4R3/+g
+        O///oDv/wnot/R0SB9UJCQQ7////AP///wD///8A////AP///wD///8A////AAAAAG0AAABbGhEFbLRx
+        Kfr/oDv//6A7//qdOv+gZCX6GQ8G2P///wAAAAAUAAAAGAAAABgAAAAIAAAAAgAAAAUAAAAYAAAADS8e
+        CsX7nTr/y4Av/l88FuQrHArJFQwFawAAAAgMIRe7HUw15x9TOecfUznnOJRn1z+ndNNAqHXTIVk+5Ua5
+        gc8/aUTmPEEk9DVlQ+VIv4bONpBk2BlBLucOIxmXGD4r4VPbmf9T25n/U9uZ/1Pbmf9T25n/U9uZ/03M
+        jv8eUDj/TcyP/1LYl/9BrHj/U9uZ/1Pbmf9T25n/EzMj0hg/LOJT25n/U9uZ/1Pbmf9T25n/U9uZ/1Pb
+        mf9Dsnz/SL2E/y98Vv9Es33/LXdT/zeQZf9T25n/U9uZ/xM1JdMYPyziU9uZ/1Pbmf8+o3L/HU02/ylr
+        S/9JwIb/HEs0/y56Vf9Crnr/MH9Z/03Ljv9S2Jf/U9uZ/1Pbmf8TNSXTGD8s4lPbmf9T25n/NIlf/zuc
+        bf8XPCr/LHRR/z2hcP8WOyn/U9uZ/yNeQf9HvIP/U9uZ/1Pbmf9T25n/EzUl0xg/LOJT25n/U9uZ/zSJ
+        X/8bRzL/IFQ7/yltTP9Dsnz/GkQv/07Pkf8WOin/JmVH/1Pbmf9T25n/U9uZ/xM1JdMYPyziU9uZ/1Pb
+        mf82jmP/GUIu/xpFMP8sdVL/RriA/x9ROP8tdlL/Qa15/yFWPP9NzI7/U9uZ/1Pbmf8TNSXTGD8s4lPb
+        mf9T25n/U9uZ/1HVlf9T25n/U9uZ/1Pbmf9T25n/U9uZ/1Pbmf9T25n/U9uZ/1Pbmf9T25n/EzUl0xU4
+        J+JT25n/U9uZ/1Pbmf9T25n/U9uZ/1Pbmf9T25n/U9uZ/1Pbmf9T25n/U9uZ/1Pbmf9T25n/U9qY/xIv
+        IdMNIxmZEzAi3BQ0JNwUNCTcFDQk3BQ0JNwUNCTcFDQk3BQ0JNwUNCTcFDQk3BQ0JNwUNCTcFDQk3BAs
+        Ht0NJhtz/8AAAP/AAAD/wAAA/oAAAP4AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAA==
+</value>
   </data>
 </root>

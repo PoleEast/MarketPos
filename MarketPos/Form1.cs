@@ -8,6 +8,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Xml.Linq;
 using MarketPos.Properties;
 using MarketPos.FormPage;
+using System.Drawing.Printing;
 
 namespace MarketPos
 {
@@ -48,6 +49,7 @@ namespace MarketPos
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
             Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded;
+            ShoppingCard.OrderItemChange += ShoppingCard_OrderItemChange;
 
             //暫時使用
             productSort("名稱", true);
@@ -342,6 +344,8 @@ namespace MarketPos
                 flp_shoppingCar.Controls.Clear();
                 orderDetail = [];
                 btn_Login.Text = "註冊/登入";
+                ptb_Buy.Enabled = false;
+                ptb_Buy.Visible = false;
             }
         }
         private async void LoginForMem_LoginSuccess(object? sender, Member e)
@@ -354,6 +358,8 @@ namespace MarketPos
             if (sender is LoginForm loginForm)
                 loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
+            ptb_Buy.Enabled = true;
+            ptb_Buy.Visible = true;
             getShoppingOrderID();
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
@@ -373,6 +379,13 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
+            PurchaseForm purchaseForm = new PurchaseForm();
+            purchaseForm.StartPosition = FormStartPosition.CenterParent;
+            purchaseForm.SetForm(123);
+            purchaseForm.ShowDialog();
+
+            if (purchaseForm.DialogResult == DialogResult.OK)
+                MessageBox.Show(purchaseForm.OName + "\n" + purchaseForm.payment);
         }
         private int Odr_getLatestOrderNum()
         {
@@ -391,6 +404,15 @@ namespace MarketPos
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
         }
+        private async void ShoppingCard_OrderItemChange(object? sender, KeyValuePair<int, int> e)
+        {
+            if (member == null) return;
+
+            await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
+            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetail);
+        }
+
         private void setShoppingCard(Dictionary<int, int> orderDetail)
         {
             flp_shoppingCar.Controls.Clear();
@@ -413,6 +435,14 @@ namespace MarketPos
             if (shoppingCards.Count == 0)
                 txbTotal.Text = string.Empty;
             else txbTotal.Text = "總金額:" + shoppingCards.Sum(o => o.total).ToString() + "$";
+
+        }
+
+        private void ptb_Buy_Click(object sender, EventArgs e)
+        {
+            if (member == null) { MessageBox.Show("請先登入會員"); return; }
+            if (orderDetail.Count == 0) { MessageBox.Show("購物車目前是空空的"); return; }
+
 
         }
     }

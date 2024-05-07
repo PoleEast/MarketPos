@@ -478,5 +478,23 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"訂單商品數量更新失敗\n{ex}"); return; }
         }
+
+        public static async Task<Dictionary<int, string>> Odr_GetPayment()
+        {
+            Dictionary<int, string> payments = [];
+            if (!await DS_ConnectionSql()) return payments;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * FROM [PaymentMethods]";
+            SqlCommand com = new SqlCommand(sql, conn);
+            try
+            {
+                conn.Open();
+                SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
+                    payments.Add((int)reader["id"], (string)reader["name"]);
+                return payments;
+            }
+            catch (Exception ex) { MessageBox.Show($"獲取付款方式失敗\n{ex}"); return payments; }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace MarketPos
     public partial class ShoppingCard : UserControl
     {
         private ProductsData? productsData;
+        public static event EventHandler<KeyValuePair<int, int>>? OrderItemChange;
         public int total;
         public ShoppingCard()
         {
@@ -28,6 +29,16 @@ namespace MarketPos
             cbCount.SelectedIndex = quantity - 1;
             txbTotal.Text += (data.Price * quantity) + "$";
             total = Convert.ToInt16(data.Price * quantity);
+            cbCount.SelectedIndexChanged += cbCount_SelectedIndexChanged;
+        }
+
+        private void cbCount_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (sender == null) return;
+            if (productsData == null) return;
+
+            KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbCount.SelectedIndex + 1);
+            OrderItemChange?.Invoke(this, orderDetail);
         }
     }
 }

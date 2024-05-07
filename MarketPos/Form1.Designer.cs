@@ -70,7 +70,7 @@ namespace MarketPos
             btnAddOriginType = new Button();
             lbAddP_price = new Label();
             tbpMemSerch = new TabPage();
-            pictureBox1 = new PictureBox();
+            ptb_Buy = new PictureBox();
             txbTotal = new TextBox();
             btntest = new Button();
             flp_shoppingCar = new FlowLayoutPanel();
@@ -96,7 +96,7 @@ namespace MarketPos
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
             tbpControl.SuspendLayout();
             tbpMemSerch.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ptb_Buy).BeginInit();
             tabControl2.SuspendLayout();
             SuspendLayout();
             // 
@@ -522,7 +522,7 @@ namespace MarketPos
             // 
             // tbpMemSerch
             // 
-            tbpMemSerch.Controls.Add(pictureBox1);
+            tbpMemSerch.Controls.Add(ptb_Buy);
             tbpMemSerch.Controls.Add(txbTotal);
             tbpMemSerch.Controls.Add(btntest);
             tbpMemSerch.Controls.Add(flp_shoppingCar);
@@ -548,16 +548,19 @@ namespace MarketPos
             tbpMemSerch.Text = "商品查詢";
             tbpMemSerch.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // ptb_Buy
             // 
-            pictureBox1.Cursor = Cursors.Hand;
-            pictureBox1.Image = Properties.Resources.buy;
-            pictureBox1.Location = new Point(343, 702);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Padding = new Padding(3);
-            pictureBox1.Size = new Size(94, 52);
-            pictureBox1.TabIndex = 35;
-            pictureBox1.TabStop = false;
+            ptb_Buy.Cursor = Cursors.Hand;
+            ptb_Buy.Enabled = false;
+            ptb_Buy.Image = Properties.Resources.buy;
+            ptb_Buy.Location = new Point(343, 702);
+            ptb_Buy.Name = "ptb_Buy";
+            ptb_Buy.Padding = new Padding(3);
+            ptb_Buy.Size = new Size(94, 52);
+            ptb_Buy.TabIndex = 35;
+            ptb_Buy.TabStop = false;
+            ptb_Buy.Visible = false;
+            ptb_Buy.Click += ptb_Buy_Click;
             // 
             // txbTotal
             // 
@@ -791,7 +794,7 @@ namespace MarketPos
             tbpControl.PerformLayout();
             tbpMemSerch.ResumeLayout(false);
             tbpMemSerch.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ptb_Buy).EndInit();
             tabControl2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -863,6 +866,6 @@ namespace MarketPos
         private Label lbMember;
         private Button btntest;
         private TextBox txbTotal;
-        private PictureBox pictureBox1;
+        private PictureBox ptb_Buy;
     }
 }

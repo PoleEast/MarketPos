@@ -12,7 +12,7 @@ namespace MarketPos
 {
     public partial class Detail_PCard : Form
     {
-        public static event EventHandler? OrderItemAdded;
+        public static event EventHandler<KeyValuePair<int, int>>? OrderItemAdded;
         private ProductsData productsData = new();
         private string[] imageFiles = [];
         public Detail_PCard(ProductsData productsData)
@@ -38,16 +38,13 @@ namespace MarketPos
             cbQuantity.SelectedIndex = 0;
         }
 
-        private async void btnS_Search_Click(object sender, EventArgs e)
+        private void btnS_Search_Click(object sender, EventArgs e)
         {
             if (Form1.member == null) { MessageBox.Show("請先登入會員"); return; }
             if (!(cbQuantity.SelectedIndex >= 0)) { MessageBox.Show("請選擇數量"); return; }
 
-            MessageBox.Show("要處理已有重複商品的情況");
-            //要處理已有重複商品的情況
-
-            await DataService.Odr_CreateOrderDetail(Form1.member.OrderId, productsData.Id, cbQuantity.SelectedIndex + 1);
-            OrderItemAdded?.Invoke(this, e);
+            KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbQuantity.SelectedIndex + 1);
+            OrderItemAdded?.Invoke(this, orderDetail);
             this.Close();
         }
     }

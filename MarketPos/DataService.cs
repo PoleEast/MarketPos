@@ -459,5 +459,24 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"獲取商品詳細清單錯誤\n{ex}"); return []; }
         }
+
+        public static async Task Odr_UpdateOrderDetail(int orderid, int productid, int quantity)
+        {
+            if (!await DS_ConnectionSql()) { return; }
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE OrderDetails 
+                           SET quantity = @quantity
+                           WHERE orderID = @orderid AND productID=@productid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            com.Parameters.AddWithValue("@productid", productid);
+            com.Parameters.AddWithValue("@quantity", quantity);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"訂單商品數量更新失敗\n{ex}"); return; }
+        }
     }
 }

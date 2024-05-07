@@ -16,6 +16,7 @@ namespace MarketPos
         public static string Imgpath = @"../../../ProductsImg";
         public static Member? member;
         public static List<ProductsData> productsDatas = [];
+        private static Dictionary<int, int> orderDetail = [];
         private List<ProductCard> productCards = [];
         private int nextOrderNum;
         public Form1()
@@ -46,7 +47,7 @@ namespace MarketPos
             //UI初始化用
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
-            Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded; ;
+            Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded;
 
             //暫時使用
             productSort("名稱", true);
@@ -339,6 +340,7 @@ namespace MarketPos
                 //登出功能
                 member = null;
                 flp_shoppingCar.Controls.Clear();
+                orderDetail = [];
                 btn_Login.Text = "註冊/登入";
             }
         }
@@ -353,7 +355,7 @@ namespace MarketPos
                 loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
             getShoppingOrderID();
-            var orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
         }
 
@@ -377,14 +379,21 @@ namespace MarketPos
             return int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + nextOrderNum.ToString("0000"));
         }
 
-        private async void Detail_PCard_OrderItemAdded(object? sender, EventArgs e)
+        private async void Detail_PCard_OrderItemAdded(object? sender, KeyValuePair<int, int> e)
         {
             if (member == null) return;
-            var orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+
+            if (!orderDetail.ContainsKey(e.Key))
+                await DataService.Odr_CreateOrderDetail(member.OrderId, e.Key, e.Value);
+            else
+                await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
+
+            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
         }
         private void setShoppingCard(Dictionary<int, int> orderDetail)
         {
+            flp_shoppingCar.Controls.Clear();
             foreach (var item in orderDetail)
             {
                 ShoppingCard shoppingCard = new ShoppingCard();

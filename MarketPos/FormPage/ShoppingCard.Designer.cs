@@ -114,7 +114,7 @@
             Controls.Add(cbCount);
             Controls.Add(lbName);
             Name = "ShoppingCard";
-            Size = new Size(408, 89);
+            Size = new Size(416, 89);
             ResumeLayout(false);
             PerformLayout();
         }

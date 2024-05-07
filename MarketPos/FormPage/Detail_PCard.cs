@@ -12,33 +12,37 @@ namespace MarketPos
 {
     public partial class Detail_PCard : Form
     {
-        private ProductsData ProductsData = new();
+        private ProductsData productsData = new();
         private string[] imageFiles = [];
         public Detail_PCard(ProductsData productsData)
         {
             InitializeComponent();
-            ProductsData = productsData;
-            this.Text = ProductsData.Name;
+            this.productsData = productsData;
+            this.Text = productsData.Name;
         }
         private void Detail_PCard_Load(object sender, EventArgs e)
         {
-            lbName.Text = ProductsData.Name;
-            lbOrigin.Text += ProductsData.Origin;
-            lbPrice.Text += Math.Floor(ProductsData.Price).ToString() + "$";
-            lbStock.Text += ProductsData.Stock.ToString();
-            lbWeight.Text += ProductsData.Weight.ToString() + "/公克";
-            lbCategory.Text += ProductsData.Category.ToString();
-            imageFiles = DataService.DS_GetPictures(ProductsData.Name);
+            lbName.Text = productsData.Name;
+            lbOrigin.Text += productsData.Origin;
+            lbPrice.Text += Math.Floor(productsData.Price).ToString() + "$";
+            lbStock.Text += productsData.Stock.ToString();
+            lbWeight.Text += productsData.Weight.ToString() + "/公克";
+            lbCategory.Text += productsData.Category.ToString();
+            imageFiles = DataService.DS_GetPictures(productsData.Name);
             ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
-            rtbDescription.Text = ProductsData.Description;
-            for (int i = 1; i < ProductsData.Stock; i++)
+            rtbDescription.Text = productsData.Description;
+            for (int i = 1; i < productsData.Stock; i++)
                 cbQuantity.Items.Add(i);
             cbQuantity.SelectedIndex = 0;
         }
 
-        private void btnS_Search_Click(object sender, EventArgs e)
+        private async void btnS_Search_Click(object sender, EventArgs e)
         {
+            if (Form1.member == null) { MessageBox.Show("請先登入會員"); return; }
+            if (!(cbQuantity.SelectedIndex >= 0)) { MessageBox.Show("請選擇數量"); return; }
 
+            await DataService.Odr_CreateOrderDetil(Form1.member.OrderId, productsData.Id, cbQuantity.SelectedIndex + 1);
+            this.Close();
         }
     }
 }

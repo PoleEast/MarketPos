@@ -14,7 +14,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=1.175.88.184,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=1.175.87.203,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -250,7 +250,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
         }
-       
+
         public static string[] DS_GetPictures(string pathname)
         {
             var imgString = Form1.Imgpath + @"\" + pathname;
@@ -419,11 +419,22 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"創建新購物清單失敗\n{ex}"); return; }
         }
 
-        public static async Task Odr_CreateOrderDetil()
+        public static async Task Odr_CreateOrderDetil(int orderid, int productid, int quantity)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
-
+            string sql = @"INSERT INTO OrderDetails(orderID,productID,quantity)
+                           VALUES(@orderID,@productID,@quantity)";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderID", orderid);
+            com.Parameters.AddWithValue("@productID", productid);
+            com.Parameters.AddWithValue("@quantity", quantity);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"創建訂單明細失敗\n{ex}"); return; }
         }
     }
 }

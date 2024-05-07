@@ -14,15 +14,13 @@ namespace MarketPos
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
-        private static Member? member;
+        public static Member? member;
         public static List<ProductsData> productsDatas = [];
         private List<ProductCard> productCards = [];
         private int nextOrderNum;
         public Form1()
         {
             InitializeComponent();
-            //int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear + todayOrder.ToString("0000"));
-
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -114,7 +112,7 @@ namespace MarketPos
             else if (condition == "種類")
                 productsDatas.Sort((a, b) => mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category));
             else if (condition == "價格")
-                productsDatas.Sort((a, b) => mode ?  -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
+                productsDatas.Sort((a, b) => mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
             else if (condition == "重量")
                 productsDatas.Sort((a, b) => mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight));
             else if (condition == "產地")
@@ -242,7 +240,7 @@ namespace MarketPos
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)
-        { 
+        {
             ProductsData productData = new ProductsData();
             try
             {
@@ -352,23 +350,24 @@ namespace MarketPos
             if (sender is LoginForm loginForm)
                 loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
-            getShoppingCard();
+            getShoppingOrderID();
         }
 
-        private async void getShoppingCard()
+        private async void getShoppingOrderID()
         {
             if (member == null) return;
-            int id = await DataService.Mem_GetMemberShopping(member.Id);
-            if (id == 0)
+            int orderid = await DataService.Odr_GetMemberShopping(member.Id);
+            if (orderid == 0)
             {
                 await DataService.Odr_CreateNewShopping(Odr_getLatestOrderNum(), member.Id);
-                id = await DataService.Mem_GetMemberShopping(member.Id);
+                orderid = await DataService.Odr_GetMemberShopping(member.Id);
             }
+            member.OrderId = orderid;
         }
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show(Odr_getLatestOrderNum().ToString());
+            MessageBox.Show(cbPage.Text + "\n" + cbPage.SelectedIndex);
         }
         private int Odr_getLatestOrderNum()
         {

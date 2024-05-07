@@ -250,41 +250,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
         }
-
-        public static async Task<ProductsData?> P_GetDetailProductCard(int productCard)
-        {
-            if (!await DS_ConnectionSql()) return null;
-
-            using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT * ,Category.name AS categoryName,Origin.name AS originName
-                                FROM Products 
-                                JOIN Category ON Category.id=category
-                                JOIN Origin ON origin.id=origin 
-                                WHERE Products.id=@id";
-            try
-            {
-                conn.Open();
-                SqlCommand com = new SqlCommand(sql, conn);
-                com.Parameters.AddWithValue("@id", productCard);
-
-                SqlDataReader reader = com.ExecuteReader();
-                reader.Read();
-                ProductsData data = new()
-                {
-                    Id = (int)reader["id"],
-                    Name = (string)reader["name"],
-                    Category = (string)reader["categoryName"],
-                    Description = (string)reader["description"],
-                    Weight = (long)reader["weight"],
-                    Price = (decimal)reader["price"],
-                    ShelveDate = (DateTime)reader["shelveDate"],
-                    Stock = (int)reader["stock"],
-                    Origin = (string)reader["originName"]
-                };
-                return data;
-            }
-            catch (Exception ex) { MessageBox.Show($"商品詳細資料獲取失敗\n{ex}"); return null; }
-        }
+       
         public static string[] DS_GetPictures(string pathname)
         {
             var imgString = Form1.Imgpath + @"\" + pathname;
@@ -393,7 +359,7 @@ namespace MarketPos
 
         /// <summary></summary>
         /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
-        public static async Task<int> Mem_GetMemberShopping(int id)
+        public static async Task<int> Odr_GetMemberShopping(int id)
         {
             if (!await DS_ConnectionSql()) return -1;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -418,7 +384,7 @@ namespace MarketPos
         /// <summary></summary>
         /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
         /// 
-        public static async Task<int> getLatestOrderNum()
+        public static async Task<int> Odr_getLatestOrderNum()
         {
             if (!await DS_ConnectionSql()) return -1;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -436,7 +402,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"獲取最新訂單編號失敗\n{ex}"); return -1; }
         }
 
-        public static async Task Mem_CreateNewShopping(int orderID, int memberid)
+        public static async Task Odr_CreateNewShopping(int orderID, int memberid)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -451,6 +417,13 @@ namespace MarketPos
                 com.ExecuteNonQuery();
             }
             catch (Exception ex) { MessageBox.Show($"創建新購物清單失敗\n{ex}"); return; }
+        }
+
+        public static async Task Odr_CreateOrderDetil()
+        {
+            if (!await DS_ConnectionSql()) return;
+            using SqlConnection conn = new SqlConnection(ConnString);
+
         }
     }
 }

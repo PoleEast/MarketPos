@@ -30,7 +30,7 @@ namespace MarketPos
             await DataService.P_getProductCardsDatas();
 
             //設定最新訂單編號 格式ex:"yydddoooo"
-            string latestOrderNum = (await DataService.getLatestOrderNum()).ToString();
+            string latestOrderNum = (await DataService.Odr_getLatestOrderNum()).ToString();
 
             nextOrderNum = latestOrderNum.Substring(0, 5) == DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") ?
                 int.Parse(latestOrderNum) - (int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + "0000")) + 1 : 1;
@@ -361,16 +361,16 @@ namespace MarketPos
             int id = await DataService.Mem_GetMemberShopping(member.Id);
             if (id == 0)
             {
-                await DataService.Mem_CreateNewShopping(getlatestOrderNum(), member.Id);
+                await DataService.Odr_CreateNewShopping(Odr_getLatestOrderNum(), member.Id);
                 id = await DataService.Mem_GetMemberShopping(member.Id);
             }
         }
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show(getlatestOrderNum().ToString());
+            MessageBox.Show(Odr_getLatestOrderNum().ToString());
         }
-        private int getlatestOrderNum()
+        private int Odr_getLatestOrderNum()
         {
             return int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + nextOrderNum.ToString("0000"));
         }

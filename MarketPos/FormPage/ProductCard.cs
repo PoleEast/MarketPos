@@ -14,13 +14,16 @@ namespace MarketPos
     public partial class ProductCard : UserControl
     {
         private string[] imageFiles = [];
+        private ProductsData? productsData;
         public int ProductID;
+        
         public ProductCard()
         {
             InitializeComponent();
         }
         public void SetCard(ProductsData Data)
         {
+            productsData=Data;
             ProductID = Data.Id;
             lbName.Text = Data.Name;
             lbOrigin.Text += Data.Origin;
@@ -29,6 +32,7 @@ namespace MarketPos
             lbWeight.Text += Data.Weight.ToString() + "/公克";
             imageFiles = DataService.DS_GetPictures(Data.Name);
             ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            
             this.Visible = true;
         }
 
@@ -59,11 +63,10 @@ namespace MarketPos
             }
         }
 
-        private async void ProductCard_Click(object sender, EventArgs e)
+        private void ProductCard_Click(object sender, EventArgs e)
         {
-            ProductsData? data = await DataService.P_GetDetailProductCard(ProductID);
-            if (data == null) return;
-            Detail_PCard detail_PCard = new(data);
+            if (productsData == null) return;
+            Detail_PCard detail_PCard = new(productsData);
             detail_PCard.StartPosition = FormStartPosition.CenterParent;
             detail_PCard.ShowDialog();
         }

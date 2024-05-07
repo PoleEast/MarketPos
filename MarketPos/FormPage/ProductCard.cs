@@ -16,14 +16,14 @@ namespace MarketPos
         private string[] imageFiles = [];
         private ProductsData? productsData;
         public int ProductID;
-        
+
         public ProductCard()
         {
             InitializeComponent();
         }
         public void SetCard(ProductsData Data)
         {
-            productsData=Data;
+            productsData = Data;
             ProductID = Data.Id;
             lbName.Text = Data.Name;
             lbOrigin.Text += Data.Origin;
@@ -32,7 +32,7 @@ namespace MarketPos
             lbWeight.Text += Data.Weight.ToString() + "/公克";
             imageFiles = DataService.DS_GetPictures(Data.Name);
             ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
-            
+
             this.Visible = true;
         }
 

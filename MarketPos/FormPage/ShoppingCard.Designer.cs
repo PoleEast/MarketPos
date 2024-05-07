@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             lbName = new Label();
-            cbCount = new ComboBox();
             lbCount = new Label();
             btnDelete = new Button();
             txbTotal = new TextBox();
             lbPrice = new Label();
+            cbCount = new ComboBox();
             SuspendLayout();
             // 
             // lbName
@@ -46,17 +46,6 @@
             lbName.Size = new Size(54, 26);
             lbName.TabIndex = 28;
             lbName.Text = "名稱";
-            // 
-            // cbCount
-            // 
-            cbCount.BackColor = SystemColors.Window;
-            cbCount.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbCount.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            cbCount.FormattingEnabled = true;
-            cbCount.Location = new Point(355, 3);
-            cbCount.Name = "cbCount";
-            cbCount.Size = new Size(50, 32);
-            cbCount.TabIndex = 30;
             // 
             // lbCount
             // 
@@ -83,9 +72,9 @@
             txbTotal.BackColor = SystemColors.Menu;
             txbTotal.BorderStyle = BorderStyle.None;
             txbTotal.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            txbTotal.Location = new Point(305, 60);
+            txbTotal.Location = new Point(198, 60);
             txbTotal.Name = "txbTotal";
-            txbTotal.Size = new Size(100, 25);
+            txbTotal.Size = new Size(207, 25);
             txbTotal.TabIndex = 33;
             txbTotal.Text = "金額:";
             txbTotal.TextAlign = HorizontalAlignment.Right;
@@ -100,6 +89,17 @@
             lbPrice.Size = new Size(42, 19);
             lbPrice.TabIndex = 34;
             lbPrice.Text = "單價:";
+            // 
+            // cbCount
+            // 
+            cbCount.BackColor = SystemColors.Window;
+            cbCount.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCount.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbCount.FormattingEnabled = true;
+            cbCount.Location = new Point(355, 3);
+            cbCount.Name = "cbCount";
+            cbCount.Size = new Size(50, 32);
+            cbCount.TabIndex = 30;
             // 
             // ShoppingCard
             // 
@@ -122,10 +122,10 @@
         #endregion
 
         private Label lbName;
-        private ComboBox cbCount;
         private Label lbCount;
         private Button btnDelete;
         private TextBox txbTotal;
         private Label lbPrice;
+        private ComboBox cbCount;
     }
 }

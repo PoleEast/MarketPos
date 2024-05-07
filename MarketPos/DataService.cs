@@ -359,7 +359,7 @@ namespace MarketPos
 
         /// <summary></summary>
         /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
-        public static async Task<int> Odr_GetMemberShopping(int id)
+        public static async Task<int> Odr_GetMemberOrder(int id)
         {
             if (!await DS_ConnectionSql()) return -1;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -402,7 +402,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"獲取最新訂單編號失敗\n{ex}"); return -1; }
         }
 
-        public static async Task Odr_CreateNewShopping(int orderID, int memberid)
+        public static async Task Odr_CreateNewOrder(int orderID, int memberid)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -419,7 +419,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"創建新購物清單失敗\n{ex}"); return; }
         }
 
-        public static async Task Odr_CreateOrderDetil(int orderid, int productid, int quantity)
+        public static async Task Odr_CreateOrderDetail(int orderid, int productid, int quantity)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -435,6 +435,29 @@ namespace MarketPos
                 com.ExecuteNonQuery();
             }
             catch (Exception ex) { MessageBox.Show($"創建訂單明細失敗\n{ex}"); return; }
+        }
+
+        public static async Task<Dictionary<int, int>> Odr_GetOrderDetail(int orderid)
+        {
+            Dictionary<int, int> orderDetail = [];
+            if (!await DS_ConnectionSql()) return orderDetail;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT productID,quantity
+                           FROM OrderDetails
+                           WHERE orderID=@orderid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
+                {
+                    orderDetail.Add((int)reader["productID"], (int)reader["quantity"]);
+                }
+                return orderDetail;
+            }
+            catch (Exception ex) { MessageBox.Show($"獲取商品詳細清單錯誤\n{ex}"); return []; }
         }
     }
 }

@@ -46,6 +46,7 @@ namespace MarketPos
             //UI初始化用
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
+            Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded; ;
 
             //暫時使用
             productSort("名稱", true);
@@ -337,41 +338,73 @@ namespace MarketPos
             {
                 //登出功能
                 member = null;
+                flp_shoppingCar.Controls.Clear();
                 btn_Login.Text = "註冊/登入";
             }
         }
-        private void LoginForMem_LoginSuccess(object? sender, Member e)
+        private async void LoginForMem_LoginSuccess(object? sender, Member e)
         {
             if (sender == null) { MessageBox.Show("登入視窗為空"); return; }
-
             if (e.Id == 0) { MessageBox.Show("查無此用戶名稱"); return; };
+
             member = e;
             lbMember.Text = $"歡迎回來: {member.Name}";
             if (sender is LoginForm loginForm)
                 loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
             getShoppingOrderID();
+            var orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetail);
         }
 
         private async void getShoppingOrderID()
         {
             if (member == null) return;
-            int orderid = await DataService.Odr_GetMemberShopping(member.Id);
+            int orderid = await DataService.Odr_GetMemberOrder(member.Id);
             if (orderid == 0)
             {
-                await DataService.Odr_CreateNewShopping(Odr_getLatestOrderNum(), member.Id);
-                orderid = await DataService.Odr_GetMemberShopping(member.Id);
+                await DataService.Odr_CreateNewOrder(Odr_getLatestOrderNum(), member.Id);
+                orderid = await DataService.Odr_GetMemberOrder(member.Id);
             }
             member.OrderId = orderid;
         }
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            MessageBox.Show(cbPage.Text + "\n" + cbPage.SelectedIndex);
         }
         private int Odr_getLatestOrderNum()
         {
             return int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + nextOrderNum.ToString("0000"));
+        }
+
+        private async void Detail_PCard_OrderItemAdded(object? sender, EventArgs e)
+        {
+            if (member == null) return;
+            var orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetail);
+        }
+        private void setShoppingCard(Dictionary<int, int> orderDetail)
+        {
+            foreach (var item in orderDetail)
+            {
+                ShoppingCard shoppingCard = new ShoppingCard();
+                ProductsData? productsData = productsDatas.FirstOrDefault(o => o.Id == item.Key);
+                if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
+                shoppingCard.SetCard(productsData, item.Value);
+                flp_shoppingCar.Controls.Add(shoppingCard);
+            }
+        }
+
+        private void flp_shoppingCar_ControlChange(object sender, ControlEventArgs e)
+        {
+            FlowLayoutPanel? flowLayoutPanel = sender as FlowLayoutPanel;
+            if (flowLayoutPanel == null) return;
+
+            List<ShoppingCard> shoppingCards = flowLayoutPanel.Controls.OfType<ShoppingCard>().ToList();
+            if (shoppingCards.Count == 0)
+                txbTotal.Text = string.Empty;
+            else txbTotal.Text = "總金額:" + shoppingCards.Sum(o => o.total).ToString() + "$";
+
         }
     }
 }

@@ -8,10 +8,11 @@ namespace MarketPos
 {
     public class Member
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Account { get; set; } = string.Empty;
-        public string HashPassword { get; set; } = string.Empty;
-        public int OrderId { get; set; }
+        public  int Id { get; set; }
+        public  string Name { get; set; } = string.Empty;
+        public  string Account { get; set; } = string.Empty;
+        public  string HashPassword { get; set; } = string.Empty;
+        public  int OrderId { get; set; }
+        public  int Level { get; set; } = 3;
     }
 }

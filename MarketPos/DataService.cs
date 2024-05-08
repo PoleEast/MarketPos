@@ -264,7 +264,7 @@ namespace MarketPos
         //------------------------------------------------------------------------------------------
         //以下為會員相關sql功能
 
-        public static async Task MeMem_GetMemberName(string hashPassword, string salt, string name, string account)
+        public static async Task Mem_CreatetMemberName(string hashPassword, string salt, string name, string account, int level)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -273,8 +273,8 @@ namespace MarketPos
                           SELECT SCOPE_IDENTITY();";
             int accountid = 0;
 
-            string sqlMember = @"INSERT INTO Member(name,account)
-                                 VALUES(@name,@account)";
+            string sqlMember = @"INSERT INTO Member(name,account,level)
+                                 VALUES(@name,@account,@level)";
             conn.Open();
             using SqlTransaction transaction = conn.BeginTransaction();
             using (SqlCommand com = new SqlCommand(sqlAccount, conn, transaction))
@@ -293,6 +293,7 @@ namespace MarketPos
                     com.Parameters.Clear();
                     com.Parameters.AddWithValue("@name", name);
                     com.Parameters.AddWithValue("@account", accountid);
+                    com.Parameters.AddWithValue("@level", level);
                     com.ExecuteNonQuery();
 
                     transaction.Commit();
@@ -307,7 +308,7 @@ namespace MarketPos
             }
 
         }
-        public static async Task<string> MeMem_LoginGetSalt(string account)
+        public static async Task<string> Mem_LoginGetSalt(string account)
         {
             if (!await DS_ConnectionSql()) return "";
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -331,7 +332,7 @@ namespace MarketPos
             Member member = new Member();
             if (!await DS_ConnectionSql()) return member;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT Account.account,name,Member.id as ID, Account.password as password
+            string sql = @"SELECT Account.account,name,Member.id as ID, Account.password as password,Member.level
                            FROM Account
                            JOIN [Member]
                            ON [Member].account=Account.id
@@ -351,6 +352,7 @@ namespace MarketPos
                 member.Name = (string)reader["name"];
                 member.Account = (string)reader["account"];
                 member.HashPassword = (string)reader["password"];
+                member.Level = (int)reader["level"];
                 return member;
             }
             catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return member; }

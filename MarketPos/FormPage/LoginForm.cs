@@ -40,7 +40,7 @@ namespace MarketPos.FormPage
             byte[] hashpassword = GHashPassword(password, salt);
             string hashpasswordStr = Convert.ToBase64String(hashpassword);
 
-            await DataService.MeMem_GetMemberName(hashpasswordStr, saltStr, name, account);
+            await DataService.Mem_CreatetMemberName(hashpasswordStr, saltStr, name, account, 3);
             tbcLogic.SelectedIndex = 0;
         }
 
@@ -53,7 +53,7 @@ namespace MarketPos.FormPage
             if (string.IsNullOrEmpty(password)) { MessageBox.Show("請輸入帳號密碼"); return; }
 
             //密碼處理
-            string saltStr = await DataService.MeMem_LoginGetSalt(account);
+            string saltStr = await DataService.Mem_LoginGetSalt(account);
             if (string.IsNullOrEmpty(saltStr)) { MessageBox.Show("密碼或帳號錯誤"); return; }
             byte[] salt = Convert.FromBase64String(saltStr);
             var hashPassword = GHashPassword(password, salt);

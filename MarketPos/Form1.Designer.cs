@@ -31,8 +31,8 @@ namespace MarketPos
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            tabControl1 = new TabControl();
-            tbcProduct = new TabPage();
+            tbcProdut = new TabControl();
+            tbProduct = new TabPage();
             ptb_Sort = new PictureBox();
             cb_Sort = new ComboBox();
             lb_Sort2 = new Label();
@@ -50,7 +50,7 @@ namespace MarketPos
             productCard2 = new ProductCard();
             productCard1 = new ProductCard();
             label1 = new Label();
-            tbpControl = new TabPage();
+            tbAddProduct = new TabPage();
             cbAddCategoryType = new Button();
             txbAddP_name = new TextBox();
             txbAddP_price = new TextBox();
@@ -69,10 +69,9 @@ namespace MarketPos
             lbAddP_category = new Label();
             btnAddOriginType = new Button();
             lbAddP_price = new Label();
-            tbpMemSerch = new TabPage();
+            tbMemSerch = new TabPage();
             ptb_Buy = new PictureBox();
             txbTotal = new TextBox();
-            btntest = new Button();
             flp_shoppingCar = new FlowLayoutPanel();
             btnS_Clear = new Button();
             btnS_Search = new Button();
@@ -88,53 +87,56 @@ namespace MarketPos
             lbS_Price = new Label();
             lbS_Category = new Label();
             lbS_Name = new Label();
-            tabControl2 = new TabControl();
+            btntest = new Button();
+            tbcControl = new TabControl();
             btn_Login = new Button();
             lbMember = new Label();
-            tabControl1.SuspendLayout();
-            tbcProduct.SuspendLayout();
+            tbcProdut.SuspendLayout();
+            tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
-            tbpControl.SuspendLayout();
-            tbpMemSerch.SuspendLayout();
+            tbAddProduct.SuspendLayout();
+            tbMemSerch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Buy).BeginInit();
-            tabControl2.SuspendLayout();
+            tbcControl.SuspendLayout();
             SuspendLayout();
             // 
-            // tabControl1
+            // tbcProdut
             // 
-            tabControl1.Controls.Add(tbcProduct);
-            tabControl1.Location = new Point(28, 49);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1084, 782);
-            tabControl1.TabIndex = 8;
+            tbcProdut.Controls.Add(tbProduct);
+            tbcProdut.Location = new Point(28, 49);
+            tbcProdut.Name = "tbcProdut";
+            tbcProdut.SelectedIndex = 0;
+            tbcProdut.Size = new Size(1084, 782);
+            tbcProdut.TabIndex = 8;
+            tbcProdut.Tag = "";
             // 
-            // tbcProduct
+            // tbProduct
             // 
-            tbcProduct.BorderStyle = BorderStyle.FixedSingle;
-            tbcProduct.Controls.Add(ptb_Sort);
-            tbcProduct.Controls.Add(cb_Sort);
-            tbcProduct.Controls.Add(lb_Sort2);
-            tbcProduct.Controls.Add(lb_Sort);
-            tbcProduct.Controls.Add(lbPage);
-            tbcProduct.Controls.Add(cbPage);
-            tbcProduct.Controls.Add(btnBackPage);
-            tbcProduct.Controls.Add(btnNextPage);
-            tbcProduct.Controls.Add(productCard8);
-            tbcProduct.Controls.Add(productCard7);
-            tbcProduct.Controls.Add(productCard6);
-            tbcProduct.Controls.Add(productCard5);
-            tbcProduct.Controls.Add(productCard4);
-            tbcProduct.Controls.Add(productCard3);
-            tbcProduct.Controls.Add(productCard2);
-            tbcProduct.Controls.Add(productCard1);
-            tbcProduct.Location = new Point(4, 24);
-            tbcProduct.Name = "tbcProduct";
-            tbcProduct.Padding = new Padding(3);
-            tbcProduct.Size = new Size(1076, 754);
-            tbcProduct.TabIndex = 0;
-            tbcProduct.Text = "商品";
-            tbcProduct.UseVisualStyleBackColor = true;
+            tbProduct.BorderStyle = BorderStyle.FixedSingle;
+            tbProduct.Controls.Add(ptb_Sort);
+            tbProduct.Controls.Add(cb_Sort);
+            tbProduct.Controls.Add(lb_Sort2);
+            tbProduct.Controls.Add(lb_Sort);
+            tbProduct.Controls.Add(lbPage);
+            tbProduct.Controls.Add(cbPage);
+            tbProduct.Controls.Add(btnBackPage);
+            tbProduct.Controls.Add(btnNextPage);
+            tbProduct.Controls.Add(productCard8);
+            tbProduct.Controls.Add(productCard7);
+            tbProduct.Controls.Add(productCard6);
+            tbProduct.Controls.Add(productCard5);
+            tbProduct.Controls.Add(productCard4);
+            tbProduct.Controls.Add(productCard3);
+            tbProduct.Controls.Add(productCard2);
+            tbProduct.Controls.Add(productCard1);
+            tbProduct.Location = new Point(4, 24);
+            tbProduct.Name = "tbProduct";
+            tbProduct.Padding = new Padding(3);
+            tbProduct.Size = new Size(1076, 754);
+            tbProduct.TabIndex = 0;
+            tbProduct.Tag = "3";
+            tbProduct.Text = "商品";
+            tbProduct.UseVisualStyleBackColor = true;
             // 
             // ptb_Sort
             // 
@@ -308,34 +310,35 @@ namespace MarketPos
             label1.TabIndex = 9;
             label1.Text = "大港開吃";
             // 
-            // tbpControl
+            // tbAddProduct
             // 
-            tbpControl.BorderStyle = BorderStyle.FixedSingle;
-            tbpControl.Controls.Add(cbAddCategoryType);
-            tbpControl.Controls.Add(txbAddP_name);
-            tbpControl.Controls.Add(txbAddP_price);
-            tbpControl.Controls.Add(cbAddP_category);
-            tbpControl.Controls.Add(txbAddP_weight);
-            tbpControl.Controls.Add(rtbAddP_description);
-            tbpControl.Controls.Add(label2);
-            tbpControl.Controls.Add(lbAddP_description);
-            tbpControl.Controls.Add(cbAddP_origin);
-            tbpControl.Controls.Add(lbAddP_stock);
-            tbpControl.Controls.Add(cbAddP_stock);
-            tbpControl.Controls.Add(lbAddP_origin);
-            tbpControl.Controls.Add(lbAddP_name);
-            tbpControl.Controls.Add(btnAddProduct);
-            tbpControl.Controls.Add(lbAddP_weight);
-            tbpControl.Controls.Add(lbAddP_category);
-            tbpControl.Controls.Add(btnAddOriginType);
-            tbpControl.Controls.Add(lbAddP_price);
-            tbpControl.Location = new Point(4, 24);
-            tbpControl.Name = "tbpControl";
-            tbpControl.Padding = new Padding(3);
-            tbpControl.Size = new Size(462, 754);
-            tbpControl.TabIndex = 0;
-            tbpControl.Text = "管理者";
-            tbpControl.UseVisualStyleBackColor = true;
+            tbAddProduct.BorderStyle = BorderStyle.FixedSingle;
+            tbAddProduct.Controls.Add(cbAddCategoryType);
+            tbAddProduct.Controls.Add(txbAddP_name);
+            tbAddProduct.Controls.Add(txbAddP_price);
+            tbAddProduct.Controls.Add(cbAddP_category);
+            tbAddProduct.Controls.Add(txbAddP_weight);
+            tbAddProduct.Controls.Add(rtbAddP_description);
+            tbAddProduct.Controls.Add(label2);
+            tbAddProduct.Controls.Add(lbAddP_description);
+            tbAddProduct.Controls.Add(cbAddP_origin);
+            tbAddProduct.Controls.Add(lbAddP_stock);
+            tbAddProduct.Controls.Add(cbAddP_stock);
+            tbAddProduct.Controls.Add(lbAddP_origin);
+            tbAddProduct.Controls.Add(lbAddP_name);
+            tbAddProduct.Controls.Add(btnAddProduct);
+            tbAddProduct.Controls.Add(lbAddP_weight);
+            tbAddProduct.Controls.Add(lbAddP_category);
+            tbAddProduct.Controls.Add(btnAddOriginType);
+            tbAddProduct.Controls.Add(lbAddP_price);
+            tbAddProduct.Location = new Point(4, 24);
+            tbAddProduct.Name = "tbAddProduct";
+            tbAddProduct.Padding = new Padding(3);
+            tbAddProduct.Size = new Size(462, 754);
+            tbAddProduct.TabIndex = 0;
+            tbAddProduct.Tag = "2";
+            tbAddProduct.Text = "管理者";
+            tbAddProduct.UseVisualStyleBackColor = true;
             // 
             // cbAddCategoryType
             // 
@@ -520,33 +523,33 @@ namespace MarketPos
             lbAddP_price.TabIndex = 2;
             lbAddP_price.Text = "價格";
             // 
-            // tbpMemSerch
+            // tbMemSerch
             // 
-            tbpMemSerch.Controls.Add(ptb_Buy);
-            tbpMemSerch.Controls.Add(txbTotal);
-            tbpMemSerch.Controls.Add(btntest);
-            tbpMemSerch.Controls.Add(flp_shoppingCar);
-            tbpMemSerch.Controls.Add(btnS_Clear);
-            tbpMemSerch.Controls.Add(btnS_Search);
-            tbpMemSerch.Controls.Add(cbS_Origin);
-            tbpMemSerch.Controls.Add(lbS_Origin);
-            tbpMemSerch.Controls.Add(cbS_Category);
-            tbpMemSerch.Controls.Add(btnS_WeightToggle);
-            tbpMemSerch.Controls.Add(txbS_weight);
-            tbpMemSerch.Controls.Add(txbS_Price);
-            tbpMemSerch.Controls.Add(txbS_Name);
-            tbpMemSerch.Controls.Add(lbS_Weight);
-            tbpMemSerch.Controls.Add(btnS_PriceToggle);
-            tbpMemSerch.Controls.Add(lbS_Price);
-            tbpMemSerch.Controls.Add(lbS_Category);
-            tbpMemSerch.Controls.Add(lbS_Name);
-            tbpMemSerch.Location = new Point(4, 24);
-            tbpMemSerch.Name = "tbpMemSerch";
-            tbpMemSerch.Padding = new Padding(3);
-            tbpMemSerch.Size = new Size(462, 754);
-            tbpMemSerch.TabIndex = 1;
-            tbpMemSerch.Text = "商品查詢";
-            tbpMemSerch.UseVisualStyleBackColor = true;
+            tbMemSerch.Controls.Add(ptb_Buy);
+            tbMemSerch.Controls.Add(txbTotal);
+            tbMemSerch.Controls.Add(flp_shoppingCar);
+            tbMemSerch.Controls.Add(btnS_Clear);
+            tbMemSerch.Controls.Add(btnS_Search);
+            tbMemSerch.Controls.Add(cbS_Origin);
+            tbMemSerch.Controls.Add(lbS_Origin);
+            tbMemSerch.Controls.Add(cbS_Category);
+            tbMemSerch.Controls.Add(btnS_WeightToggle);
+            tbMemSerch.Controls.Add(txbS_weight);
+            tbMemSerch.Controls.Add(txbS_Price);
+            tbMemSerch.Controls.Add(txbS_Name);
+            tbMemSerch.Controls.Add(lbS_Weight);
+            tbMemSerch.Controls.Add(btnS_PriceToggle);
+            tbMemSerch.Controls.Add(lbS_Price);
+            tbMemSerch.Controls.Add(lbS_Category);
+            tbMemSerch.Controls.Add(lbS_Name);
+            tbMemSerch.Location = new Point(4, 24);
+            tbMemSerch.Name = "tbMemSerch";
+            tbMemSerch.Padding = new Padding(3);
+            tbMemSerch.Size = new Size(462, 754);
+            tbMemSerch.TabIndex = 1;
+            tbMemSerch.Tag = "3";
+            tbMemSerch.Text = "商品查詢";
+            tbMemSerch.UseVisualStyleBackColor = true;
             // 
             // ptb_Buy
             // 
@@ -572,17 +575,6 @@ namespace MarketPos
             txbTotal.Size = new Size(207, 31);
             txbTotal.TabIndex = 34;
             txbTotal.TextAlign = HorizontalAlignment.Right;
-            // 
-            // btntest
-            // 
-            btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btntest.Location = new Point(360, 20);
-            btntest.Name = "btntest";
-            btntest.Size = new Size(96, 43);
-            btntest.TabIndex = 32;
-            btntest.Text = "測試";
-            btntest.UseVisualStyleBackColor = true;
-            btntest.Click += btntest_Click_1;
             // 
             // flp_shoppingCar
             // 
@@ -739,15 +731,27 @@ namespace MarketPos
             lbS_Name.TabIndex = 1;
             lbS_Name.Text = "名稱";
             // 
-            // tabControl2
+            // btntest
             // 
-            tabControl2.Controls.Add(tbpMemSerch);
-            tabControl2.Controls.Add(tbpControl);
-            tabControl2.Location = new Point(1114, 49);
-            tabControl2.Name = "tabControl2";
-            tabControl2.SelectedIndex = 0;
-            tabControl2.Size = new Size(470, 782);
-            tabControl2.TabIndex = 10;
+            btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btntest.Location = new Point(859, 14);
+            btntest.Name = "btntest";
+            btntest.Size = new Size(96, 43);
+            btntest.TabIndex = 32;
+            btntest.Text = "測試";
+            btntest.UseVisualStyleBackColor = true;
+            btntest.Click += btntest_Click_1;
+            // 
+            // tbcControl
+            // 
+            tbcControl.Controls.Add(tbMemSerch);
+            tbcControl.Controls.Add(tbAddProduct);
+            tbcControl.Location = new Point(1114, 49);
+            tbcControl.Name = "tbcControl";
+            tbcControl.SelectedIndex = 0;
+            tbcControl.Size = new Size(470, 782);
+            tbcControl.TabIndex = 10;
+            tbcControl.Tag = "";
             // 
             // btn_Login
             // 
@@ -779,23 +783,24 @@ namespace MarketPos
             ClientSize = new Size(1584, 861);
             Controls.Add(lbMember);
             Controls.Add(btn_Login);
-            Controls.Add(tabControl2);
+            Controls.Add(btntest);
+            Controls.Add(tbcControl);
             Controls.Add(label1);
-            Controls.Add(tabControl1);
+            Controls.Add(tbcProdut);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "大港開吃";
             Load += Form1_Load;
-            tabControl1.ResumeLayout(false);
-            tbcProduct.ResumeLayout(false);
-            tbcProduct.PerformLayout();
+            tbcProdut.ResumeLayout(false);
+            tbProduct.ResumeLayout(false);
+            tbProduct.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).EndInit();
-            tbpControl.ResumeLayout(false);
-            tbpControl.PerformLayout();
-            tbpMemSerch.ResumeLayout(false);
-            tbpMemSerch.PerformLayout();
+            tbAddProduct.ResumeLayout(false);
+            tbAddProduct.PerformLayout();
+            tbMemSerch.ResumeLayout(false);
+            tbMemSerch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Buy).EndInit();
-            tabControl2.ResumeLayout(false);
+            tbcControl.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -807,8 +812,8 @@ namespace MarketPos
 
         #endregion
 
-        private TabControl tabControl1;
-        private TabPage tbcProduct;
+        private TabControl tbcProdut;
+        private TabPage tbProduct;
         private ProductCard productCard8;
         private ProductCard productCard7;
         private ProductCard productCard6;
@@ -822,7 +827,7 @@ namespace MarketPos
         private ComboBox cbPage;
         private Button btnBackPage;
         private Button btnNextPage;
-        private TabPage tbpControl;
+        private TabPage tbAddProduct;
         private Button cbAddCategoryType;
         private TextBox txbAddP_name;
         private TextBox txbAddP_price;
@@ -841,7 +846,7 @@ namespace MarketPos
         private Label lbAddP_category;
         private Button btnAddOriginType;
         private Label lbAddP_price;
-        private TabPage tbpMemSerch;
+        private TabPage tbMemSerch;
         private ComboBox cbS_Origin;
         private Label lbS_Origin;
         private ComboBox cbS_Category;
@@ -854,7 +859,7 @@ namespace MarketPos
         private Label lbS_Price;
         private Label lbS_Category;
         private Label lbS_Name;
-        private TabControl tabControl2;
+        private TabControl tbcControl;
         private Button btnS_Search;
         private Button btnS_Clear;
         private Label lb_Sort;

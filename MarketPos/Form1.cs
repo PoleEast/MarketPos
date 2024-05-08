@@ -10,16 +10,21 @@ using MarketPos.Properties;
 using MarketPos.FormPage;
 using System.Drawing.Printing;
 using System.Windows.Forms;
+using System;
+using System.Reflection.Emit;
+using System.Reflection;
 
 namespace MarketPos
 {
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
-        public static Member? member;
         public static List<ProductsData> productsDatas = [];
+        public static Member? member;
         private static Dictionary<int, int> orderDetail = [];
         private List<ProductCard> productCards = [];
+        private List<TabPage> tabPagesControl = [];
+        private List<TabPage> tabPagesProduct = [];
         private int nextOrderNum;
         public Form1()
         {
@@ -53,10 +58,43 @@ namespace MarketPos
             ShoppingCard.OrderItemChange += ShoppingCard_OrderItemChange;
             ShoppingCard.OrderItemDelete += ShoppingCard_OrderItemDelete; ;
 
+            tabPagesControl = tbcControl.TabPages.Cast<TabPage>().ToList();
+            tabPagesProduct = tbcProdut.TabPages.Cast<TabPage>().ToList();
+
+            //權限功能初始化
+            levelControl(3);
+
             //暫時使用
             productSort("名稱", true);
             Set_Page();
             cb_init();
+        }
+
+        private void levelControl(int level)
+        {
+
+#pragma warning disable CS0252 // 可能誤用參考比較; 左端需要轉換
+            if (tabPagesControl.Any(o => o.Tag == "") || tabPagesProduct.Any(o => o.Tag == "")) MessageBox.Show($"設計錯誤Tab權限未設置");
+
+            tbcControl.TabPages.Clear();
+            tbcProdut.TabPages.Clear();
+
+            if (level <= 3)
+            {
+                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "3").ToArray());
+                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "3").ToArray());
+            }
+            if (level <= 2)
+            {
+                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "2").ToArray());
+                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "2").ToArray());
+            }
+            if (level == 1)
+            {
+                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "1").ToArray());
+                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "1").ToArray());
+            }
+#pragma warning restore CS0252 // 可能誤用參考比較; 左端需要轉換
         }
 
         /// <summary>
@@ -369,7 +407,10 @@ namespace MarketPos
                 lbMember.Text = string.Empty;
                 ptb_Buy.Enabled = false;
                 ptb_Buy.Visible = false;
+                levelControl(3);
             }
+            btnS_Clear_Click(this, EventArgs.Empty);
+
         }
         private async void LoginForMem_LoginSuccess(object? sender, Member e)
         {
@@ -377,12 +418,14 @@ namespace MarketPos
             if (e.Id == 0) { MessageBox.Show("查無此用戶名稱"); return; };
 
             member = e;
+
+            //UI設置
             lbMember.Text = $"歡迎回來: {member.Name}";
-            if (sender is LoginForm loginForm)
-                loginForm.LoginSuccess -= LoginForMem_LoginSuccess;
             btn_Login.Text = "登出";
             ptb_Buy.Enabled = true;
             ptb_Buy.Visible = true;
+            levelControl(member.Level);
+
             getShoppingOrderID();
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
@@ -402,6 +445,7 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
+            levelControl(2);
         }
         private int Odr_getLatestOrderNum()
         {

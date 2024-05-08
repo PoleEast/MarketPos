@@ -335,7 +335,9 @@ namespace MarketPos
                            FROM Account
                            JOIN [Member]
                            ON [Member].account=Account.id
-                           WHERE Account.account=@account AND Account.password=@password";
+                           WHERE Account.account=@account COLLATE Latin1_General_BIN
+                           AND Account.password=@password COLLATE Latin1_General_BIN";
+
             using SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@account", account);
             com.Parameters.AddWithValue("@password", password);
@@ -477,6 +479,23 @@ namespace MarketPos
                 com.ExecuteNonQuery();
             }
             catch (Exception ex) { MessageBox.Show($"訂單商品數量更新失敗\n{ex}"); return; }
+        }
+
+        public static async Task Odr_DeleteOrderDetail(int orderid, int productid)
+        {
+            if (!await DS_ConnectionSql()) { return; }
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"DELETE FROM OrderDetails 
+                           WHERE orderID=@orderid AND productID=@productid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            com.Parameters.AddWithValue("@productid", productid);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"訂單商品刪除失敗\n{ex}"); return; }
         }
 
         public static async Task<Dictionary<int, string>> Odr_GetPayment()

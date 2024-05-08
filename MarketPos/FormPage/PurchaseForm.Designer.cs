@@ -42,6 +42,7 @@
             lb_OrderNum = new Label();
             ptb_Icon = new PictureBox();
             btn_OK = new Button();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)ptb_Icon).BeginInit();
             SuspendLayout();
             // 
@@ -177,11 +178,23 @@
             btn_OK.UseVisualStyleBackColor = true;
             btn_OK.Click += btn_OK_Click;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(54, 182);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(74, 19);
+            checkBox1.TabIndex = 37;
+            checkBox1.Text = "同訂貨人";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            // 
             // PurchaseForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(616, 392);
+            Controls.Add(checkBox1);
             Controls.Add(btn_OK);
             Controls.Add(ptb_Icon);
             Controls.Add(lb_OrderNum);
@@ -218,5 +231,6 @@
         private Label lb_OrderNum;
         private PictureBox ptb_Icon;
         private Button btn_OK;
+        private CheckBox checkBox1;
     }
 }

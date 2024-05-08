@@ -14,6 +14,7 @@ namespace MarketPos
     {
         private ProductsData? productsData;
         public static event EventHandler<KeyValuePair<int, int>>? OrderItemChange;
+        public static event EventHandler<int>? OrderItemDelete;
         public int total;
         public ShoppingCard()
         {
@@ -39,6 +40,14 @@ namespace MarketPos
 
             KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbCount.SelectedIndex + 1);
             OrderItemChange?.Invoke(this, orderDetail);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (sender == null) return;
+            if (productsData == null) return;
+
+            OrderItemDelete?.Invoke(this, productsData.Id);
         }
     }
 }

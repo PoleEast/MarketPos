@@ -50,5 +50,20 @@ namespace MarketPos.FormPage
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                txbR_Name.Text = txbO_Name.Text;
+                txbR_Address.Text = txbO_Address.Text;
+            }
+            else 
+            {
+                txbR_Name.Text=string.Empty;
+                txbR_Address.Text=string.Empty;
+            }
+
+        }
     }
 }

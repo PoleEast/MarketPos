@@ -51,6 +51,7 @@ namespace MarketPos
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
             Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded;
             ShoppingCard.OrderItemChange += ShoppingCard_OrderItemChange;
+            ShoppingCard.OrderItemDelete += ShoppingCard_OrderItemDelete; ;
 
             //暫時使用
             productSort("名稱", true);
@@ -365,6 +366,7 @@ namespace MarketPos
                 flp_shoppingCar.Controls.Clear();
                 orderDetail = [];
                 btn_Login.Text = "註冊/登入";
+                lbMember.Text = string.Empty;
                 ptb_Buy.Enabled = false;
                 ptb_Buy.Visible = false;
             }
@@ -418,11 +420,21 @@ namespace MarketPos
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
         }
+
         private async void ShoppingCard_OrderItemChange(object? sender, KeyValuePair<int, int> e)
         {
             if (member == null) return;
 
             await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
+            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetail);
+        }
+
+        private async void ShoppingCard_OrderItemDelete(object? sender, int e)
+        {
+            if (member == null) return;
+
+            await DataService.Odr_DeleteOrderDetail(member.OrderId, e);
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
         }

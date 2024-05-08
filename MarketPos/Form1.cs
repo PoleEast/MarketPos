@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using MarketPos.Properties;
 using MarketPos.FormPage;
 using System.Drawing.Printing;
+using System.Windows.Forms;
 
 namespace MarketPos
 {
@@ -237,10 +238,26 @@ namespace MarketPos
             for (int i = 0; i < 100; i++)
                 cbAddP_stock.Items.Add(i);
 
-            cbAddP_category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
-            cbS_Category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
-            cbAddP_origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
-            cbS_Origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
+            cbAddP_category.DisplayMember = "Key";
+            cbAddP_category.ValueMember = "Value";
+            cbAddP_category.DataSource = new BindingSource(DataService.categorysDict, null);
+
+            cbS_Category.DisplayMember = "Key";
+            cbS_Category.ValueMember = "Value";
+            cbS_Category.DataSource = new BindingSource(DataService.categorysDict, null);
+
+            cbAddP_origin.DisplayMember = "Key";
+            cbAddP_origin.ValueMember = "Value";
+            cbAddP_origin.DataSource = new BindingSource(DataService.originsDict, null);
+
+            cbS_Origin.DisplayMember = "Key";
+            cbS_Origin.ValueMember = "Value";
+            cbS_Origin.DataSource = new BindingSource(DataService.originsDict, null);
+
+            //cbAddP_category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
+            //cbS_Category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
+            //cbAddP_origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
+            //cbS_Origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)

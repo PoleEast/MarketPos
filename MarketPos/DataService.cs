@@ -367,7 +367,7 @@ namespace MarketPos
                            FROM Member
                            JOIN Orders
                            ON Member.id=Orders.memberID
-                           WHERE Member.id=@id AND Orders.isPaid=0";
+                           WHERE Member.id=@id AND Orders.placed=0";
             using SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@id", id);
             try
@@ -495,6 +495,33 @@ namespace MarketPos
                 return payments;
             }
             catch (Exception ex) { MessageBox.Show($"獲取付款方式失敗\n{ex}"); return payments; }
+        }
+
+        public static async Task<bool> Odr_orderPlaced(int orderid, int paymentMethodID, string ordererName, string ordererAddress,
+            string receiverName, string receiverAddress)
+        {
+            if (!await DS_ConnectionSql()) return false;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE Orders
+                           SET placed=@placed,paymentMethodID=@paymentMethodID,
+                               [ordererName]=@ordererName,[ordererAddress]=@ordererAddress,
+                               [receiverName]=@receiverName,[receiverAddress]=@receiverAddress
+                           WHERE id=@orderid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@placed", 1);
+            com.Parameters.AddWithValue("@paymentMethodID", paymentMethodID);
+            com.Parameters.AddWithValue("@ordererName", ordererName);
+            com.Parameters.AddWithValue("@ordererAddress", ordererAddress);
+            com.Parameters.AddWithValue("@receiverName", receiverName);
+            com.Parameters.AddWithValue("@receiverAddress", receiverAddress);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex) { MessageBox.Show($"訂單狀態確認下單失敗\n{ex}"); return false; }
         }
     }
 }

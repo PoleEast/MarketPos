@@ -133,7 +133,7 @@
             lbO_Address.Name = "lbO_Address";
             lbO_Address.Size = new Size(105, 24);
             lbO_Address.TabIndex = 31;
-            lbO_Address.Text = "收貨人地址";
+            lbO_Address.Text = "訂貨人地址";
             // 
             // lbO_Name
             // 
@@ -144,7 +144,7 @@
             lbO_Name.Name = "lbO_Name";
             lbO_Name.Size = new Size(109, 24);
             lbO_Name.TabIndex = 30;
-            lbO_Name.Text = "收貨人名稱:";
+            lbO_Name.Text = "訂貨人名稱:";
             // 
             // lb_OrderNum
             // 

@@ -241,18 +241,22 @@ namespace MarketPos
             cbAddP_category.DisplayMember = "Key";
             cbAddP_category.ValueMember = "Value";
             cbAddP_category.DataSource = new BindingSource(DataService.categorysDict, null);
+            cbAddP_category.SelectedIndex = -1;
 
             cbS_Category.DisplayMember = "Key";
             cbS_Category.ValueMember = "Value";
             cbS_Category.DataSource = new BindingSource(DataService.categorysDict, null);
+            cbS_Category.SelectedIndex = -1;
 
             cbAddP_origin.DisplayMember = "Key";
             cbAddP_origin.ValueMember = "Value";
             cbAddP_origin.DataSource = new BindingSource(DataService.originsDict, null);
+            cbAddP_origin.SelectedIndex = -1;
 
             cbS_Origin.DisplayMember = "Key";
             cbS_Origin.ValueMember = "Value";
             cbS_Origin.DataSource = new BindingSource(DataService.originsDict, null);
+            cbS_Origin.SelectedIndex = -1;
 
             //cbAddP_category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
             //cbS_Category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
@@ -396,13 +400,6 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            PurchaseForm purchaseForm = new PurchaseForm();
-            purchaseForm.StartPosition = FormStartPosition.CenterParent;
-            purchaseForm.SetForm(123);
-            purchaseForm.ShowDialog();
-
-            if (purchaseForm.DialogResult == DialogResult.OK)
-                MessageBox.Show(purchaseForm.OName + "\n" + purchaseForm.payment);
         }
         private int Odr_getLatestOrderNum()
         {
@@ -455,12 +452,27 @@ namespace MarketPos
 
         }
 
-        private void ptb_Buy_Click(object sender, EventArgs e)
+        private async void ptb_Buy_Click(object sender, EventArgs e)
         {
             if (member == null) { MessageBox.Show("請先登入會員"); return; }
             if (orderDetail.Count == 0) { MessageBox.Show("購物車目前是空空的"); return; }
 
+            PurchaseForm purchaseForm = new PurchaseForm();
+            purchaseForm.StartPosition = FormStartPosition.CenterParent;
+            purchaseForm.SetForm(member.OrderId);
+            purchaseForm.ShowDialog();
 
+            if (purchaseForm.DialogResult != DialogResult.OK) return;
+
+            //修改訂單狀態
+            if (await DataService.Odr_orderPlaced(member.OrderId, purchaseForm.payment, purchaseForm.OName,
+                purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress))
+            {
+                MessageBox.Show("訂單下單成功");
+                getShoppingOrderID();
+                orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
+                setShoppingCard(orderDetail);
+            }
         }
     }
 }

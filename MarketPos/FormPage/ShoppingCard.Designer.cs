@@ -95,6 +95,7 @@
             // 
             cbCount.BackColor = SystemColors.Window;
             cbCount.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCount.Enabled = false;
             cbCount.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
             cbCount.FormattingEnabled = true;
             cbCount.Location = new Point(355, 3);

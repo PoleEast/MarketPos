@@ -523,7 +523,7 @@ namespace MarketPos
             flp_shoppingCar.Controls.Clear();
             foreach (var item in orderDetail)
             {
-                ShoppingCard shoppingCard = new ShoppingCard();
+                ShoppingCard shoppingCard = new ShoppingCard(true);
                 ProductsData? productsData = productsDatas.FirstOrDefault(o => o.Id == item.Key);
                 if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
                 shoppingCard.SetCard(productsData, item.Value);

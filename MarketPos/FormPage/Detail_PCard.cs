@@ -15,6 +15,7 @@ namespace MarketPos
         public static event EventHandler<KeyValuePair<int, int>>? OrderItemAdded;
         private ProductsData productsData = new();
         private string[] imageFiles = [];
+
         public Detail_PCard(ProductsData productsData)
         {
             InitializeComponent();

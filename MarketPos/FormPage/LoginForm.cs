@@ -35,9 +35,9 @@ namespace MarketPos.FormPage
             if (password.Length < 6) { MessageBox.Show("請輸入正確的密碼格式"); return; }
 
             //密碼加密
-            byte[] salt = createSalt();
+            byte[] salt = Form1.CreateSalt();
             string saltStr = Convert.ToBase64String(salt);
-            byte[] hashpassword = GHashPassword(password, salt);
+            byte[] hashpassword = Form1.GHashPassword(password, salt);
             string hashpasswordStr = Convert.ToBase64String(hashpassword);
 
             await DataService.Mem_CreatetMemberName(hashpasswordStr, saltStr, name, account, 3);
@@ -56,7 +56,7 @@ namespace MarketPos.FormPage
             string saltStr = await DataService.Mem_LoginGetSalt(account);
             if (string.IsNullOrEmpty(saltStr)) { MessageBox.Show("密碼或帳號錯誤"); return; }
             byte[] salt = Convert.FromBase64String(saltStr);
-            var hashPassword = GHashPassword(password, salt);
+            var hashPassword = Form1.GHashPassword(password, salt);
             string hashpasswordStr = Convert.ToBase64String(hashPassword);
 
             //驗證帳號密碼
@@ -83,27 +83,6 @@ namespace MarketPos.FormPage
         private void btnR_Cancel_Click(object sender, EventArgs e)
         {
             tbcLogic.SelectedIndex = 0;
-        }
-
-        //產生鹽巴
-        private byte[] createSalt()
-        {
-            byte[] buffer = new byte[16];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(buffer);
-            return buffer;
-        }
-
-        //hash來源https://ithelp.ithome.com.tw/articles/10266660
-        private byte[] GHashPassword(string password, byte[] salt)
-        {
-            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
-            argon2.Salt = salt;
-            argon2.DegreeOfParallelism = 4; // 4 核心就設成 8
-            argon2.Iterations = 3; // 迭代運算次數
-            argon2.MemorySize = 512 * 512; // 1 GB
-
-            return argon2.GetBytes(16);
         }
 
         private void txb_KeyPress(object sender, KeyPressEventArgs e)

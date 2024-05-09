@@ -15,6 +15,9 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Security.Principal;
+using Konscious.Security.Cryptography;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MarketPos
 {
@@ -204,6 +207,15 @@ namespace MarketPos
         private void checkNum_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+                e.Handled = true;
+        }
+        //限制輸入為密碼
+        private void checkPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar >= 'a' && e.KeyChar <= 'z') ||
+                (e.KeyChar >= 'A' && e.KeyChar <= 'Z') || (char.IsControl(e.KeyChar)))
+                e.Handled = false;
+            else
                 e.Handled = true;
         }
 
@@ -558,7 +570,8 @@ namespace MarketPos
         {
             if (member == null) return;
 
-            string emailPattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+            string emailPattern =
+                @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
             string phonePattern = @"^09\d{8}$";
 
             if (string.IsNullOrEmpty(txbMem_Name.Text)) { MessageBox.Show("請填入要更改的名字"); return; }
@@ -573,6 +586,61 @@ namespace MarketPos
 
             MessageBox.Show("會員基本資料更新成功");
             setMemberProfile(true);
+        }
+
+        private async void btnAccountEdit_Click(object sender, EventArgs e)
+        {
+            if (member == null) return;
+
+            string oldPassword = txbOldPassword.Text.Trim();
+            string newPassword = txbPassword.Text.Trim();
+            string check = txbCheck.Text.Trim();
+            List<string> list = [oldPassword, newPassword, check];
+
+            if (list.Any(string.IsNullOrEmpty)) { MessageBox.Show("請輸入新舊密碼"); return; }
+            if (!newPassword.Equals(check)) { MessageBox.Show("密碼輸入不一致"); return; }
+            if (newPassword.Length < 6) { MessageBox.Show("請輸入正確的密碼格式，請大於6個英文數字"); return; }
+
+
+            string oldSaltStr = await DataService.Mem_LoginGetSalt(member.Account);
+            byte[] oldSalt = Convert.FromBase64String(oldSaltStr);
+            byte[] oldHashpassword = GHashPassword(oldPassword, oldSalt);
+            string oldHashpasswordStr = Convert.ToBase64String(oldHashpassword);
+            if (member.HashPassword != oldHashpasswordStr) { MessageBox.Show("舊密碼登入錯誤"); return; }
+
+            //密碼加密
+            byte[] newSalt = CreateSalt();
+            string newSaltStr = Convert.ToBase64String(newSalt);
+            byte[] newHashpassword = GHashPassword(newPassword, newSalt);
+            string newHashpasswordStr = Convert.ToBase64String(newHashpassword);
+
+            if (await DataService.Mem_EditAccount(newHashpasswordStr, newSaltStr, member.Account))
+            {
+                member = await DataService.Mem_Login(member.Account, newHashpasswordStr);
+                if (member == null) MessageBox.Show("出現錯誤請與克服聯繫");
+                MessageBox.Show("密碼更改成功");
+            }
+        }
+
+        //產生鹽巴
+        public static byte[] CreateSalt()
+        {
+            byte[] buffer = new byte[16];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(buffer);
+            return buffer;
+        }
+
+        //hash來源https://ithelp.ithome.com.tw/articles/10266660
+        public static byte[] GHashPassword(string password, byte[] salt)
+        {
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
+            argon2.Salt = salt;
+            argon2.DegreeOfParallelism = 4; // 4 核心就設成 8
+            argon2.Iterations = 3; // 迭代運算次數
+            argon2.MemorySize = 512 * 512; // 1 GB
+
+            return argon2.GetBytes(16);
         }
     }
 }

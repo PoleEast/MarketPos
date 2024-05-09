@@ -832,6 +832,7 @@ namespace MarketPos
             btnAccountEdit.TabIndex = 34;
             btnAccountEdit.Text = "更改密碼";
             btnAccountEdit.UseVisualStyleBackColor = true;
+            btnAccountEdit.Click += btnAccountEdit_Click;
             // 
             // btnMemberEdit
             // 
@@ -865,10 +866,11 @@ namespace MarketPos
             // txbOldPassword
             // 
             txbOldPassword.Location = new Point(143, 529);
-            txbOldPassword.MaxLength = 30;
+            txbOldPassword.MaxLength = 20;
             txbOldPassword.Name = "txbOldPassword";
             txbOldPassword.Size = new Size(170, 23);
             txbOldPassword.TabIndex = 24;
+            txbOldPassword.KeyPress += checkPassword_KeyPress;
             // 
             // lbOldPassword
             // 
@@ -884,40 +886,42 @@ namespace MarketPos
             // txbCheck
             // 
             txbCheck.Location = new Point(143, 644);
-            txbCheck.MaxLength = 30;
+            txbCheck.MaxLength = 20;
             txbCheck.Name = "txbCheck";
             txbCheck.Size = new Size(170, 23);
             txbCheck.TabIndex = 22;
+            txbCheck.KeyPress += checkPassword_KeyPress;
             // 
             // lbCheck
             // 
             lbCheck.AutoEllipsis = true;
             lbCheck.AutoSize = true;
             lbCheck.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbCheck.Location = new Point(78, 644);
+            lbCheck.Location = new Point(40, 643);
             lbCheck.Name = "lbCheck";
-            lbCheck.Size = new Size(48, 24);
+            lbCheck.Size = new Size(86, 24);
             lbCheck.TabIndex = 21;
-            lbCheck.Text = "地址";
+            lbCheck.Text = "確認密碼";
             // 
             // txbPassword
             // 
             txbPassword.Location = new Point(143, 586);
-            txbPassword.MaxLength = 30;
+            txbPassword.MaxLength = 20;
             txbPassword.Name = "txbPassword";
             txbPassword.Size = new Size(170, 23);
             txbPassword.TabIndex = 20;
+            txbPassword.KeyPress += checkPassword_KeyPress;
             // 
             // lbPassword
             // 
             lbPassword.AutoEllipsis = true;
             lbPassword.AutoSize = true;
             lbPassword.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbPassword.Location = new Point(78, 586);
+            lbPassword.Location = new Point(59, 585);
             lbPassword.Name = "lbPassword";
-            lbPassword.Size = new Size(48, 24);
+            lbPassword.Size = new Size(67, 24);
             lbPassword.TabIndex = 19;
-            lbPassword.Text = "地址";
+            lbPassword.Text = "新密碼";
             // 
             // lbMem_Title2
             // 

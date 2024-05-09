@@ -383,6 +383,26 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"會員基本資料更新失敗\n{ex}"); return false; }
         }
 
+        public static async Task<bool> Mem_EditAccount(string newHashPassword, string newSaltl, string account)
+        {
+            if (!await DS_ConnectionSql()) return false;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE Account
+                           SET password=@newHashPassword,salt=@newSaltl
+                           WHERE account=@account";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@newHashPassword", newHashPassword);
+            com.Parameters.AddWithValue("@newSaltl", newSaltl);
+            com.Parameters.AddWithValue("@account", account);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex) { MessageBox.Show($"密碼更改發生錯誤\n{ex}"); return false; }
+        }
+
         //---------------------------------------------------------------------
         //以下為訂單相關功能
 

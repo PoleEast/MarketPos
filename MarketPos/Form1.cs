@@ -13,6 +13,8 @@ using System.Windows.Forms;
 using System;
 using System.Reflection.Emit;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Security.Principal;
 
 namespace MarketPos
 {
@@ -62,7 +64,7 @@ namespace MarketPos
             tabPagesProduct = tbcProdut.TabPages.Cast<TabPage>().ToList();
 
             //權限功能初始化
-            levelControl(3);
+            levelControl(4);
 
             //暫時使用
             productSort("名稱", true);
@@ -79,6 +81,12 @@ namespace MarketPos
             tbcControl.TabPages.Clear();
             tbcProdut.TabPages.Clear();
 
+
+            if (level <= 4)
+            {
+                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "4").ToArray());
+                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "4").ToArray());
+            }
             if (level <= 3)
             {
                 tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "3").ToArray());
@@ -193,7 +201,7 @@ namespace MarketPos
         }
 
         //限制輸入為數字
-        private void check_KeyPress(object sender, KeyPressEventArgs e)
+        private void checkNum_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
@@ -420,15 +428,30 @@ namespace MarketPos
             member = e;
 
             //UI設置
-            lbMember.Text = $"歡迎回來: {member.Name}";
-            btn_Login.Text = "登出";
             ptb_Buy.Enabled = true;
             ptb_Buy.Visible = true;
             levelControl(member.Level);
+            setMemberProfile(false);
 
             getShoppingOrderID();
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail);
+        }
+        /// <summary>
+        /// 如需重新抓取會員資料請傳入true
+        /// </summary>
+        private async void setMemberProfile(bool mode)
+        {
+            if (member == null || member.Id == 0) return;
+            if (mode) member = await DataService.Mem_Login(member.Account, member.HashPassword);
+
+            lbMember.Text = $"歡迎回來: {member.Name}";
+            btn_Login.Text = "登出";
+            if (member == null) return;
+            txbMem_Name.Text = member.Name;
+            txbMem_Email.Text = member.Email;
+            txbMem_Address.Text = member.Address;
+            txbMem_Phone.Text = member.Phone;
         }
 
         private async void getShoppingOrderID()
@@ -529,6 +552,27 @@ namespace MarketPos
                 orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
                 setShoppingCard(orderDetail);
             }
+        }
+
+        private async void btnMemberEdit_Click(object sender, EventArgs e)
+        {
+            if (member == null) return;
+
+            string emailPattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+            string phonePattern = @"^09\d{8}$";
+
+            if (string.IsNullOrEmpty(txbMem_Name.Text)) { MessageBox.Show("請填入要更改的名字"); return; }
+            if (!string.IsNullOrEmpty(txbMem_Email.Text) && !Regex.IsMatch(txbMem_Email.Text, emailPattern))
+            { MessageBox.Show("請填入正確的MAIL地址"); return; }
+            if (!Regex.IsMatch(txbMem_Phone.Text, phonePattern) && !string.IsNullOrEmpty(txbMem_Phone.Text))
+            { MessageBox.Show("請填入正確的手機號碼"); return; }
+
+            if (!await DataService.Mem_EditProfile(txbMem_Name.Text.Trim(), txbMem_Address.Text.Trim(),
+                    txbMem_Email.Text.Trim(), txbMem_Phone.Text, member.Id))
+                return;
+
+            MessageBox.Show("會員基本資料更新成功");
+            setMemberProfile(true);
         }
     }
 }

@@ -332,7 +332,7 @@ namespace MarketPos
             Member member = new Member();
             if (!await DS_ConnectionSql()) return member;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT Account.account,name,Member.id as ID, Account.password as password,Member.level
+            string sql = @"SELECT * ,Member.id as ID
                            FROM Account
                            JOIN [Member]
                            ON [Member].account=Account.id
@@ -348,14 +348,39 @@ namespace MarketPos
                 using SqlDataReader reader = com.ExecuteReader();
                 if (!reader.HasRows) return member;
                 reader.Read();
-                member.Id = (int)reader["id"];
+                member.Id = (int)reader["ID"];
                 member.Name = (string)reader["name"];
                 member.Account = (string)reader["account"];
                 member.HashPassword = (string)reader["password"];
                 member.Level = (int)reader["level"];
+                member.Email = reader["email"] != DBNull.Value ? (string)reader["email"] : string.Empty;
+                member.Phone = reader["phone"] != DBNull.Value ? (string)reader["phone"] : string.Empty;
+                member.Address = reader["address"] != DBNull.Value ? (string)reader["address"] : string.Empty; ;
                 return member;
             }
             catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return member; }
+        }
+
+        public static async Task<bool> Mem_EditProfile(string name, string address, string email, string phone, int id)
+        {
+            if (!await DS_ConnectionSql()) return false;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE Member
+                           SET address=@address,email=@email,name=@name,phone=@phone
+                           WHERE Member.id=@id";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@name", name);
+            com.Parameters.AddWithValue("@address", address);
+            com.Parameters.AddWithValue("@email", email);
+            com.Parameters.AddWithValue("@phone", phone);
+            com.Parameters.AddWithValue("@id", id);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex) { MessageBox.Show($"會員基本資料更新失敗\n{ex}"); return false; }
         }
 
         //---------------------------------------------------------------------

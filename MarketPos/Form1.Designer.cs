@@ -70,6 +70,7 @@ namespace MarketPos
             btnAddOriginType = new Button();
             lbAddP_price = new Label();
             tbMemSerch = new TabPage();
+            pictureBox1 = new PictureBox();
             ptb_Buy = new PictureBox();
             txbTotal = new TextBox();
             flp_shoppingCar = new FlowLayoutPanel();
@@ -89,6 +90,27 @@ namespace MarketPos
             lbS_Name = new Label();
             btntest = new Button();
             tbcControl = new TabControl();
+            tbMenberEdit = new TabPage();
+            btnAccountEdit = new Button();
+            btnMemberEdit = new Button();
+            ptbAccount = new PictureBox();
+            ptbMember = new PictureBox();
+            txbOldPassword = new TextBox();
+            lbOldPassword = new Label();
+            txbCheck = new TextBox();
+            lbCheck = new Label();
+            txbPassword = new TextBox();
+            lbPassword = new Label();
+            lbMem_Title2 = new Label();
+            txbMem_Address = new TextBox();
+            lbMem_Address = new Label();
+            txbMem_Email = new TextBox();
+            lbMem_Email = new Label();
+            txbMem_Phone = new TextBox();
+            lbMem_Phone = new Label();
+            lbMem_Title = new Label();
+            txbMem_Name = new TextBox();
+            lbMem_Name = new Label();
             btn_Login = new Button();
             lbMember = new Label();
             tbcProdut.SuspendLayout();
@@ -96,8 +118,12 @@ namespace MarketPos
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
             tbAddProduct.SuspendLayout();
             tbMemSerch.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ptb_Buy).BeginInit();
             tbcControl.SuspendLayout();
+            tbMenberEdit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ptbAccount).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ptbMember).BeginInit();
             SuspendLayout();
             // 
             // tbcProdut
@@ -134,7 +160,7 @@ namespace MarketPos
             tbProduct.Padding = new Padding(3);
             tbProduct.Size = new Size(1076, 754);
             tbProduct.TabIndex = 0;
-            tbProduct.Tag = "3";
+            tbProduct.Tag = "4";
             tbProduct.Text = "商品";
             tbProduct.UseVisualStyleBackColor = true;
             // 
@@ -366,7 +392,7 @@ namespace MarketPos
             txbAddP_price.Name = "txbAddP_price";
             txbAddP_price.Size = new Size(170, 23);
             txbAddP_price.TabIndex = 9;
-            txbAddP_price.KeyPress += check_KeyPress;
+            txbAddP_price.KeyPress += checkNum_KeyPress;
             // 
             // cbAddP_category
             // 
@@ -384,7 +410,7 @@ namespace MarketPos
             txbAddP_weight.Name = "txbAddP_weight";
             txbAddP_weight.Size = new Size(170, 23);
             txbAddP_weight.TabIndex = 10;
-            txbAddP_weight.KeyPress += check_KeyPress;
+            txbAddP_weight.KeyPress += checkNum_KeyPress;
             // 
             // rtbAddP_description
             // 
@@ -525,6 +551,7 @@ namespace MarketPos
             // 
             // tbMemSerch
             // 
+            tbMemSerch.Controls.Add(pictureBox1);
             tbMemSerch.Controls.Add(ptb_Buy);
             tbMemSerch.Controls.Add(txbTotal);
             tbMemSerch.Controls.Add(flp_shoppingCar);
@@ -547,9 +574,18 @@ namespace MarketPos
             tbMemSerch.Padding = new Padding(3);
             tbMemSerch.Size = new Size(462, 754);
             tbMemSerch.TabIndex = 1;
-            tbMemSerch.Tag = "3";
+            tbMemSerch.Tag = "4";
             tbMemSerch.Text = "商品查詢";
             tbMemSerch.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.loupe;
+            pictureBox1.Location = new Point(353, 23);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(67, 74);
+            pictureBox1.TabIndex = 36;
+            pictureBox1.TabStop = false;
             // 
             // ptb_Buy
             // 
@@ -579,6 +615,8 @@ namespace MarketPos
             // flp_shoppingCar
             // 
             flp_shoppingCar.AutoScroll = true;
+            flp_shoppingCar.BackgroundImage = Properties.Resources.shopping_cart2;
+            flp_shoppingCar.BackgroundImageLayout = ImageLayout.Center;
             flp_shoppingCar.BorderStyle = BorderStyle.FixedSingle;
             flp_shoppingCar.Location = new Point(6, 269);
             flp_shoppingCar.Name = "flp_shoppingCar";
@@ -656,7 +694,7 @@ namespace MarketPos
             txbS_weight.Name = "txbS_weight";
             txbS_weight.Size = new Size(170, 23);
             txbS_weight.TabIndex = 24;
-            txbS_weight.KeyPress += check_KeyPress;
+            txbS_weight.KeyPress += checkNum_KeyPress;
             // 
             // txbS_Price
             // 
@@ -665,7 +703,7 @@ namespace MarketPos
             txbS_Price.Name = "txbS_Price";
             txbS_Price.Size = new Size(170, 23);
             txbS_Price.TabIndex = 13;
-            txbS_Price.KeyPress += check_KeyPress;
+            txbS_Price.KeyPress += checkNum_KeyPress;
             // 
             // txbS_Name
             // 
@@ -746,12 +784,237 @@ namespace MarketPos
             // 
             tbcControl.Controls.Add(tbMemSerch);
             tbcControl.Controls.Add(tbAddProduct);
+            tbcControl.Controls.Add(tbMenberEdit);
             tbcControl.Location = new Point(1114, 49);
             tbcControl.Name = "tbcControl";
             tbcControl.SelectedIndex = 0;
             tbcControl.Size = new Size(470, 782);
             tbcControl.TabIndex = 10;
             tbcControl.Tag = "";
+            // 
+            // tbMenberEdit
+            // 
+            tbMenberEdit.Controls.Add(btnAccountEdit);
+            tbMenberEdit.Controls.Add(btnMemberEdit);
+            tbMenberEdit.Controls.Add(ptbAccount);
+            tbMenberEdit.Controls.Add(ptbMember);
+            tbMenberEdit.Controls.Add(txbOldPassword);
+            tbMenberEdit.Controls.Add(lbOldPassword);
+            tbMenberEdit.Controls.Add(txbCheck);
+            tbMenberEdit.Controls.Add(lbCheck);
+            tbMenberEdit.Controls.Add(txbPassword);
+            tbMenberEdit.Controls.Add(lbPassword);
+            tbMenberEdit.Controls.Add(lbMem_Title2);
+            tbMenberEdit.Controls.Add(txbMem_Address);
+            tbMenberEdit.Controls.Add(lbMem_Address);
+            tbMenberEdit.Controls.Add(txbMem_Email);
+            tbMenberEdit.Controls.Add(lbMem_Email);
+            tbMenberEdit.Controls.Add(txbMem_Phone);
+            tbMenberEdit.Controls.Add(lbMem_Phone);
+            tbMenberEdit.Controls.Add(lbMem_Title);
+            tbMenberEdit.Controls.Add(txbMem_Name);
+            tbMenberEdit.Controls.Add(lbMem_Name);
+            tbMenberEdit.Location = new Point(4, 24);
+            tbMenberEdit.Name = "tbMenberEdit";
+            tbMenberEdit.Padding = new Padding(3);
+            tbMenberEdit.Size = new Size(462, 754);
+            tbMenberEdit.TabIndex = 2;
+            tbMenberEdit.Tag = "3";
+            tbMenberEdit.Text = "基本資料";
+            tbMenberEdit.UseVisualStyleBackColor = true;
+            // 
+            // btnAccountEdit
+            // 
+            btnAccountEdit.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnAccountEdit.Location = new Point(324, 687);
+            btnAccountEdit.Name = "btnAccountEdit";
+            btnAccountEdit.Size = new Size(96, 43);
+            btnAccountEdit.TabIndex = 34;
+            btnAccountEdit.Text = "更改密碼";
+            btnAccountEdit.UseVisualStyleBackColor = true;
+            // 
+            // btnMemberEdit
+            // 
+            btnMemberEdit.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnMemberEdit.Location = new Point(304, 342);
+            btnMemberEdit.Name = "btnMemberEdit";
+            btnMemberEdit.Size = new Size(116, 43);
+            btnMemberEdit.TabIndex = 33;
+            btnMemberEdit.Text = "更改會員資料";
+            btnMemberEdit.UseVisualStyleBackColor = true;
+            btnMemberEdit.Click += btnMemberEdit_Click;
+            // 
+            // ptbAccount
+            // 
+            ptbAccount.Image = Properties.Resources.account;
+            ptbAccount.Location = new Point(290, 405);
+            ptbAccount.Name = "ptbAccount";
+            ptbAccount.Size = new Size(130, 118);
+            ptbAccount.TabIndex = 26;
+            ptbAccount.TabStop = false;
+            // 
+            // ptbMember
+            // 
+            ptbMember.Image = Properties.Resources.membership;
+            ptbMember.Location = new Point(290, 3);
+            ptbMember.Name = "ptbMember";
+            ptbMember.Size = new Size(142, 130);
+            ptbMember.TabIndex = 25;
+            ptbMember.TabStop = false;
+            // 
+            // txbOldPassword
+            // 
+            txbOldPassword.Location = new Point(143, 529);
+            txbOldPassword.MaxLength = 30;
+            txbOldPassword.Name = "txbOldPassword";
+            txbOldPassword.Size = new Size(170, 23);
+            txbOldPassword.TabIndex = 24;
+            // 
+            // lbOldPassword
+            // 
+            lbOldPassword.AutoEllipsis = true;
+            lbOldPassword.AutoSize = true;
+            lbOldPassword.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbOldPassword.Location = new Point(59, 528);
+            lbOldPassword.Name = "lbOldPassword";
+            lbOldPassword.Size = new Size(67, 24);
+            lbOldPassword.TabIndex = 23;
+            lbOldPassword.Text = "舊密碼";
+            // 
+            // txbCheck
+            // 
+            txbCheck.Location = new Point(143, 644);
+            txbCheck.MaxLength = 30;
+            txbCheck.Name = "txbCheck";
+            txbCheck.Size = new Size(170, 23);
+            txbCheck.TabIndex = 22;
+            // 
+            // lbCheck
+            // 
+            lbCheck.AutoEllipsis = true;
+            lbCheck.AutoSize = true;
+            lbCheck.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbCheck.Location = new Point(78, 644);
+            lbCheck.Name = "lbCheck";
+            lbCheck.Size = new Size(48, 24);
+            lbCheck.TabIndex = 21;
+            lbCheck.Text = "地址";
+            // 
+            // txbPassword
+            // 
+            txbPassword.Location = new Point(143, 586);
+            txbPassword.MaxLength = 30;
+            txbPassword.Name = "txbPassword";
+            txbPassword.Size = new Size(170, 23);
+            txbPassword.TabIndex = 20;
+            // 
+            // lbPassword
+            // 
+            lbPassword.AutoEllipsis = true;
+            lbPassword.AutoSize = true;
+            lbPassword.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbPassword.Location = new Point(78, 586);
+            lbPassword.Name = "lbPassword";
+            lbPassword.Size = new Size(48, 24);
+            lbPassword.TabIndex = 19;
+            lbPassword.Text = "地址";
+            // 
+            // lbMem_Title2
+            // 
+            lbMem_Title2.AutoSize = true;
+            lbMem_Title2.Font = new Font("Microsoft JhengHei UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            lbMem_Title2.Location = new Point(59, 436);
+            lbMem_Title2.Name = "lbMem_Title2";
+            lbMem_Title2.Size = new Size(146, 41);
+            lbMem_Title2.TabIndex = 18;
+            lbMem_Title2.Text = "帳號設定";
+            // 
+            // txbMem_Address
+            // 
+            txbMem_Address.Location = new Point(143, 296);
+            txbMem_Address.MaxLength = 30;
+            txbMem_Address.Name = "txbMem_Address";
+            txbMem_Address.Size = new Size(170, 23);
+            txbMem_Address.TabIndex = 17;
+            // 
+            // lbMem_Address
+            // 
+            lbMem_Address.AutoEllipsis = true;
+            lbMem_Address.AutoSize = true;
+            lbMem_Address.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMem_Address.Location = new Point(78, 296);
+            lbMem_Address.Name = "lbMem_Address";
+            lbMem_Address.Size = new Size(48, 24);
+            lbMem_Address.TabIndex = 16;
+            lbMem_Address.Text = "地址";
+            // 
+            // txbMem_Email
+            // 
+            txbMem_Email.Location = new Point(143, 246);
+            txbMem_Email.MaxLength = 30;
+            txbMem_Email.Name = "txbMem_Email";
+            txbMem_Email.Size = new Size(170, 23);
+            txbMem_Email.TabIndex = 15;
+            // 
+            // lbMem_Email
+            // 
+            lbMem_Email.AutoEllipsis = true;
+            lbMem_Email.AutoSize = true;
+            lbMem_Email.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMem_Email.Location = new Point(59, 246);
+            lbMem_Email.Name = "lbMem_Email";
+            lbMem_Email.Size = new Size(67, 24);
+            lbMem_Email.TabIndex = 14;
+            lbMem_Email.Text = "e-mail";
+            // 
+            // txbMem_Phone
+            // 
+            txbMem_Phone.Location = new Point(143, 193);
+            txbMem_Phone.MaxLength = 10;
+            txbMem_Phone.Name = "txbMem_Phone";
+            txbMem_Phone.Size = new Size(170, 23);
+            txbMem_Phone.TabIndex = 13;
+            txbMem_Phone.KeyPress += checkNum_KeyPress;
+            // 
+            // lbMem_Phone
+            // 
+            lbMem_Phone.AutoEllipsis = true;
+            lbMem_Phone.AutoSize = true;
+            lbMem_Phone.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMem_Phone.Location = new Point(78, 193);
+            lbMem_Phone.Name = "lbMem_Phone";
+            lbMem_Phone.Size = new Size(48, 24);
+            lbMem_Phone.TabIndex = 12;
+            lbMem_Phone.Text = "電話";
+            // 
+            // lbMem_Title
+            // 
+            lbMem_Title.AutoSize = true;
+            lbMem_Title.Font = new Font("Microsoft JhengHei UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            lbMem_Title.Location = new Point(59, 58);
+            lbMem_Title.Name = "lbMem_Title";
+            lbMem_Title.Size = new Size(146, 41);
+            lbMem_Title.TabIndex = 11;
+            lbMem_Title.Text = "基本資料";
+            // 
+            // txbMem_Name
+            // 
+            txbMem_Name.Location = new Point(143, 138);
+            txbMem_Name.MaxLength = 30;
+            txbMem_Name.Name = "txbMem_Name";
+            txbMem_Name.Size = new Size(170, 23);
+            txbMem_Name.TabIndex = 10;
+            // 
+            // lbMem_Name
+            // 
+            lbMem_Name.AutoEllipsis = true;
+            lbMem_Name.AutoSize = true;
+            lbMem_Name.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMem_Name.Location = new Point(78, 138);
+            lbMem_Name.Name = "lbMem_Name";
+            lbMem_Name.Size = new Size(48, 24);
+            lbMem_Name.TabIndex = 9;
+            lbMem_Name.Text = "名稱";
             // 
             // btn_Login
             // 
@@ -799,8 +1062,13 @@ namespace MarketPos
             tbAddProduct.PerformLayout();
             tbMemSerch.ResumeLayout(false);
             tbMemSerch.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)ptb_Buy).EndInit();
             tbcControl.ResumeLayout(false);
+            tbMenberEdit.ResumeLayout(false);
+            tbMenberEdit.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ptbAccount).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ptbMember).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -872,5 +1140,27 @@ namespace MarketPos
         private Button btntest;
         private TextBox txbTotal;
         private PictureBox ptb_Buy;
+        private TabPage tbMenberEdit;
+        private PictureBox pictureBox1;
+        private TextBox txbMem_Name;
+        private Label lbMem_Name;
+        private TextBox txbMem_Phone;
+        private Label lbMem_Phone;
+        private Label lbMem_Title;
+        private Label lbMem_Title2;
+        private TextBox txbMem_Address;
+        private Label lbMem_Address;
+        private TextBox txbMem_Email;
+        private Label lbMem_Email;
+        private TextBox txbCheck;
+        private Label lbCheck;
+        private TextBox txbPassword;
+        private Label lbPassword;
+        private TextBox txbOldPassword;
+        private Label lbOldPassword;
+        private PictureBox ptbAccount;
+        private PictureBox ptbMember;
+        private Button btnMemberEdit;
+        private Button btnAccountEdit;
     }
 }

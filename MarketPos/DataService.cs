@@ -37,12 +37,12 @@ namespace MarketPos
         /// <summary>
         /// 獲取商品卡片
         /// </summary>
-        public static async Task P_getProductCardsDatas()
+        public static async Task<List<ProductsData>> P_getProductCardsDatas()
         {
             List<ProductsData> products = [];
-            if (!await DS_ConnectionSql()) return;
+            if (!await DS_ConnectionSql()) return products;
             using SqlConnection conn = new(ConnString);
-            string sql = @$"SELECT Products.id,Products.name,Category.name AS  categoryName,price,shelveDate,description,weight,origin.name AS originname,stock
+            string sql = @$"SELECT Products.id,Products.name,Category.name AS  categoryName,price,shelveDate,description,weight,origin.name AS originname,stock,isShelve
                                 FROM Products
                                 JOIN Category ON Category.id=category
                                 JOIN origin ON origin.id=origin
@@ -64,13 +64,14 @@ namespace MarketPos
                         Price = (decimal)reader["price"],
                         ShelveDate = (DateTime)reader["shelveDate"],
                         Stock = (int)reader["stock"],
-                        Origin = (string)reader["originname"]
+                        Origin = (string)reader["originname"],
+                        IsShelve = (bool)reader["isShelve"]
                     };
                     products.Add(card);
                 }
-                Form1.productsDatas = products;
+                return products;
             }
-            catch (Exception ex) { MessageBox.Show($"獲取商品資料發生錯誤\n {ex} "); }
+            catch (Exception ex) { MessageBox.Show($"獲取商品資料發生錯誤\n {ex} "); return products; }
         }
 
         public static async void P_insertProduct(ProductsData productsData)
@@ -105,10 +106,10 @@ namespace MarketPos
         /// weightOrder true為以上，false為以下
         /// </summary>
         /// <returns>查到的資料列表</returns>
-        public static async Task P_SelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
+        public static async Task<List<ProductsData>> P_SelectProducts(ProductsData productsData, bool pricesort, bool weightsort)
         {
             List<ProductsData> productsDatas = [];
-            if (!await DS_ConnectionSql()) return;
+            if (!await DS_ConnectionSql()) return productsDatas;
             string sqlSelect = @"SELECT * ,Category.name AS categoryName,Origin.name AS originName
                                 FROM Products 
                                 JOIN Category ON Category.id=category
@@ -168,9 +169,9 @@ namespace MarketPos
                     };
                     productsDatas.Add(data);
                 }
-                Form1.productsDatas = productsDatas;
+                return productsDatas;
             }
-            catch (Exception ex) { MessageBox.Show($"差尋錯誤:\n{ex}"); }
+            catch (Exception ex) { MessageBox.Show($"差尋錯誤:\n{ex}"); return productsDatas; }
         }
         public static async Task P_GetCategoryType()
         {
@@ -601,7 +602,7 @@ namespace MarketPos
                     {
                         com.Parameters.Clear();
 
-                        var product = Form1.productsDatas.First(o => o.Id == item.Key);
+                        var product = Form1.shelveProducts.First(o => o.Id == item.Key);
                         int stock = product.Stock - item.Value;
                         if (stock < 0) throw new Exception();
 

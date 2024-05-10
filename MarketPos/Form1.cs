@@ -25,12 +25,13 @@ namespace MarketPos
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
-        public static List<ProductsData> productsDatas = [];
         public static Member? member;
+        public static List<ProductsData> shelveProducts = [];
 
         //key是id,value是數量
         private static Dictionary<int, int> orderDetail = [];
         private List<ProductCard> productCards = [];
+        private List<ProductsData> unshelveProducts = [];
         private List<TabPage> tabPagesControl = [];
         private List<TabPage> tabPagesProduct = [];
         private int nextOrderNum;
@@ -41,7 +42,7 @@ namespace MarketPos
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await DataService.P_getProductCardsDatas();
+            getProductCardsDatas(await DataService.P_getProductCardsDatas());
 
             //設定最新訂單編號 格式ex:"yydddoooo"
             string latestOrderNum = (await DataService.Odr_getLatestOrderNum()).ToString();
@@ -76,6 +77,12 @@ namespace MarketPos
             productSort("名稱", true);
             Set_Page();
             cb_init();
+        }
+
+        private void getProductCardsDatas(List<ProductsData> datas)
+        {
+            shelveProducts = datas.Where(o => o.IsShelve).ToList();
+            unshelveProducts = datas.Where(o => !o.IsShelve).ToList();
         }
 
         private void levelControl(int level)
@@ -123,11 +130,11 @@ namespace MarketPos
             //計算需要哪個區間的商品
             int uip_Count = productCards.Count;
             int first = uip_Count * page - uip_Count;
-            int last = productsDatas.Count - first < 8 ? productsDatas.Count : first + uip_Count;
+            int last = shelveProducts.Count - first < 8 ? shelveProducts.Count : first + uip_Count;
 
             //將商品顯示出來
             for (int i = first; i < last; i++)
-                currentUI_Cards.Add(productsDatas[i]);
+                currentUI_Cards.Add(shelveProducts[i]);
             foreach (ProductsData product in currentUI_Cards)
             {
                 setProductCardsData(product);
@@ -166,15 +173,15 @@ namespace MarketPos
         public void productSort(string condition, bool mode)
         {
             if (condition == "名稱")
-                productsDatas.Sort((a, b) => mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name));
+                shelveProducts.Sort((a, b) => mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name));
             else if (condition == "種類")
-                productsDatas.Sort((a, b) => mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category));
+                shelveProducts.Sort((a, b) => mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category));
             else if (condition == "價格")
-                productsDatas.Sort((a, b) => mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
+                shelveProducts.Sort((a, b) => mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
             else if (condition == "重量")
-                productsDatas.Sort((a, b) => mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight));
+                shelveProducts.Sort((a, b) => mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight));
             else if (condition == "產地")
-                productsDatas.Sort((a, b) => mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin));
+                shelveProducts.Sort((a, b) => mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin));
             else
             {
                 MessageBox.Show("商品排序出現錯誤");
@@ -255,7 +262,7 @@ namespace MarketPos
 
         private void Set_Page()
         {
-            int p_count = productsDatas.Count;
+            int p_count = shelveProducts.Count;
 
             //訂正page頁數
             int page = (int)Math.Floor(p_count / 8d);
@@ -341,8 +348,9 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
-            await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (productsDatas.Count == 0) { MessageBox.Show("查無此資料"); return; }
+            var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
+            if (data.Count == 0) { MessageBox.Show("查無此資料"); return; }
+            getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
                 MessageBox.Show("找不到ptb_Sort.tag");
@@ -376,7 +384,7 @@ namespace MarketPos
             cbS_Category.SelectedIndex = -1;
             cbS_Origin.SelectedIndex = -1;
             cb_Sort.SelectedIndex = 0;
-            await DataService.P_getProductCardsDatas();
+            getProductCardsDatas(await DataService.P_getProductCardsDatas());
             if (ptb_Sort.Tag == null)
             {
                 MessageBox.Show("找不到ptb_Sort.tag");
@@ -539,7 +547,7 @@ namespace MarketPos
             foreach (var item in orderDetail)
             {
                 ShoppingCard shoppingCard = new ShoppingCard(isShoppingCar);
-                ProductsData? productsData = productsDatas.FirstOrDefault(o => o.Id == item.Key);
+                ProductsData? productsData = shelveProducts.FirstOrDefault(o => o.Id == item.Key);
                 if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
                 shoppingCard.SetCard(productsData, item.Value);
                 flp.Controls.Add(shoppingCard);
@@ -589,7 +597,7 @@ namespace MarketPos
                 setShoppingCard(orderDetail, flp_shoppingCar, true);
 
                 //重新獲取商品資料
-                await DataService.P_getProductCardsDatas();
+                getProductCardsDatas(await DataService.P_getProductCardsDatas());
                 if (ptb_Sort.Tag != null)
                     productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
                 Set_Page();

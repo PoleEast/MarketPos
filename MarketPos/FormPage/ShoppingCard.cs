@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MarketPos.Models;
 
 namespace MarketPos
 {
@@ -61,6 +62,13 @@ namespace MarketPos
             if (productsData == null) return;
 
             OrderItemDelete?.Invoke(this, productsData.Id);
+        }
+        private void shoppingCard_Click(object sender, EventArgs e)
+        {
+            if (productsData == null) return;
+            Detail_PCard detail_PCard = new(productsData);
+            detail_PCard.StartPosition = FormStartPosition.CenterParent;
+            detail_PCard.ShowDialog();
         }
     }
 }

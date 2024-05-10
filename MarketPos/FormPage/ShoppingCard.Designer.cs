@@ -46,6 +46,7 @@
             lbName.Size = new Size(54, 26);
             lbName.TabIndex = 28;
             lbName.Text = "名稱";
+            lbName.Click += shoppingCard_Click;
             // 
             // lbCount
             // 
@@ -57,6 +58,7 @@
             lbCount.Size = new Size(48, 24);
             lbCount.TabIndex = 31;
             lbCount.Text = "數量";
+            lbCount.Click += shoppingCard_Click;
             // 
             // btnDelete
             // 
@@ -79,6 +81,7 @@
             txbTotal.TabIndex = 33;
             txbTotal.Text = "金額:";
             txbTotal.TextAlign = HorizontalAlignment.Right;
+            txbTotal.Click += shoppingCard_Click;
             // 
             // lbPrice
             // 
@@ -90,6 +93,7 @@
             lbPrice.Size = new Size(42, 19);
             lbPrice.TabIndex = 34;
             lbPrice.Text = "單價:";
+            lbPrice.Click += shoppingCard_Click;
             // 
             // cbCount
             // 
@@ -97,6 +101,7 @@
             cbCount.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCount.Enabled = false;
             cbCount.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbCount.ForeColor = SystemColors.WindowText;
             cbCount.FormattingEnabled = true;
             cbCount.Location = new Point(355, 3);
             cbCount.Name = "cbCount";
@@ -115,8 +120,10 @@
             Controls.Add(lbCount);
             Controls.Add(cbCount);
             Controls.Add(lbName);
+            Cursor = Cursors.Hand;
             Name = "ShoppingCard";
             Size = new Size(416, 89);
+            Click += shoppingCard_Click;
             ResumeLayout(false);
             PerformLayout();
         }

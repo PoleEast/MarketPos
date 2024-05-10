@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using Konscious.Security.Cryptography;
 using Microsoft.VisualBasic.ApplicationServices;
+using MarketPos.Models;
 
 namespace MarketPos.FormPage
 {

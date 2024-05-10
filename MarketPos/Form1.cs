@@ -18,6 +18,7 @@ using System.Security.Principal;
 using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using System.Text;
+using MarketPos.Models;
 
 namespace MarketPos
 {
@@ -26,6 +27,8 @@ namespace MarketPos
         public static string Imgpath = @"../../../ProductsImg";
         public static List<ProductsData> productsDatas = [];
         public static Member? member;
+
+        //key是id,value是數量
         private static Dictionary<int, int> orderDetail = [];
         private List<ProductCard> productCards = [];
         private List<TabPage> tabPagesControl = [];
@@ -427,10 +430,9 @@ namespace MarketPos
                 lbMember.Text = string.Empty;
                 ptb_Buy.Enabled = false;
                 ptb_Buy.Visible = false;
-                levelControl(3);
+                levelControl(4);
             }
             btnS_Clear_Click(this, EventArgs.Empty);
-
         }
         private async void LoginForMem_LoginSuccess(object? sender, Member e)
         {
@@ -445,10 +447,20 @@ namespace MarketPos
             levelControl(member.Level);
             setMemberProfile(false);
 
+            //會員訂單處理
             getShoppingOrderID();
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail);
+            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            setOrderHistroy();
         }
+
+        private async void setOrderHistroy()
+        {
+            if (member == null || member.Id == 0) return;
+
+            cbOdr_Number.DataSource = await DataService.Odr_getHistoryNum(member.Id);
+        }
+
         /// <summary>
         /// 如需重新抓取會員資料請傳入true
         /// </summary>
@@ -459,7 +471,7 @@ namespace MarketPos
 
             lbMember.Text = $"歡迎回來: {member.Name}";
             btn_Login.Text = "登出";
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
             txbMem_Name.Text = member.Name;
             txbMem_Email.Text = member.Email;
             txbMem_Address.Text = member.Address;
@@ -468,7 +480,7 @@ namespace MarketPos
 
         private async void getShoppingOrderID()
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
             int orderid = await DataService.Odr_GetMemberOrder(member.Id);
             if (orderid == 0)
             {
@@ -489,7 +501,7 @@ namespace MarketPos
 
         private async void Detail_PCard_OrderItemAdded(object? sender, KeyValuePair<int, int> e)
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
 
             if (!orderDetail.ContainsKey(e.Key))
                 await DataService.Odr_CreateOrderDetail(member.OrderId, e.Key, e.Value);
@@ -497,50 +509,60 @@ namespace MarketPos
                 await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
 
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail);
+            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            tbcControl.SelectedIndex = 0;
         }
 
         private async void ShoppingCard_OrderItemChange(object? sender, KeyValuePair<int, int> e)
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
 
             await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail);
+            setShoppingCard(orderDetail, flp_shoppingCar, true);
         }
 
         private async void ShoppingCard_OrderItemDelete(object? sender, int e)
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
 
             await DataService.Odr_DeleteOrderDetail(member.OrderId, e);
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail);
+            setShoppingCard(orderDetail, flp_shoppingCar, true);
         }
 
-        private void setShoppingCard(Dictionary<int, int> orderDetail)
+        /// <param name="orderDetail">訂單詳細資料</param>
+        /// <param name="flp">設置的版面</param>
+        private void setShoppingCard(Dictionary<int, int> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
         {
-            flp_shoppingCar.Controls.Clear();
+            flp.Controls.Clear();
             foreach (var item in orderDetail)
             {
-                ShoppingCard shoppingCard = new ShoppingCard(true);
+                ShoppingCard shoppingCard = new ShoppingCard(isShoppingCar);
                 ProductsData? productsData = productsDatas.FirstOrDefault(o => o.Id == item.Key);
                 if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
                 shoppingCard.SetCard(productsData, item.Value);
-                flp_shoppingCar.Controls.Add(shoppingCard);
+                flp.Controls.Add(shoppingCard);
             }
         }
 
-        private void flp_shoppingCar_ControlChange(object sender, ControlEventArgs e)
+        /// <summary>
+        /// 計算總金額
+        /// </summary>
+        private void flp_ControlChange(object sender, EventArgs e)
         {
             FlowLayoutPanel? flowLayoutPanel = sender as FlowLayoutPanel;
             if (flowLayoutPanel == null) return;
 
+            //選擇要將金額輸出在哪個txb
+            System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
+            if (flowLayoutPanel.Name == "flp_shoppingCar") textBox = txbTotal;
+            else if (flowLayoutPanel.Name == "flpOdr_Histroy") textBox = txbOdr_Total;
+
             List<ShoppingCard> shoppingCards = flowLayoutPanel.Controls.OfType<ShoppingCard>().ToList();
             if (shoppingCards.Count == 0)
-                txbTotal.Text = string.Empty;
-            else txbTotal.Text = "總金額:" + shoppingCards.Sum(o => o.total).ToString() + "$";
-
+                textBox.Text = string.Empty;
+            else textBox.Text = "總金額:" + shoppingCards.Sum(o => o.total).ToString() + "$";
         }
 
         private async void ptb_Buy_Click(object sender, EventArgs e)
@@ -557,18 +579,27 @@ namespace MarketPos
 
             //修改訂單狀態
             if (await DataService.Odr_orderPlaced(member.OrderId, purchaseForm.payment, purchaseForm.OName,
-                purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress))
+                purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress, orderDetail))
             {
                 MessageBox.Show("訂單下單成功");
+
+                //初始化訂單
                 getShoppingOrderID();
                 orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-                setShoppingCard(orderDetail);
+                setShoppingCard(orderDetail, flp_shoppingCar, true);
+
+                //重新獲取商品資料
+                await DataService.P_getProductCardsDatas();
+                if (ptb_Sort.Tag != null)
+                    productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
+                Set_Page();
+                setOrderHistroy();
             }
         }
 
         private async void btnMemberEdit_Click(object sender, EventArgs e)
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
 
             string emailPattern =
                 @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
@@ -590,7 +621,7 @@ namespace MarketPos
 
         private async void btnAccountEdit_Click(object sender, EventArgs e)
         {
-            if (member == null) return;
+            if (member == null || member.Id == 0) return;
 
             string oldPassword = txbOldPassword.Text.Trim();
             string newPassword = txbPassword.Text.Trim();
@@ -619,6 +650,9 @@ namespace MarketPos
                 member = await DataService.Mem_Login(member.Account, newHashpasswordStr);
                 if (member == null) MessageBox.Show("出現錯誤請與克服聯繫");
                 MessageBox.Show("密碼更改成功");
+                txbOldPassword.Text = string.Empty;
+                txbPassword.Text = string.Empty;
+                txbCheck.Text = string.Empty;
             }
         }
 
@@ -641,6 +675,44 @@ namespace MarketPos
             argon2.MemorySize = 512 * 512; // 1 GB
 
             return argon2.GetBytes(16);
+        }
+
+        private void lb_TextChanged(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Label? label = sender as System.Windows.Forms.Label;
+            if (label == null) return;
+
+            // 計算文字寬度和標籤寬度的比例
+            int minFontSize = 6;
+            if (string.IsNullOrEmpty(label.Text)) return;
+            float ratio = 200f / TextRenderer.MeasureText(label.Text, label.Font).Width;
+
+            // 如果比例小於1，調整字體大小
+            if (ratio < 1)
+            {
+                int newSize = (int)(label.Font.Size * ratio);
+                newSize = Math.Max(newSize, minFontSize);
+                label.Font = new Font(label.Font.FontFamily, newSize, label.Font.Style);
+            }
+        }
+
+        private async void cbOdr_Number_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbOdr_Number.SelectedValue == null) return;
+            if (member == null || member.Id == 0) return;
+
+            int orderid = (int)cbOdr_Number.SelectedValue;
+            var orderDetail = await DataService.Odr_GetOrderDetail(orderid);
+            var orderData = await DataService.Odr_GetOrderData(orderid, member.Id);
+            var paymentmethod = await DataService.Odr_GetPayment();
+
+            setShoppingCard(orderDetail, flpOdr_Histroy, false);
+            lbOdr_date.Text = "訂購日期 : " + orderData.PlacedDate.ToString("yyyy年MM月dd日");
+            lbOdr_Payment.Text = "付款方式 : " + paymentmethod[orderData.Payment];
+            lbOdr_OName.Text = "訂購人姓名 :" + orderData.OrdererName;
+            txbOdr_OAdress.Text = orderData.OrdererAddress;
+            lbOdr_RName.Text = "收貨人姓名 :" + orderData.ReceiverName;
+            txbOdr_RAdress.Text = orderData.ReceiverAddress;
         }
     }
 }

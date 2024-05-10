@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketPos
+namespace MarketPos.Models
 {
     public class Member
     {

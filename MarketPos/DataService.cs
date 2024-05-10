@@ -1,4 +1,5 @@
-﻿using Microsoft.SqlServer.Server;
+﻿using MarketPos.Models;
+using Microsoft.SqlServer.Server;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -14,7 +15,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=1.175.87.203,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=1.175.95.119,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -486,6 +487,8 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"創建訂單明細失敗\n{ex}"); return; }
         }
 
+
+        /// <returns>Dictionary key=產品ID value=數量</returns>
         public static async Task<Dictionary<int, int>> Odr_GetOrderDetail(int orderid)
         {
             Dictionary<int, int> orderDetail = [];
@@ -564,30 +567,103 @@ namespace MarketPos
         }
 
         public static async Task<bool> Odr_orderPlaced(int orderid, int paymentMethodID, string ordererName, string ordererAddress,
-            string receiverName, string receiverAddress)
+            string receiverName, string receiverAddress, Dictionary<int, int> orderDetail)
         {
             if (!await DS_ConnectionSql()) return false;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"UPDATE Orders
+            string sqlOrder = @"UPDATE Orders
                            SET placed=@placed,paymentMethodID=@paymentMethodID,
                                [ordererName]=@ordererName,[ordererAddress]=@ordererAddress,
-                               [receiverName]=@receiverName,[receiverAddress]=@receiverAddress
+                               [receiverName]=@receiverName,[receiverAddress]=@receiverAddress,
+                               [placedDate]=GETDATE()
                            WHERE id=@orderid";
-            SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@placed", 1);
-            com.Parameters.AddWithValue("@paymentMethodID", paymentMethodID);
-            com.Parameters.AddWithValue("@ordererName", ordererName);
-            com.Parameters.AddWithValue("@ordererAddress", ordererAddress);
-            com.Parameters.AddWithValue("@receiverName", receiverName);
-            com.Parameters.AddWithValue("@receiverAddress", receiverAddress);
-            com.Parameters.AddWithValue("@orderid", orderid);
+            string sqlStock = @"UPDATE Products SET stock=@stock WHERE id=@id";
+
+            conn.Open();
+            using SqlTransaction trans = conn.BeginTransaction();
+            using SqlCommand com = new SqlCommand(sqlOrder, conn, trans);
+            {
+                try
+                {
+                    //更新訂單狀態
+                    com.Parameters.AddWithValue("@placed", 1);
+                    com.Parameters.AddWithValue("@paymentMethodID", paymentMethodID);
+                    com.Parameters.AddWithValue("@ordererName", ordererName);
+                    com.Parameters.AddWithValue("@ordererAddress", ordererAddress);
+                    com.Parameters.AddWithValue("@receiverName", receiverName);
+                    com.Parameters.AddWithValue("@receiverAddress", receiverAddress);
+                    com.Parameters.AddWithValue("@orderid", orderid);
+                    com.ExecuteNonQuery();
+
+                    com.CommandText = sqlStock;
+                    //修改庫存數目
+                    foreach (var item in orderDetail)
+                    {
+                        com.Parameters.Clear();
+
+                        var product = Form1.productsDatas.First(o => o.Id == item.Key);
+                        int stock = product.Stock - item.Value;
+                        if (stock < 0) throw new Exception();
+
+                        com.Parameters.AddWithValue("@id", item.Key);
+                        com.Parameters.AddWithValue("@stock", stock);
+                        com.ExecuteNonQuery();
+                    }
+
+                    trans.Commit();
+                    return true;
+                }
+
+                catch (Exception ex) { trans.Rollback(); ; MessageBox.Show($"訂單狀態確認下單失敗\n{ex}"); return false; }
+            }
+        }
+
+        public static async Task<List<int>> Odr_getHistoryNum(int id)
+        {
+            List<int> orderNums = [];
+            if (!await DS_ConnectionSql()) return orderNums;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT id FROM Orders WHERE memberID=@id AND placed = 1";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@id", id);
             try
             {
                 conn.Open();
-                com.ExecuteNonQuery();
-                return true;
+                using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
+                    orderNums.Add((int)reader["id"]);
+
+                return orderNums;
             }
-            catch (Exception ex) { MessageBox.Show($"訂單狀態確認下單失敗\n{ex}"); return false; }
+            catch (Exception ex) { MessageBox.Show($"獲取歷史訂單編號失敗\n{ex}"); return []; }
+        }
+
+        public static async Task<Order> Odr_GetOrderData(int orderid, int memberid)
+        {
+            Order order = new Order();
+            if (!await DS_ConnectionSql()) return order;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * FROM Orders WHERE id=@orderid AND memberID=@memberid";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            com.Parameters.AddWithValue("@memberid", memberid);
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                if (!reader.HasRows) return order;
+
+                reader.Read();
+                order.OrdererName = (string)reader["ordererName"];
+                order.OrdererAddress = (string)reader["ordererAddress"];
+                order.ReceiverName = (string)reader["receiverName"];
+                order.ReceiverAddress = (string)reader["receiverAddress"];
+                order.Payment = (int)reader["paymentMethodID"];
+                order.PlacedDate = (DateTime)reader["placedDate"];
+
+                return order;
+            }
+            catch (Exception ex) { MessageBox.Show($"獲取歷史訂單資料失敗\n{ex}"); return order; }
         }
     }
 }

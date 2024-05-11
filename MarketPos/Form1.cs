@@ -19,6 +19,7 @@ using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using System.Text;
 using MarketPos.Models;
+using MarketPos.FormPage.Manager;
 
 namespace MarketPos
 {
@@ -74,6 +75,7 @@ namespace MarketPos
             levelControl(4);
 
             //暫時使用
+            member = new Member();
             productSort("名稱", true);
             Set_Page();
             cb_init();
@@ -421,7 +423,7 @@ namespace MarketPos
 
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            if (member == null)
+            if (member == null || member.Id==0)
             {
                 LoginForm loginForm = new LoginForm();
                 loginForm.StartPosition = FormStartPosition.CenterParent;
@@ -431,7 +433,7 @@ namespace MarketPos
             else
             {
                 //登出功能
-                member = null;
+                member = new Member();
                 flp_shoppingCar.Controls.Clear();
                 orderDetail = [];
                 btn_Login.Text = "註冊/登入";
@@ -500,7 +502,9 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            levelControl(2);
+            Mem_Detail_PCard mem_Detail_PCard = new(shelveProducts[1]);
+            mem_Detail_PCard.StartPosition = FormStartPosition.CenterScreen;
+            mem_Detail_PCard.ShowDialog();
         }
         private int Odr_getLatestOrderNum()
         {
@@ -578,7 +582,7 @@ namespace MarketPos
 
         private async void ptb_Buy_Click(object sender, EventArgs e)
         {
-            if (member == null) { MessageBox.Show("請先登入會員"); return; }
+            if (member == null || member.Id == 0) { MessageBox.Show("請先登入會員"); return; }
             if (orderDetail.Count == 0) { MessageBox.Show("購物車目前是空空的"); return; }
 
             PurchaseForm purchaseForm = new PurchaseForm();
@@ -659,7 +663,7 @@ namespace MarketPos
             if (await DataService.Mem_EditAccount(newHashpasswordStr, newSaltStr, member.Account))
             {
                 member = await DataService.Mem_Login(member.Account, newHashpasswordStr);
-                if (member == null) MessageBox.Show("出現錯誤請與克服聯繫");
+                if (member == null || member.Id == 0) MessageBox.Show("出現錯誤請與克服聯繫");
                 MessageBox.Show("密碼更改成功");
                 txbOldPassword.Text = string.Empty;
                 txbPassword.Text = string.Empty;

@@ -42,7 +42,7 @@ namespace MarketPos
 
         private void btnS_Search_Click(object sender, EventArgs e)
         {
-            if (Form1.member == null) { MessageBox.Show("請先登入會員"); return; }
+            if (Form1.member == null || Form1.member.Id == 0) { MessageBox.Show("請先登入會員"); return; }
             if (!(cbQuantity.SelectedIndex >= 0)) { MessageBox.Show("請選擇數量"); return; }
 
             KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbQuantity.SelectedIndex + 1);

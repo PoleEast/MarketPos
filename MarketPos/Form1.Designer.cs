@@ -112,6 +112,7 @@ namespace MarketPos
             txbMem_Name = new TextBox();
             lbMem_Name = new Label();
             tbOrderHistory = new TabPage();
+            pictureBox2 = new PictureBox();
             txbOdr_Total = new TextBox();
             lbOdr_RName = new Label();
             lbOdr_OName = new Label();
@@ -127,7 +128,6 @@ namespace MarketPos
             lbOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
-            pictureBox2 = new PictureBox();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -1064,6 +1064,15 @@ namespace MarketPos
             tbOrderHistory.Text = "歷史訂單";
             tbOrderHistory.UseVisualStyleBackColor = true;
             // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = Properties.Resources.file;
+            pictureBox2.Location = new Point(285, 16);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(152, 128);
+            pictureBox2.TabIndex = 43;
+            pictureBox2.TabStop = false;
+            // 
             // txbOdr_Total
             // 
             txbOdr_Total.BackColor = SystemColors.Window;
@@ -1236,15 +1245,6 @@ namespace MarketPos
             lbMember.Name = "lbMember";
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
-            // 
-            // pictureBox2
-            // 
-            pictureBox2.Image = Properties.Resources.file;
-            pictureBox2.Location = new Point(285, 16);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(152, 128);
-            pictureBox2.TabIndex = 43;
-            pictureBox2.TabStop = false;
             // 
             // Form1
             // 

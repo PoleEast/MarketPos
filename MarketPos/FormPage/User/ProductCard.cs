@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MarketPos.FormPage.Manager;
 using MarketPos.Models;
 
 namespace MarketPos
@@ -66,10 +67,21 @@ namespace MarketPos
 
         private void ProductCard_Click(object sender, EventArgs e)
         {
-            if (productsData == null) return;
-            Detail_PCard detail_PCard = new(productsData);
-            detail_PCard.StartPosition = FormStartPosition.CenterParent;
-            detail_PCard.ShowDialog();
+            if (productsData == null||Form1.member==null) return;
+
+            if (Form1.member.Level < 3)
+            {
+                //管理者用
+                Mem_Detail_PCard mem_Detail_PCard = new(productsData);
+                mem_Detail_PCard.StartPosition = FormStartPosition.CenterScreen;
+                mem_Detail_PCard.ShowDialog();
+            }
+            else
+            {
+                Detail_PCard detail_PCard = new(productsData);
+                detail_PCard.StartPosition = FormStartPosition.CenterParent;
+                detail_PCard.ShowDialog();
+            }
         }
     }
 }

@@ -547,7 +547,10 @@ namespace MarketPos
             foreach (var item in orderDetail)
             {
                 ShoppingCard shoppingCard = new ShoppingCard(isShoppingCar);
-                ProductsData? productsData = shelveProducts.FirstOrDefault(o => o.Id == item.Key);
+                List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];
+
+                ProductsData? productsData = datas.FirstOrDefault(o => o.Id == item.Key && (o.IsShelve || !isShoppingCar));
+
                 if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
                 shoppingCard.SetCard(productsData, item.Value);
                 flp.Controls.Add(shoppingCard);

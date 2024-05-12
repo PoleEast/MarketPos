@@ -20,19 +20,21 @@ using System.Security.Cryptography;
 using System.Text;
 using MarketPos.Models;
 using MarketPos.FormPage.Manager;
+using System.Collections.Generic;
 
 namespace MarketPos
 {
     public partial class Form1 : Form
     {
         public static string Imgpath = @"../../../ProductsImg";
-        public static Member? member;
+        public static Member member = new();
         public static List<ProductsData> shelveProducts = [];
+        public List<ProductsData> unshelveProducts = [];
 
         //key是id,value是數量
         private static Dictionary<int, int> orderDetail = [];
         private List<ProductCard> productCards = [];
-        private List<ProductsData> unshelveProducts = [];
+        private List<ProductCard> unShelveProductCards = [];
         private List<TabPage> tabPagesControl = [];
         private List<TabPage> tabPagesProduct = [];
         private int nextOrderNum;
@@ -61,6 +63,14 @@ namespace MarketPos
             productCards.Add(productCard7);
             productCards.Add(productCard8);
 
+            unShelveProductCards.Add(productCard9);
+            unShelveProductCards.Add(productCard10);
+            unShelveProductCards.Add(productCard11);
+            unShelveProductCards.Add(productCard12);
+            unShelveProductCards.Add(productCard13);
+            unShelveProductCards.Add(productCard14);
+            unShelveProductCards.Add(productCard15);
+            unShelveProductCards.Add(productCard16);
             //UI初始化用
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
@@ -75,7 +85,6 @@ namespace MarketPos
             levelControl(4);
 
             //暫時使用
-            member = new Member();
             productSort("名稱", true);
             Set_Page();
             cb_init();
@@ -137,7 +146,7 @@ namespace MarketPos
             //將商品顯示出來
             for (int i = first; i < last; i++)
                 currentUI_Cards.Add(shelveProducts[i]);
-            
+
 
             foreach (ProductsData product in currentUI_Cards)
             {
@@ -151,6 +160,35 @@ namespace MarketPos
         private void setProductCardsData(ProductsData productsData)
         {
             var productCard = productCards.FirstOrDefault(o => o.Visible == false);
+            productCard?.SetCard(productsData);
+        }
+
+        private void setUnShelveCardsDatas(int page)
+        {
+            //管理者功能
+            if (member == null) return;
+            if (member.Level > 2) return;
+
+            List<ProductsData> currentUI_Cards = [];
+
+            unShelveProductCards.ForEach(o => o.init());
+
+            int uip_Count = unShelveProductCards.Count;
+            int first = uip_Count * page - uip_Count;
+            int last = unshelveProducts.Count - first < 8 ? unshelveProducts.Count : first + uip_Count;
+
+            for (int i = first; i < last; i++)
+                currentUI_Cards.Add(unshelveProducts[i]);
+
+            foreach (ProductsData product in currentUI_Cards)
+            {
+                setUnShelveCard(product);
+            }
+        }
+
+        private void setUnShelveCard(ProductsData productsData)
+        {
+            var productCard = unShelveProductCards.FirstOrDefault(o => o.Visible == false);
             productCard?.SetCard(productsData);
         }
 
@@ -191,7 +229,6 @@ namespace MarketPos
                 MessageBox.Show("商品排序出現錯誤");
                 return;
             }
-            //UI設定
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
@@ -279,11 +316,33 @@ namespace MarketPos
             //更改UI數值
             if (cbPage.Items.Count != 0) cbPage.SelectedIndex = 0;
             lbPage.Text = $"/{page}頁";
+
+
+            //管理者功能
+            if (member == null) return;
+            if (member.Level > 2) return;
+            int unp_count = unshelveProducts.Count;
+
+            //訂正page頁數
+            page = (int)Math.Floor(unp_count / 8d);
+            if (unp_count % 8 != 0) page++;
+
+            cbUnPage.Items.Clear();
+            for (int i = 1; i <= page; i++)
+                cbUnPage.Items.Add(i.ToString());
+
+            //更改UI數值
+            if (cbUnPage.Items.Count != 0) cbUnPage.SelectedIndex = 0;
+            lbUnPage.Text = $"/{page}頁";
         }
 
         private void cbPage_SelectedIndexChanged(object sender, EventArgs e)
         {
             setProductCardsDatas(cbPage.SelectedIndex + 1);
+        }
+        private void cbUnPage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            setUnShelveCardsDatas(cbPage.SelectedIndex + 1);
         }
 
         private void btnNextPage_Click(object sender, EventArgs e)
@@ -296,6 +355,17 @@ namespace MarketPos
         {
             if (cbPage.SelectedIndex > 1)
                 cbPage.SelectedIndex--;
+        }
+        private void btnUnNextPage_Click(object sender, EventArgs e)
+        {
+            if (cbUnPage.SelectedIndex != cbUnPage.Items.Count - 1)
+                cbUnPage.SelectedIndex++;
+        }
+
+        private void btnUnBackPage_Click(object sender, EventArgs e)
+        {
+            if (cbUnPage.SelectedIndex > 1)
+                cbUnPage.SelectedIndex--;
         }
 
         //將資料填入cb
@@ -353,7 +423,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if ( data.Where(o => o.IsShelve).Count() == 0) { MessageBox.Show("查無此資料"); return; }
+            if (data.Where(o => o.IsShelve).Count() == 0) { MessageBox.Show("查無此資料"); return; }
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
@@ -425,7 +495,7 @@ namespace MarketPos
 
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            if (member == null || member.Id==0)
+            if (member == null || member.Id == 0)
             {
                 LoginForm loginForm = new LoginForm();
                 loginForm.StartPosition = FormStartPosition.CenterParent;
@@ -464,6 +534,7 @@ namespace MarketPos
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail, flp_shoppingCar, true);
             setOrderHistroy();
+
         }
 
         private async void setOrderHistroy()
@@ -504,9 +575,7 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            Mem_Detail_PCard mem_Detail_PCard = new(shelveProducts[1]);
-            mem_Detail_PCard.StartPosition = FormStartPosition.CenterScreen;
-            mem_Detail_PCard.ShowDialog();
+            levelControl(2);
         }
         private int Odr_getLatestOrderNum()
         {

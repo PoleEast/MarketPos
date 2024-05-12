@@ -49,6 +49,19 @@ namespace MarketPos
             productCard3 = new ProductCard();
             productCard2 = new ProductCard();
             productCard1 = new ProductCard();
+            tbUnshelve = new TabPage();
+            lbUnPage = new Label();
+            cbUnPage = new ComboBox();
+            btnUnBackPage = new Button();
+            btnUnNextPage = new Button();
+            productCard9 = new ProductCard();
+            productCard10 = new ProductCard();
+            productCard11 = new ProductCard();
+            productCard12 = new ProductCard();
+            productCard13 = new ProductCard();
+            productCard14 = new ProductCard();
+            productCard15 = new ProductCard();
+            productCard16 = new ProductCard();
             label1 = new Label();
             tbAddProduct = new TabPage();
             cbAddCategoryType = new Button();
@@ -128,26 +141,10 @@ namespace MarketPos
             lbOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
-            tbUnshelve = new TabPage();
-            productCard9 = new ProductCard();
-            productCard10 = new ProductCard();
-            productCard11 = new ProductCard();
-            productCard12 = new ProductCard();
-            productCard13 = new ProductCard();
-            productCard14 = new ProductCard();
-            productCard15 = new ProductCard();
-            productCard16 = new ProductCard();
-            pictureBox3 = new PictureBox();
-            comboBox1 = new ComboBox();
-            label3 = new Label();
-            label4 = new Label();
-            label5 = new Label();
-            comboBox2 = new ComboBox();
-            button1 = new Button();
-            button2 = new Button();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
+            tbUnshelve.SuspendLayout();
             tbAddProduct.SuspendLayout();
             tbMemSerch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -158,8 +155,6 @@ namespace MarketPos
             ((System.ComponentModel.ISupportInitialize)ptbMember).BeginInit();
             tbOrderHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            tbUnshelve.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             SuspendLayout();
             // 
             // tbcProdut
@@ -362,6 +357,145 @@ namespace MarketPos
             productCard1.Size = new Size(230, 304);
             productCard1.TabIndex = 8;
             productCard1.Visible = false;
+            // 
+            // tbUnshelve
+            // 
+            tbUnshelve.Controls.Add(lbUnPage);
+            tbUnshelve.Controls.Add(cbUnPage);
+            tbUnshelve.Controls.Add(btnUnBackPage);
+            tbUnshelve.Controls.Add(btnUnNextPage);
+            tbUnshelve.Controls.Add(productCard9);
+            tbUnshelve.Controls.Add(productCard10);
+            tbUnshelve.Controls.Add(productCard11);
+            tbUnshelve.Controls.Add(productCard12);
+            tbUnshelve.Controls.Add(productCard13);
+            tbUnshelve.Controls.Add(productCard14);
+            tbUnshelve.Controls.Add(productCard15);
+            tbUnshelve.Controls.Add(productCard16);
+            tbUnshelve.Location = new Point(4, 24);
+            tbUnshelve.Name = "tbUnshelve";
+            tbUnshelve.Padding = new Padding(3);
+            tbUnshelve.Size = new Size(1076, 754);
+            tbUnshelve.TabIndex = 1;
+            tbUnshelve.Tag = "2";
+            tbUnshelve.Text = "下架商品";
+            tbUnshelve.UseVisualStyleBackColor = true;
+            // 
+            // lbUnPage
+            // 
+            lbUnPage.AutoSize = true;
+            lbUnPage.Font = new Font("Microsoft JhengHei UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbUnPage.Location = new Point(898, 707);
+            lbUnPage.Name = "lbUnPage";
+            lbUnPage.Size = new Size(42, 17);
+            lbUnPage.TabIndex = 34;
+            lbUnPage.Text = "/10頁";
+            // 
+            // cbUnPage
+            // 
+            cbUnPage.BackColor = SystemColors.Window;
+            cbUnPage.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbUnPage.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbUnPage.FormattingEnabled = true;
+            cbUnPage.Location = new Point(842, 692);
+            cbUnPage.Name = "cbUnPage";
+            cbUnPage.Size = new Size(50, 32);
+            cbUnPage.TabIndex = 33;
+            cbUnPage.SelectedIndexChanged += cbUnPage_SelectedIndexChanged;
+            // 
+            // btnUnBackPage
+            // 
+            btnUnBackPage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnUnBackPage.Location = new Point(730, 687);
+            btnUnBackPage.Name = "btnUnBackPage";
+            btnUnBackPage.Size = new Size(96, 43);
+            btnUnBackPage.TabIndex = 32;
+            btnUnBackPage.Text = "上一頁";
+            btnUnBackPage.UseVisualStyleBackColor = true;
+            btnUnBackPage.Click += btnUnBackPage_Click;
+            // 
+            // btnUnNextPage
+            // 
+            btnUnNextPage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnUnNextPage.Location = new Point(954, 687);
+            btnUnNextPage.Name = "btnUnNextPage";
+            btnUnNextPage.Size = new Size(96, 43);
+            btnUnNextPage.TabIndex = 31;
+            btnUnNextPage.Text = "下一頁";
+            btnUnNextPage.UseVisualStyleBackColor = true;
+            btnUnNextPage.Click += btnUnNextPage_Click;
+            // 
+            // productCard9
+            // 
+            productCard9.BorderStyle = BorderStyle.FixedSingle;
+            productCard9.Location = new Point(26, 23);
+            productCard9.Name = "productCard9";
+            productCard9.Size = new Size(230, 304);
+            productCard9.TabIndex = 23;
+            productCard9.Visible = false;
+            // 
+            // productCard10
+            // 
+            productCard10.BorderStyle = BorderStyle.FixedSingle;
+            productCard10.Location = new Point(297, 23);
+            productCard10.Name = "productCard10";
+            productCard10.Size = new Size(230, 304);
+            productCard10.TabIndex = 22;
+            productCard10.Visible = false;
+            // 
+            // productCard11
+            // 
+            productCard11.BorderStyle = BorderStyle.FixedSingle;
+            productCard11.Location = new Point(558, 23);
+            productCard11.Name = "productCard11";
+            productCard11.Size = new Size(230, 304);
+            productCard11.TabIndex = 21;
+            productCard11.Visible = false;
+            // 
+            // productCard12
+            // 
+            productCard12.BorderStyle = BorderStyle.FixedSingle;
+            productCard12.Location = new Point(818, 23);
+            productCard12.Name = "productCard12";
+            productCard12.Size = new Size(230, 304);
+            productCard12.TabIndex = 20;
+            productCard12.Visible = false;
+            // 
+            // productCard13
+            // 
+            productCard13.BorderStyle = BorderStyle.FixedSingle;
+            productCard13.Location = new Point(26, 358);
+            productCard13.Name = "productCard13";
+            productCard13.Size = new Size(230, 304);
+            productCard13.TabIndex = 19;
+            productCard13.Visible = false;
+            // 
+            // productCard14
+            // 
+            productCard14.BorderStyle = BorderStyle.FixedSingle;
+            productCard14.Location = new Point(297, 358);
+            productCard14.Name = "productCard14";
+            productCard14.Size = new Size(230, 304);
+            productCard14.TabIndex = 18;
+            productCard14.Visible = false;
+            // 
+            // productCard15
+            // 
+            productCard15.BorderStyle = BorderStyle.FixedSingle;
+            productCard15.Location = new Point(558, 358);
+            productCard15.Name = "productCard15";
+            productCard15.Size = new Size(230, 304);
+            productCard15.TabIndex = 17;
+            productCard15.Visible = false;
+            // 
+            // productCard16
+            // 
+            productCard16.BorderStyle = BorderStyle.FixedSingle;
+            productCard16.Location = new Point(818, 358);
+            productCard16.Name = "productCard16";
+            productCard16.Size = new Size(230, 304);
+            productCard16.TabIndex = 16;
+            productCard16.Visible = false;
             // 
             // label1
             // 
@@ -1266,191 +1400,6 @@ namespace MarketPos
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
             // 
-            // tbUnshelve
-            // 
-            tbUnshelve.Controls.Add(pictureBox3);
-            tbUnshelve.Controls.Add(comboBox1);
-            tbUnshelve.Controls.Add(label3);
-            tbUnshelve.Controls.Add(label4);
-            tbUnshelve.Controls.Add(label5);
-            tbUnshelve.Controls.Add(comboBox2);
-            tbUnshelve.Controls.Add(button1);
-            tbUnshelve.Controls.Add(button2);
-            tbUnshelve.Controls.Add(productCard9);
-            tbUnshelve.Controls.Add(productCard10);
-            tbUnshelve.Controls.Add(productCard11);
-            tbUnshelve.Controls.Add(productCard12);
-            tbUnshelve.Controls.Add(productCard13);
-            tbUnshelve.Controls.Add(productCard14);
-            tbUnshelve.Controls.Add(productCard15);
-            tbUnshelve.Controls.Add(productCard16);
-            tbUnshelve.Location = new Point(4, 24);
-            tbUnshelve.Name = "tbUnshelve";
-            tbUnshelve.Padding = new Padding(3);
-            tbUnshelve.Size = new Size(1076, 754);
-            tbUnshelve.TabIndex = 1;
-            tbUnshelve.Tag = "2";
-            tbUnshelve.Text = "下架商品";
-            tbUnshelve.UseVisualStyleBackColor = true;
-            // 
-            // productCard9
-            // 
-            productCard9.BorderStyle = BorderStyle.FixedSingle;
-            productCard9.Location = new Point(818, 358);
-            productCard9.Name = "productCard9";
-            productCard9.Size = new Size(230, 304);
-            productCard9.TabIndex = 23;
-            productCard9.Visible = false;
-            // 
-            // productCard10
-            // 
-            productCard10.BorderStyle = BorderStyle.FixedSingle;
-            productCard10.Location = new Point(558, 358);
-            productCard10.Name = "productCard10";
-            productCard10.Size = new Size(230, 304);
-            productCard10.TabIndex = 22;
-            productCard10.Visible = false;
-            // 
-            // productCard11
-            // 
-            productCard11.BorderStyle = BorderStyle.FixedSingle;
-            productCard11.Location = new Point(297, 358);
-            productCard11.Name = "productCard11";
-            productCard11.Size = new Size(230, 304);
-            productCard11.TabIndex = 21;
-            productCard11.Visible = false;
-            // 
-            // productCard12
-            // 
-            productCard12.BorderStyle = BorderStyle.FixedSingle;
-            productCard12.Location = new Point(26, 358);
-            productCard12.Name = "productCard12";
-            productCard12.Size = new Size(230, 304);
-            productCard12.TabIndex = 20;
-            productCard12.Visible = false;
-            // 
-            // productCard13
-            // 
-            productCard13.BorderStyle = BorderStyle.FixedSingle;
-            productCard13.Location = new Point(818, 23);
-            productCard13.Name = "productCard13";
-            productCard13.Size = new Size(230, 304);
-            productCard13.TabIndex = 19;
-            productCard13.Visible = false;
-            // 
-            // productCard14
-            // 
-            productCard14.BorderStyle = BorderStyle.FixedSingle;
-            productCard14.Location = new Point(558, 23);
-            productCard14.Name = "productCard14";
-            productCard14.Size = new Size(230, 304);
-            productCard14.TabIndex = 18;
-            productCard14.Visible = false;
-            // 
-            // productCard15
-            // 
-            productCard15.BorderStyle = BorderStyle.FixedSingle;
-            productCard15.Location = new Point(297, 23);
-            productCard15.Name = "productCard15";
-            productCard15.Size = new Size(230, 304);
-            productCard15.TabIndex = 17;
-            productCard15.Visible = false;
-            // 
-            // productCard16
-            // 
-            productCard16.BorderStyle = BorderStyle.FixedSingle;
-            productCard16.Location = new Point(26, 23);
-            productCard16.Name = "productCard16";
-            productCard16.Size = new Size(230, 304);
-            productCard16.TabIndex = 16;
-            productCard16.Visible = false;
-            // 
-            // pictureBox3
-            // 
-            pictureBox3.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox3.Cursor = Cursors.Hand;
-            pictureBox3.Image = Properties.Resources.descendingOrder;
-            pictureBox3.Location = new Point(674, 692);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(32, 32);
-            pictureBox3.TabIndex = 38;
-            pictureBox3.TabStop = false;
-            pictureBox3.Tag = "descendingOrder";
-            // 
-            // comboBox1
-            // 
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "名稱", "種類", "價格", "重量", "產地" });
-            comboBox1.Location = new Point(525, 692);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(89, 32);
-            comboBox1.TabIndex = 37;
-            // 
-            // label3
-            // 
-            label3.AutoEllipsis = true;
-            label3.AutoSize = true;
-            label3.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            label3.Location = new Point(620, 695);
-            label3.Name = "label3";
-            label3.Size = new Size(48, 24);
-            label3.TabIndex = 36;
-            label3.Text = "排序";
-            // 
-            // label4
-            // 
-            label4.AutoEllipsis = true;
-            label4.AutoSize = true;
-            label4.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            label4.Location = new Point(471, 695);
-            label4.Name = "label4";
-            label4.Size = new Size(48, 24);
-            label4.TabIndex = 35;
-            label4.Text = "依照";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Microsoft JhengHei UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            label5.Location = new Point(898, 707);
-            label5.Name = "label5";
-            label5.Size = new Size(42, 17);
-            label5.TabIndex = 34;
-            label5.Text = "/10頁";
-            // 
-            // comboBox2
-            // 
-            comboBox2.BackColor = SystemColors.Window;
-            comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox2.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(842, 692);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(50, 32);
-            comboBox2.TabIndex = 33;
-            // 
-            // button1
-            // 
-            button1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            button1.Location = new Point(730, 687);
-            button1.Name = "button1";
-            button1.Size = new Size(96, 43);
-            button1.TabIndex = 32;
-            button1.Text = "上一頁";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            button2.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            button2.Location = new Point(954, 687);
-            button2.Name = "button2";
-            button2.Size = new Size(96, 43);
-            button2.TabIndex = 31;
-            button2.Text = "下一頁";
-            button2.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1470,6 +1419,8 @@ namespace MarketPos
             tbProduct.ResumeLayout(false);
             tbProduct.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).EndInit();
+            tbUnshelve.ResumeLayout(false);
+            tbUnshelve.PerformLayout();
             tbAddProduct.ResumeLayout(false);
             tbAddProduct.PerformLayout();
             tbMemSerch.ResumeLayout(false);
@@ -1484,9 +1435,6 @@ namespace MarketPos
             tbOrderHistory.ResumeLayout(false);
             tbOrderHistory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            tbUnshelve.ResumeLayout(false);
-            tbUnshelve.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1599,13 +1547,9 @@ namespace MarketPos
         private ProductCard productCard14;
         private ProductCard productCard15;
         private ProductCard productCard16;
-        private PictureBox pictureBox3;
-        private ComboBox comboBox1;
-        private Label label3;
-        private Label label4;
-        private Label label5;
-        private ComboBox comboBox2;
-        private Button button1;
-        private Button button2;
+        private Label lbUnPage;
+        private ComboBox cbUnPage;
+        private Button btnUnBackPage;
+        private Button btnUnNextPage;
     }
 }

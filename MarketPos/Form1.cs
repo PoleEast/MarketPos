@@ -137,6 +137,8 @@ namespace MarketPos
             //將商品顯示出來
             for (int i = first; i < last; i++)
                 currentUI_Cards.Add(shelveProducts[i]);
+            
+
             foreach (ProductsData product in currentUI_Cards)
             {
                 setProductCardsData(product);
@@ -292,7 +294,7 @@ namespace MarketPos
 
         private void btnBackPage_Click(object sender, EventArgs e)
         {
-            if (cbPage.SelectedIndex != 0)
+            if (cbPage.SelectedIndex > 1)
                 cbPage.SelectedIndex--;
         }
 
@@ -351,7 +353,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (data.Count == 0) { MessageBox.Show("查無此資料"); return; }
+            if ( data.Where(o => o.IsShelve).Count() == 0) { MessageBox.Show("查無此資料"); return; }
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {

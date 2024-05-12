@@ -15,7 +15,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=1.175.95.119,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=DESKTOP-QP45LEI\\SQLEXPRESS;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -165,7 +165,8 @@ namespace MarketPos
                         Price = (decimal)reader["price"],
                         ShelveDate = (DateTime)reader["shelveDate"],
                         Stock = (int)reader["stock"],
-                        Origin = (string)reader["originName"]
+                        Origin = (string)reader["originName"],
+                        IsShelve = (bool)reader["isShelve"]
                     };
                     productsDatas.Add(data);
                 }

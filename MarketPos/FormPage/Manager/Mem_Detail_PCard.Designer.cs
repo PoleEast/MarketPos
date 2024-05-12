@@ -45,6 +45,7 @@
             ckbShelve = new CheckBox();
             btnChange = new Button();
             txbStock = new TextBox();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)ptbProduct).BeginInit();
             SuspendLayout();
             // 
@@ -180,7 +181,7 @@
             txbPrice.Location = new Point(522, 403);
             txbPrice.MaxLength = 8;
             txbPrice.Name = "txbPrice";
-            txbPrice.Size = new Size(140, 42);
+            txbPrice.Size = new Size(132, 42);
             txbPrice.TabIndex = 58;
             txbPrice.KeyPress += checkNum_KeyPress;
             // 
@@ -196,13 +197,12 @@
             // 
             // ckbShelve
             // 
-            ckbShelve.Appearance = Appearance.Button;
             ckbShelve.AutoSize = true;
             ckbShelve.Cursor = Cursors.Hand;
             ckbShelve.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            ckbShelve.Location = new Point(723, 152);
+            ckbShelve.Location = new Point(716, 158);
             ckbShelve.Name = "ckbShelve";
-            ckbShelve.Size = new Size(58, 34);
+            ckbShelve.Size = new Size(67, 28);
             ckbShelve.TabIndex = 61;
             ckbShelve.Text = "上架";
             ckbShelve.UseVisualStyleBackColor = true;
@@ -216,6 +216,7 @@
             btnChange.TabIndex = 62;
             btnChange.Text = "確認更改";
             btnChange.UseVisualStyleBackColor = true;
+            btnChange.Click += btnChange_Click;
             // 
             // txbStock
             // 
@@ -228,11 +229,23 @@
             txbStock.TabIndex = 63;
             txbStock.KeyPress += checkNum_KeyPress;
             // 
+            // label2
+            // 
+            label2.AutoEllipsis = true;
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft JhengHei UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            label2.Location = new Point(655, 406);
+            label2.Name = "label2";
+            label2.Size = new Size(31, 35);
+            label2.TabIndex = 64;
+            label2.Text = "$";
+            // 
             // Mem_Detail_PCard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label2);
             Controls.Add(txbStock);
             Controls.Add(btnChange);
             Controls.Add(ckbShelve);
@@ -276,5 +289,6 @@
         private CheckBox ckbShelve;
         private Button btnChange;
         private TextBox txbStock;
+        private Label label2;
     }
 }

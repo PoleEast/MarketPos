@@ -26,8 +26,8 @@ namespace MarketPos.FormPage.Manager
         private void Mem_Detail_PCard_Load(object sender, EventArgs e)
         {
             txbName.Text = productsData.Name;
-            txbWeight.Text=productsData.Weight.ToString();
-            txbPrice.Text = Math.Floor(productsData.Price).ToString() + "$";
+            txbWeight.Text = productsData.Weight.ToString();
+            txbPrice.Text = Math.Floor(productsData.Price).ToString();
             rtbDescription.Text = productsData.Description;
 
             cbCategory.DisplayMember = "Key";
@@ -50,6 +50,25 @@ namespace MarketPos.FormPage.Manager
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
+        }
+
+        private void btnChange_Click(object sender, EventArgs e)
+        {
+
+            string change = "確定更改以下資訊?\n";
+
+            change += productsData.Name.Contains(txbName.Text.Trim()) ? "" : $"確認將名字[{productsData.Name}]改成->[{txbName.Text.Trim()}]\n";
+            change +=  Math.Abs(productsData.Weight-Double.Parse(txbWeight.Text.Trim()))<0.1F ?
+                "" : $"確認將重量[{productsData.Weight}]改成->[{txbWeight.Text.Trim()}]\n";
+            change += Math.Floor(productsData.Price) == int.Parse(txbPrice.Text) ? "" : $"確認將價格[{productsData.Price}]改成->[{txbPrice.Text.Trim()}]\n";
+            change += rtbDescription.Text == productsData.Description?"": $"確認將描述\n[{productsData.Description}]\n改成->\n[{rtbDescription.Text.Trim()}]\n";
+            change += cbCategory.Text==(productsData.Category)?"":$"確認將種類[{productsData.Category}]改成->[{cbCategory.Text}]\n";
+            change += cbOrigin.Text==productsData.Origin? "" : $"確認將產地[{productsData.Origin}]改成->[{cbOrigin.Text}]\n";
+            change += txbStock.Text == productsData.Stock.ToString() ? "" : $"確認將數量[{productsData.Stock}]改成->[{txbStock.Text}]\n";
+            change+=! ckbShelve.Checked? "確認將商品上架?":"確認將商品下架?";
+
+            if (change == "確定更改以下資訊?\n") { MessageBox.Show("您沒更改任何值"); return; }
+            MessageBox.Show(change, "確認更改", MessageBoxButtons.OKCancel);
         }
     }
 }

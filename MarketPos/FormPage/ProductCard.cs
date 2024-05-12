@@ -46,6 +46,9 @@ namespace MarketPos
             lbStock.Text = "庫存:";
             ptbProduct.Image = null;
             lbWeight.Text = "重量:";
+            productsData = new();
+            ProductID = 0;
+
             this.Visible = false;
         }
 

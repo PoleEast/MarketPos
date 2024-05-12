@@ -159,7 +159,7 @@ namespace MarketPos
         /// </summary>
         private void setProductCardsData(ProductsData productsData)
         {
-            var productCard = productCards.FirstOrDefault(o => o.Visible == false);
+            var productCard = productCards.FirstOrDefault(o => o.ProductID == 0);
             productCard?.SetCard(productsData);
         }
 
@@ -188,7 +188,7 @@ namespace MarketPos
 
         private void setUnShelveCard(ProductsData productsData)
         {
-            var productCard = unShelveProductCards.FirstOrDefault(o => o.Visible == false);
+            var productCard = unShelveProductCards.FirstOrDefault(o => o.ProductID == 0);
             productCard?.SetCard(productsData);
         }
 
@@ -342,7 +342,7 @@ namespace MarketPos
         }
         private void cbUnPage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            setUnShelveCardsDatas(cbPage.SelectedIndex + 1);
+            setUnShelveCardsDatas(cbUnPage.SelectedIndex + 1);
         }
 
         private void btnNextPage_Click(object sender, EventArgs e)
@@ -353,7 +353,7 @@ namespace MarketPos
 
         private void btnBackPage_Click(object sender, EventArgs e)
         {
-            if (cbPage.SelectedIndex > 1)
+            if (cbPage.SelectedIndex > 0)
                 cbPage.SelectedIndex--;
         }
         private void btnUnNextPage_Click(object sender, EventArgs e)
@@ -364,7 +364,7 @@ namespace MarketPos
 
         private void btnUnBackPage_Click(object sender, EventArgs e)
         {
-            if (cbUnPage.SelectedIndex > 1)
+            if (cbUnPage.SelectedIndex > 0)
                 cbUnPage.SelectedIndex--;
         }
 
@@ -400,11 +400,6 @@ namespace MarketPos
             cbS_Origin.ValueMember = "Value";
             cbS_Origin.DataSource = new BindingSource(DataService.originsDict, null);
             cbS_Origin.SelectedIndex = -1;
-
-            //cbAddP_category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
-            //cbS_Category.Items.AddRange(DataService.categorysDict.Select(o => o.Key).ToArray());
-            //cbAddP_origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
-            //cbS_Origin.Items.AddRange(DataService.originsDict.Select(o => o.Key).ToArray());
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)
@@ -423,7 +418,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (data.Where(o => o.IsShelve).Count() == 0) { MessageBox.Show("查無此資料"); return; }
+            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level<3) { MessageBox.Show("查無此資料"); return; }
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
@@ -432,6 +427,7 @@ namespace MarketPos
             }
             productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
+            
         }
 
         private void btnS_WeightToggle_Click(object sender, EventArgs e)

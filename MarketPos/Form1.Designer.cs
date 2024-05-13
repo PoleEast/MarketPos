@@ -534,7 +534,7 @@ namespace MarketPos
             tbAddProduct.Size = new Size(462, 754);
             tbAddProduct.TabIndex = 0;
             tbAddProduct.Tag = "2";
-            tbAddProduct.Text = "管理者";
+            tbAddProduct.Text = "新增商品";
             tbAddProduct.UseVisualStyleBackColor = true;
             // 
             // cbAddCategoryType

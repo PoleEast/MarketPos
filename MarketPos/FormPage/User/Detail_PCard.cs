@@ -33,7 +33,10 @@ namespace MarketPos
             lbCategory.Text += productsData.Category.ToString();
             lbPerWeight.Text += ((double)productsData.Price / productsData.Weight).ToString("F2") + "$";
             imageFiles = DataService.DS_GetPictures(productsData.Name);
-            ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            if (imageFiles.Length > 0)
+            {
+                ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            }
             rtbDescription.Text = productsData.Description;
             for (int i = 1; i <= productsData.Stock; i++)
                 cbQuantity.Items.Add(i);

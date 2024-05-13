@@ -33,7 +33,10 @@ namespace MarketPos
             lbStock.Text += Data.Stock.ToString();
             lbWeight.Text += Data.Weight.ToString() + "/公克";
             imageFiles = DataService.DS_GetPictures(Data.Name);
-            ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            if (imageFiles.Length != 0)
+            {
+                ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            }
 
             this.Visible = true;
         }
@@ -70,7 +73,7 @@ namespace MarketPos
 
         private void ProductCard_Click(object sender, EventArgs e)
         {
-            if (productsData == null||Form1.member==null) return;
+            if (productsData == null || Form1.member == null) return;
 
             if (Form1.member.Level < 3)
             {

@@ -1,12 +1,16 @@
 ﻿using MarketPos.Models;
 using Microsoft.SqlServer.Server;
+using Microsoft.VisualBasic.ApplicationServices;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Net.Http;
+using System.Text;
 using System.Transactions;
+using System.Web;
 using System.Windows;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MarketPos
 {
@@ -15,7 +19,7 @@ namespace MarketPos
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
         public static string ConnString =
-        "Data Source=DESKTOP-QP45LEI\\SQLEXPRESS;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        "Data Source=1.175.105.241,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
         private static async Task<bool> DS_ConnectionSql()
         {
             using SqlConnection conn = new(ConnString);
@@ -72,33 +76,6 @@ namespace MarketPos
                 return products;
             }
             catch (Exception ex) { MessageBox.Show($"獲取商品資料發生錯誤\n {ex} "); return products; }
-        }
-
-        public static async void P_insertProduct(ProductsData productsData)
-        {
-            if (!await DS_ConnectionSql()) return;
-            using SqlConnection conn = new(ConnString);
-            string sqlInsert = @"INSERT INTO Products([name],[category],[price],[description],[weight],[origin],[stock])
-                                VALUES(@name,@category,@price,@description,@weight,@origin,@stock)";
-            conn.Open();
-            using SqlCommand comInsert = new(sqlInsert, conn);
-            try
-            {
-                comInsert.Parameters.AddWithValue("@name", productsData.Name);
-                comInsert.Parameters.AddWithValue("@category", categorysDict[productsData.Category]);
-                comInsert.Parameters.AddWithValue("@price", productsData.Price);
-                comInsert.Parameters.AddWithValue("@description", productsData.Description);
-                comInsert.Parameters.AddWithValue("@weight", productsData.Weight);
-                comInsert.Parameters.AddWithValue("@origin", originsDict[productsData.Origin]);
-                comInsert.Parameters.AddWithValue("@stock", productsData.Stock);
-                //執行sql指令
-                comInsert.ExecuteNonQuery();
-
-                MessageBox.Show($"增加{productsData.Name}成功");
-            }
-
-            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
-
         }
 
         /// <summary>
@@ -219,25 +196,101 @@ namespace MarketPos
 
         }
 
-        public static async Task P_AddCategoryType(string category)
+        public static string[] DS_GetPictures(string pathname)
         {
-            if (!await DS_ConnectionSql()) return;
+            var imgString = Form1.Imgpath + @"\" + pathname;
+            if (Directory.Exists(imgString))
+            {
+                return Directory.GetFiles(imgString, "*.jpg");
+            }
+            return [];
+        }
+        //------------------------------------------------------------------------------------------
+        //以下是商品管理相關
 
+        public static async Task<bool> MP_UpdateProduct(ProductsData productsData)
+        {
+            if (!await DS_ConnectionSql()) return false;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"INSERT INTO Category([name])VALUES(@category)";
+            string sql = @"UPDATE Products SET ";
+            List<string> sqlUpdate = [];
+            using SqlCommand com = new SqlCommand();
+            if (!string.IsNullOrEmpty(productsData.Name))
+            {
+                sqlUpdate.Add("name=@Name");
+                com.Parameters.AddWithValue("@Name", productsData.Name);
+            }
+            if (!string.IsNullOrEmpty(productsData.Description))
+            {
+                sqlUpdate.Add("description=@Description");
+                com.Parameters.AddWithValue("@Description", productsData.Description);
+            }
+            if (!string.IsNullOrEmpty(productsData.Category))
+            {
+                sqlUpdate.Add("category=@Category");
+                com.Parameters.AddWithValue("@Category", categorysDict[productsData.Category]);
+            }
+            if (!string.IsNullOrEmpty(productsData.Origin))
+            {
+                sqlUpdate.Add("origin=@Origin");
+                com.Parameters.AddWithValue("@Origin", originsDict[productsData.Origin]);
+            }
+            if (Math.Floor(productsData.Price) != 0)
+            {
+                sqlUpdate.Add("price=@Price");
+                com.Parameters.AddWithValue("@Price", productsData.Price);
+            }
+            if (Math.Floor(productsData.Weight) != 0)
+            {
+                sqlUpdate.Add("weight=@Weight");
+                com.Parameters.AddWithValue("@Weight", productsData.Weight);
+            }
+            sqlUpdate.Add("stock=@Stock");
+            sqlUpdate.Add("isShelve=@IsShelve");
+            sql += (string.Join(", ", sqlUpdate));
+            sql += @" WHERE id=@ID";
+            com.Parameters.AddWithValue("@Stock", productsData.Stock);
+            com.Parameters.AddWithValue("@IsShelve", productsData.IsShelve);
+            com.Parameters.AddWithValue("@ID", productsData.Id);
             try
             {
                 conn.Open();
-                using SqlCommand com = new SqlCommand(sql, conn);
-                com.Parameters.AddWithValue("@category", category);
+                com.Connection = conn;
+                com.CommandText = sql;
                 com.ExecuteNonQuery();
-                MessageBox.Show($"增加類別 {category} 成功");
+                return true;
             }
-            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+            catch (Exception ex) { MessageBox.Show($"商品更新失敗\n{ex}"); return false; }
 
         }
 
-        public static async Task P_AddOriginType(string origin)
+        public static async void MP_insertProduct(ProductsData productsData)
+        {
+            if (!await DS_ConnectionSql()) return;
+            using SqlConnection conn = new(ConnString);
+            string sqlInsert = @"INSERT INTO Products([name],[category],[price],[description],[weight],[origin],[stock])
+                                VALUES(@name,@category,@price,@description,@weight,@origin,@stock)";
+            conn.Open();
+            using SqlCommand comInsert = new(sqlInsert, conn);
+            try
+            {
+                comInsert.Parameters.AddWithValue("@name", productsData.Name);
+                comInsert.Parameters.AddWithValue("@category", categorysDict[productsData.Category]);
+                comInsert.Parameters.AddWithValue("@price", productsData.Price);
+                comInsert.Parameters.AddWithValue("@description", productsData.Description);
+                comInsert.Parameters.AddWithValue("@weight", productsData.Weight);
+                comInsert.Parameters.AddWithValue("@origin", originsDict[productsData.Origin]);
+                comInsert.Parameters.AddWithValue("@stock", productsData.Stock);
+                //執行sql指令
+                comInsert.ExecuteNonQuery();
+
+                MessageBox.Show($"增加{productsData.Name}成功");
+            }
+
+            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+        }
+
+        public static async Task MP_AddOriginType(string origin)
         {
             if (!await DS_ConnectionSql()) return;
 
@@ -254,14 +307,30 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
         }
 
-        public static string[] DS_GetPictures(string pathname)
+        public static async Task MP_AddCategoryType(string category)
         {
-            var imgString = Form1.Imgpath + @"\" + pathname;
-            if (Directory.Exists(imgString))
+            if (!await DS_ConnectionSql()) return;
+
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"INSERT INTO Category([name])VALUES(@category)";
+            try
             {
-                return Directory.GetFiles(imgString, "*.jpg");
+                conn.Open();
+                using SqlCommand com = new SqlCommand(sql, conn);
+                com.Parameters.AddWithValue("@category", category);
+                com.ExecuteNonQuery();
+                MessageBox.Show($"增加類別 {category} 成功");
             }
-            return [];
+            catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
+        }
+
+
+        public static void MP_UpdatePictureDir(string oldProductName, string newProductName)
+        {
+            string oldDirectoryName = Path.Combine(Form1.Imgpath, oldProductName);
+            string newDirectoryName = Path.Combine(Form1.Imgpath, newProductName);
+
+            Directory.Move(oldDirectoryName, newDirectoryName);
         }
 
         //------------------------------------------------------------------------------------------

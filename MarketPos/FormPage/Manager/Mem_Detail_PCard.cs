@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -14,6 +15,7 @@ namespace MarketPos.FormPage.Manager
 {
     public partial class Mem_Detail_PCard : Form
     {
+        public static event EventHandler? ChangeProduct;
         private ProductsData productsData = new();
         private string[] imageFiles = [];
 
@@ -42,8 +44,13 @@ namespace MarketPos.FormPage.Manager
 
             txbStock.Text = productsData.Stock.ToString();
 
+            ckbShelve.Checked = productsData.IsShelve;
+
             imageFiles = DataService.DS_GetPictures(productsData.Name);
-            ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            if (imageFiles.Length > 0)
+            {
+                ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
+            }
         }
 
         private void checkNum_KeyPress(object sender, KeyPressEventArgs e)
@@ -52,23 +59,74 @@ namespace MarketPos.FormPage.Manager
                 e.Handled = true;
         }
 
-        private void btnChange_Click(object sender, EventArgs e)
+        private async void btnChange_Click(object sender, EventArgs e)
         {
+            ProductsData data = new();
 
             string change = "確定更改以下資訊?\n";
 
-            change += productsData.Name.Contains(txbName.Text.Trim()) ? "" : $"確認將名字[{productsData.Name}]改成->[{txbName.Text.Trim()}]\n";
-            change +=  Math.Abs(productsData.Weight-Double.Parse(txbWeight.Text.Trim()))<0.1F ?
-                "" : $"確認將重量[{productsData.Weight}]改成->[{txbWeight.Text.Trim()}]\n";
-            change += Math.Floor(productsData.Price) == int.Parse(txbPrice.Text) ? "" : $"確認將價格[{productsData.Price}]改成->[{txbPrice.Text.Trim()}]\n";
-            change += rtbDescription.Text == productsData.Description?"": $"確認將描述\n[{productsData.Description}]\n改成->\n[{rtbDescription.Text.Trim()}]\n";
-            change += cbCategory.Text==(productsData.Category)?"":$"確認將種類[{productsData.Category}]改成->[{cbCategory.Text}]\n";
-            change += cbOrigin.Text==productsData.Origin? "" : $"確認將產地[{productsData.Origin}]改成->[{cbOrigin.Text}]\n";
-            change += txbStock.Text == productsData.Stock.ToString() ? "" : $"確認將數量[{productsData.Stock}]改成->[{txbStock.Text}]\n";
-            change+=! ckbShelve.Checked? "確認將商品上架?":"確認將商品下架?";
+            if (!productsData.Name.Contains(txbName.Text.Trim()))
+            {
+                change += $"確認將名字[{productsData.Name}]改成->[{txbName.Text.Trim()}]\n";
+                data.Name = txbName.Text.Trim();
+            }
+            if (!(Math.Abs(productsData.Weight - Double.Parse(txbWeight.Text.Trim())) < 0.1F))
+            {
+                change += $"確認將重量[{productsData.Weight}]改成->[{txbWeight.Text.Trim()}]\n";
+                data.Weight = Double.Parse(txbWeight.Text.Trim());
+            }
+            if (!(Math.Floor(productsData.Price) == int.Parse(txbPrice.Text)))
+            {
+                change += $"確認將價格[{productsData.Price}]改成->[{txbPrice.Text.Trim()}]\n";
+                data.Price = decimal.Parse(txbPrice.Text);
+            }
+            if (productsData.Description != rtbDescription.Text)
+            {
+                change += $"確認將描述\n[{productsData.Description}]\n改成->\n[{rtbDescription.Text.Trim()}]\n";
+                data.Description = rtbDescription.Text;
+            }
+            if (productsData.Category != cbCategory.Text)
+            {
+                change += $"確認將種類[{productsData.Category}]改成->[{cbCategory.Text}]\n";
+                data.Category = cbCategory.Text;
+            }
+            if (productsData.Origin != cbOrigin.Text)
+            {
+                change += $"確認將產地[{productsData.Origin}]改成->[{cbOrigin.Text}]\n";
+                data.Origin = cbOrigin.Text;
+            }
+            if (productsData.Stock.ToString() != txbStock.Text)
+            {
+                change += $"確認將數量[{productsData.Stock}]改成->[{txbStock.Text}]\n";
+                data.Stock = int.Parse(txbStock.Text);
+            }
+            else { data.Stock = productsData.Stock; }
+            if (ckbShelve.Checked)
+            {
+                change += "確認將商品上架?";
+                data.IsShelve = true;
+            }
+            else
+            {
+                change += "確認將商品下架?";
+                data.IsShelve = false;
+            }
+
+            data.Id = productsData.Id;
 
             if (change == "確定更改以下資訊?\n") { MessageBox.Show("您沒更改任何值"); return; }
-            MessageBox.Show(change, "確認更改", MessageBoxButtons.OKCancel);
+            DialogResult result = MessageBox.Show(change, "確認更改", MessageBoxButtons.OKCancel);
+            if (result != DialogResult.OK) return;
+
+            if (await DataService.MP_UpdateProduct(data))
+            {
+                DataService.MP_UpdatePictureDir(productsData.Name, data.Name);
+                MessageBox.Show($"商品:{data.Name} 更改成功!!");
+                ChangeProduct?.Invoke(this, EventArgs.Empty);
+
+                this.Close();
+            }
+            else { MessageBox.Show($"商品:{data.Name} 更改失敗!!"); }
         }
     }
 }

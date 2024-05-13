@@ -76,7 +76,8 @@ namespace MarketPos
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
             Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded;
             ShoppingCard.OrderItemChange += ShoppingCard_OrderItemChange;
-            ShoppingCard.OrderItemDelete += ShoppingCard_OrderItemDelete; ;
+            ShoppingCard.OrderItemDelete += ShoppingCard_OrderItemDelete;
+            Mem_Detail_PCard.ChangeProduct += Mem_Detail_PCard_ChangeProduct;
 
             tabPagesControl = tbcControl.TabPages.Cast<TabPage>().ToList();
             tabPagesProduct = tbcProdut.TabPages.Cast<TabPage>().ToList();
@@ -204,7 +205,7 @@ namespace MarketPos
                 Stock = cbAddP_stock.SelectedIndex,
                 Origin = cbAddP_origin.Text
             };
-            DataService.P_insertProduct(productData);
+            DataService.MP_insertProduct(productData);
         }
 
         /// <summary>
@@ -281,7 +282,7 @@ namespace MarketPos
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
-            await DataService.P_AddCategoryType(userInput.userinput);
+            await DataService.MP_AddCategoryType(userInput.userinput);
             cb_init();
         }
 
@@ -297,7 +298,7 @@ namespace MarketPos
             if (string.IsNullOrEmpty(userInput.userinput)) return;
 
             //將新類別輸入資料庫
-            await DataService.P_AddOriginType(userInput.userinput);
+            await DataService.MP_AddOriginType(userInput.userinput);
             cb_init();
         }
 
@@ -418,7 +419,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level<3) { MessageBox.Show("查無此資料"); return; }
+            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level < 3) { MessageBox.Show("查無此資料"); return; }
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
@@ -427,7 +428,7 @@ namespace MarketPos
             }
             productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
-            
+
         }
 
         private void btnS_WeightToggle_Click(object sender, EventArgs e)
@@ -571,7 +572,8 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            levelControl(2);
+            // DataService.MP_UpdatePictureDir("日本伊藤A4黑毛和牛肉眼", "日本伊藤A5黑毛和牛肉眼");
+            DataService.MP_UpdatePictureDir("日本伊藤A5黑毛和牛肉眼", "日本伊藤A4黑毛和牛肉眼");
         }
         private int Odr_getLatestOrderNum()
         {
@@ -590,6 +592,17 @@ namespace MarketPos
             orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
             setShoppingCard(orderDetail, flp_shoppingCar, true);
             tbcControl.SelectedIndex = 0;
+        }
+        private async void Mem_Detail_PCard_ChangeProduct(object? sender, EventArgs e)
+        {
+            getProductCardsDatas(await DataService.P_getProductCardsDatas());
+            if (ptb_Sort.Tag == null)
+            {
+                MessageBox.Show("找不到ptb_Sort.tag");
+                return;
+            }
+            productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
+            Set_Page();
         }
 
         private async void ShoppingCard_OrderItemChange(object? sender, KeyValuePair<int, int> e)

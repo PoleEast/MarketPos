@@ -46,7 +46,7 @@ namespace MarketPos.FormPage.Manager
 
             ckbShelve.Checked = productsData.IsShelve;
 
-            imageFiles = DataService.DS_GetPictures(productsData.Name);
+            imageFiles = DataService.DS_GetPictures(productsData.Id.ToString());
             if (imageFiles.Length > 0)
             {
                 ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);
@@ -120,7 +120,6 @@ namespace MarketPos.FormPage.Manager
 
             if (await DataService.MP_UpdateProduct(data))
             {
-                DataService.MP_UpdatePictureDir(productsData.Name, data.Name);
                 MessageBox.Show($"商品:{data.Name} 更改成功!!");
                 ChangeProduct?.Invoke(this, EventArgs.Empty);
 

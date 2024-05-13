@@ -324,15 +324,6 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"資料庫寫入錯誤:\n {ex}"); }
         }
 
-
-        public static void MP_UpdatePictureDir(string oldProductName, string newProductName)
-        {
-            string oldDirectoryName = Path.Combine(Form1.Imgpath, oldProductName);
-            string newDirectoryName = Path.Combine(Form1.Imgpath, newProductName);
-
-            Directory.Move(oldDirectoryName, newDirectoryName);
-        }
-
         //------------------------------------------------------------------------------------------
         //以下為會員相關sql功能
 

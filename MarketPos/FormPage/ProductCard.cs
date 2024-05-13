@@ -32,7 +32,7 @@ namespace MarketPos
             lbPrice.Text += Math.Floor(Data.Price).ToString() + "$";
             lbStock.Text += Data.Stock.ToString();
             lbWeight.Text += Data.Weight.ToString() + "/公克";
-            imageFiles = DataService.DS_GetPictures(Data.Name);
+            imageFiles = DataService.DS_GetPictures(Data.Id.ToString());
             if (imageFiles.Length != 0)
             {
                 ptbProduct.Image = Bitmap.FromFile(imageFiles[0]);

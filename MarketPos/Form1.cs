@@ -572,8 +572,7 @@ namespace MarketPos
 
         private void btntest_Click_1(object sender, EventArgs e)
         {
-            // DataService.MP_UpdatePictureDir("日本伊藤A4黑毛和牛肉眼", "日本伊藤A5黑毛和牛肉眼");
-            DataService.MP_UpdatePictureDir("日本伊藤A5黑毛和牛肉眼", "日本伊藤A4黑毛和牛肉眼");
+
         }
         private int Odr_getLatestOrderNum()
         {

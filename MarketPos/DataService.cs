@@ -698,14 +698,14 @@ namespace MarketPos
             List<int> orderNums = [];
             if (!await DS_ConnectionSql()) return orderNums;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT id FROM Orders WHERE 1=1 ";
+            string sql = @"SELECT id FROM Orders WHERE 1=1 AND placed = 1 ";
             using SqlCommand com = new SqlCommand();
             if (id != 0)
             {
                 sql += @"AND memberID=@id ";
                 com.Parameters.AddWithValue("@id", id);
             }
-            sql += @"AND placed = 1";
+            sql += @"ORDER BY confirmed ASC, id DESC";
             try
             {
                 conn.Open();

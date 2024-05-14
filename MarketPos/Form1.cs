@@ -71,6 +71,7 @@ namespace MarketPos
             unShelveProductCards.Add(productCard14);
             unShelveProductCards.Add(productCard15);
             unShelveProductCards.Add(productCard16);
+
             //UI初始化用
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
@@ -97,37 +98,42 @@ namespace MarketPos
             unshelveProducts = datas.Where(o => !o.IsShelve).ToList();
         }
 
+        //新增tab後請到這裡設定權限
         private void levelControl(int level)
         {
-
-#pragma warning disable CS0252 // 可能誤用參考比較; 左端需要轉換
-            if (tabPagesControl.Any(o => o.Tag == "") || tabPagesProduct.Any(o => o.Tag == "")) MessageBox.Show($"設計錯誤Tab權限未設置");
+#pragma warning disable CS8604 // 可能有 Null 參考引數。
 
             tbcControl.TabPages.Clear();
             tbcProdut.TabPages.Clear();
 
+            try
+            {
+                //訪客權限
+                if (level <= 4)
+                {
+                    tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMemSerch"));
+                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbProduct"));
+                }
+                //會員權限
+                if (level == 3)
+                {
+                    tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMenberEdit"));
+                    tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbOrderHistory"));
+                }
+                //管理員權限
+                if (level <= 2)
+                {
+                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbUnshelve"));
+                    tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbAddProduct"));
 
-            if (level <= 4)
-            {
-                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "4").ToArray());
-                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "4").ToArray());
+                }
+                //系統最高管理員
+                if (level == 1)
+                {
+                }
             }
-            if (level <= 3)
-            {
-                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "3").ToArray());
-                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "3").ToArray());
-            }
-            if (level <= 2)
-            {
-                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "2").ToArray());
-                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "2").ToArray());
-            }
-            if (level == 1)
-            {
-                tbcControl.TabPages.AddRange(tabPagesControl.Where(o => o.Tag == "1").ToArray());
-                tbcProdut.TabPages.AddRange(tabPagesProduct.Where(o => o.Tag == "1").ToArray());
-            }
-#pragma warning restore CS0252 // 可能誤用參考比較; 左端需要轉換
+            catch (Exception ex) { MessageBox.Show("出現重大錯誤權限分割"); }
+#pragma warning disable CS8604 // 可能有 Null 參考引數。
         }
 
         /// <summary>
@@ -766,7 +772,7 @@ namespace MarketPos
             argon2.Salt = salt;
             argon2.DegreeOfParallelism = 4; // 4 核心就設成 8
             argon2.Iterations = 3; // 迭代運算次數
-            argon2.MemorySize = 512 * 512; // 1 GB
+            argon2.MemorySize = 512 * 512;
 
             return argon2.GetBytes(16);
         }

@@ -114,6 +114,7 @@ namespace MarketPos.FormPage.Manager
 
             data.Id = productsData.Id;
 
+            //更改功能執行
             if (change == "確定更改以下資訊?\n") { MessageBox.Show("您沒更改任何值"); return; }
             DialogResult result = MessageBox.Show(change, "確認更改", MessageBoxButtons.OKCancel);
             if (result != DialogResult.OK) return;

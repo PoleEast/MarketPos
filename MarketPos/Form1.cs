@@ -32,7 +32,7 @@ namespace MarketPos
         public List<ProductsData> unshelveProducts = [];
 
         //key是id,value是數量
-        private static Dictionary<int, int> orderDetail = [];
+        private static List<OrderDetail> orderDetails = [];
         private List<ProductCard> productCards = [];
         private List<ProductCard> unShelveProductCards = [];
         private List<TabPage> tabPagesControl = [];
@@ -132,7 +132,7 @@ namespace MarketPos
                 {
                 }
             }
-            catch (Exception ex) { MessageBox.Show("出現重大錯誤權限分割"); }
+            catch { MessageBox.Show("出現重大錯誤權限分割"); }
 #pragma warning disable CS8604 // 可能有 Null 參考引數。
         }
 
@@ -510,7 +510,7 @@ namespace MarketPos
                 //登出功能
                 member = new Member();
                 flp_shoppingCar.Controls.Clear();
-                orderDetail = [];
+                orderDetails = [];
                 btn_Login.Text = "註冊/登入";
                 lbMember.Text = string.Empty;
                 ptb_Buy.Enabled = false;
@@ -534,8 +534,8 @@ namespace MarketPos
 
             //會員訂單處理
             getShoppingOrderID();
-            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetails, flp_shoppingCar, true);
             setOrderHistroy();
 
         }
@@ -567,11 +567,11 @@ namespace MarketPos
         private async void getShoppingOrderID()
         {
             if (member == null || member.Id == 0) return;
-            int orderid = await DataService.Odr_GetMemberOrder(member.Id);
+            int orderid = await DataService.Odr_GetMemberOrderID(member.Id);
             if (orderid == 0)
             {
                 await DataService.Odr_CreateNewOrder(Odr_getLatestOrderNum(), member.Id);
-                orderid = await DataService.Odr_GetMemberOrder(member.Id);
+                orderid = await DataService.Odr_GetMemberOrderID(member.Id);
             }
             member.OrderId = orderid;
         }
@@ -585,17 +585,17 @@ namespace MarketPos
             return int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + nextOrderNum.ToString("0000"));
         }
 
-        private async void Detail_PCard_OrderItemAdded(object? sender, KeyValuePair<int, int> e)
+        private async void Detail_PCard_OrderItemAdded(object? sender, OrderDetail e)
         {
             if (member == null || member.Id == 0) return;
 
-            if (!orderDetail.ContainsKey(e.Key))
-                await DataService.Odr_CreateOrderDetail(member.OrderId, e.Key, e.Value);
+            if (!orderDetails.Any(o => o.productID == e.productID))
+                await DataService.Odr_CreateOrderDetail(e);
             else
-                await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
+                await DataService.Odr_UpdateOrderDetail(e);
 
-            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetails, flp_shoppingCar, true);
             tbcControl.SelectedIndex = 0;
         }
         private async void Mem_Detail_PCard_ChangeProduct(object? sender, EventArgs e)
@@ -610,13 +610,13 @@ namespace MarketPos
             Set_Page();
         }
 
-        private async void ShoppingCard_OrderItemChange(object? sender, KeyValuePair<int, int> e)
+        private async void ShoppingCard_OrderItemChange(object? sender, OrderDetail e)
         {
             if (member == null || member.Id == 0) return;
 
-            await DataService.Odr_UpdateOrderDetail(member.OrderId, e.Key, e.Value);
-            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            await DataService.Odr_UpdateOrderDetail(e);
+            orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetails, flp_shoppingCar, true);
         }
 
         private async void ShoppingCard_OrderItemDelete(object? sender, int e)
@@ -624,13 +624,13 @@ namespace MarketPos
             if (member == null || member.Id == 0) return;
 
             await DataService.Odr_DeleteOrderDetail(member.OrderId, e);
-            orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-            setShoppingCard(orderDetail, flp_shoppingCar, true);
+            orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+            setShoppingCard(orderDetails, flp_shoppingCar, true);
         }
 
         /// <param name="orderDetail">訂單詳細資料</param>
         /// <param name="flp">設置的版面</param>
-        private void setShoppingCard(Dictionary<int, int> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
+        private void setShoppingCard(List<OrderDetail> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
         {
             flp.Controls.Clear();
             foreach (var item in orderDetail)
@@ -638,10 +638,10 @@ namespace MarketPos
                 ShoppingCard shoppingCard = new ShoppingCard(isShoppingCar);
                 List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];
 
-                ProductsData? productsData = datas.FirstOrDefault(o => o.Id == item.Key && (o.IsShelve || !isShoppingCar));
+                ProductsData? productsData = datas.FirstOrDefault(o => o.Id == item.productID && (o.IsShelve || !isShoppingCar));
 
-                if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.Key}，請與克服聯繫"); continue; }
-                shoppingCard.SetCard(productsData, item.Value);
+                if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.productID}，請與克服聯繫"); continue; }
+                shoppingCard.SetCard(productsData, item.quantity);
                 flp.Controls.Add(shoppingCard);
             }
         }
@@ -668,7 +668,7 @@ namespace MarketPos
         private async void ptb_Buy_Click(object sender, EventArgs e)
         {
             if (member == null || member.Id == 0) { MessageBox.Show("請先登入會員"); return; }
-            if (orderDetail.Count == 0) { MessageBox.Show("購物車目前是空空的"); return; }
+            if (orderDetails.Count == 0) { MessageBox.Show("購物車目前是空空的"); return; }
 
             PurchaseForm purchaseForm = new PurchaseForm();
             purchaseForm.StartPosition = FormStartPosition.CenterParent;
@@ -679,14 +679,14 @@ namespace MarketPos
 
             //修改訂單狀態
             if (await DataService.Odr_orderPlaced(member.OrderId, purchaseForm.payment, purchaseForm.OName,
-                purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress, orderDetail))
+                purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress, orderDetails))
             {
                 MessageBox.Show("訂單下單成功");
 
                 //初始化訂單
                 getShoppingOrderID();
-                orderDetail = await DataService.Odr_GetOrderDetail(member.OrderId);
-                setShoppingCard(orderDetail, flp_shoppingCar, true);
+                orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+                setShoppingCard(orderDetails, flp_shoppingCar, true);
 
                 //重新獲取商品資料
                 getProductCardsDatas(await DataService.P_getProductCardsDatas());
@@ -802,11 +802,11 @@ namespace MarketPos
             if (member == null || member.Id == 0) return;
 
             int orderid = (int)cbOdr_Number.SelectedValue;
-            var orderDetail = await DataService.Odr_GetOrderDetail(orderid);
+            var orderDetails = await DataService.Odr_GetOrderDetail(orderid);
             var orderData = await DataService.Odr_GetOrderData(orderid, member.Id);
             var paymentmethod = await DataService.Odr_GetPayment();
 
-            setShoppingCard(orderDetail, flpOdr_Histroy, false);
+            setShoppingCard(orderDetails, flpOdr_Histroy, false);
             lbOdr_date.Text = "訂購日期 : " + orderData.PlacedDate.ToString("yyyy年MM月dd日");
             lbOdr_Payment.Text = "付款方式 : " + paymentmethod[orderData.Payment];
             lbOdr_OName.Text = "訂購人姓名 :" + orderData.OrdererName;

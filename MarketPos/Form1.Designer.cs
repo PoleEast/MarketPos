@@ -141,6 +141,22 @@ namespace MarketPos
             lbOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
+            tbMemOrder = new TabPage();
+            ptbMOdr = new PictureBox();
+            txbMOdr_Total = new TextBox();
+            lbMOdr_RName = new Label();
+            lbMOdr_OName = new Label();
+            lbMOdr_RAddress = new Label();
+            txbMOdr_RAddress = new TextBox();
+            lbMOdr_OAddress = new Label();
+            lbMOdr_Patment = new Label();
+            txbMOdr_OAddress = new TextBox();
+            lbMOdr_Date = new Label();
+            flpMOdr = new FlowLayoutPanel();
+            lbMOdr = new Label();
+            cbMOdr_Number = new ComboBox();
+            lbMOdr_Number = new Label();
+            button1 = new Button();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -155,6 +171,8 @@ namespace MarketPos
             ((System.ComponentModel.ISupportInitialize)ptbMember).BeginInit();
             tbOrderHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            tbMemOrder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ptbMOdr).BeginInit();
             SuspendLayout();
             // 
             // tbcProdut
@@ -958,6 +976,7 @@ namespace MarketPos
             tbcControl.Controls.Add(tbAddProduct);
             tbcControl.Controls.Add(tbMenberEdit);
             tbcControl.Controls.Add(tbOrderHistory);
+            tbcControl.Controls.Add(tbMemOrder);
             tbcControl.Location = new Point(1114, 49);
             tbcControl.Name = "tbcControl";
             tbcControl.SelectedIndex = 0;
@@ -1400,6 +1419,196 @@ namespace MarketPos
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
             // 
+            // tbMemOrder
+            // 
+            tbMemOrder.Controls.Add(button1);
+            tbMemOrder.Controls.Add(ptbMOdr);
+            tbMemOrder.Controls.Add(txbMOdr_Total);
+            tbMemOrder.Controls.Add(lbMOdr_RName);
+            tbMemOrder.Controls.Add(lbMOdr_OName);
+            tbMemOrder.Controls.Add(lbMOdr_RAddress);
+            tbMemOrder.Controls.Add(txbMOdr_RAddress);
+            tbMemOrder.Controls.Add(lbMOdr_OAddress);
+            tbMemOrder.Controls.Add(lbMOdr_Patment);
+            tbMemOrder.Controls.Add(txbMOdr_OAddress);
+            tbMemOrder.Controls.Add(lbMOdr_Date);
+            tbMemOrder.Controls.Add(flpMOdr);
+            tbMemOrder.Controls.Add(lbMOdr);
+            tbMemOrder.Controls.Add(cbMOdr_Number);
+            tbMemOrder.Controls.Add(lbMOdr_Number);
+            tbMemOrder.Location = new Point(4, 24);
+            tbMemOrder.Name = "tbMemOrder";
+            tbMemOrder.Padding = new Padding(3);
+            tbMemOrder.Size = new Size(462, 754);
+            tbMemOrder.TabIndex = 4;
+            tbMemOrder.Text = "訂單確認";
+            tbMemOrder.UseVisualStyleBackColor = true;
+            // 
+            // ptbMOdr
+            // 
+            ptbMOdr.Image = Properties.Resources.clipboard;
+            ptbMOdr.Location = new Point(295, 10);
+            ptbMOdr.Name = "ptbMOdr";
+            ptbMOdr.Size = new Size(152, 128);
+            ptbMOdr.TabIndex = 57;
+            ptbMOdr.TabStop = false;
+            // 
+            // txbMOdr_Total
+            // 
+            txbMOdr_Total.BackColor = SystemColors.Window;
+            txbMOdr_Total.BorderStyle = BorderStyle.None;
+            txbMOdr_Total.Font = new Font("Microsoft JhengHei UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            txbMOdr_Total.Location = new Point(271, 188);
+            txbMOdr_Total.Name = "txbMOdr_Total";
+            txbMOdr_Total.ReadOnly = true;
+            txbMOdr_Total.Size = new Size(176, 31);
+            txbMOdr_Total.TabIndex = 56;
+            txbMOdr_Total.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lbMOdr_RName
+            // 
+            lbMOdr_RName.AutoEllipsis = true;
+            lbMOdr_RName.AutoSize = true;
+            lbMOdr_RName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_RName.Location = new Point(32, 294);
+            lbMOdr_RName.Name = "lbMOdr_RName";
+            lbMOdr_RName.Size = new Size(114, 24);
+            lbMOdr_RName.TabIndex = 55;
+            lbMOdr_RName.Text = "收貨人姓名 :";
+            // 
+            // lbMOdr_OName
+            // 
+            lbMOdr_OName.AutoEllipsis = true;
+            lbMOdr_OName.AutoSize = true;
+            lbMOdr_OName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_OName.Location = new Point(32, 223);
+            lbMOdr_OName.Name = "lbMOdr_OName";
+            lbMOdr_OName.Size = new Size(114, 24);
+            lbMOdr_OName.TabIndex = 54;
+            lbMOdr_OName.Text = "訂購人姓名 :";
+            // 
+            // lbMOdr_RAddress
+            // 
+            lbMOdr_RAddress.AutoEllipsis = true;
+            lbMOdr_RAddress.AutoSize = true;
+            lbMOdr_RAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_RAddress.Location = new Point(32, 329);
+            lbMOdr_RAddress.Name = "lbMOdr_RAddress";
+            lbMOdr_RAddress.Size = new Size(114, 24);
+            lbMOdr_RAddress.TabIndex = 53;
+            lbMOdr_RAddress.Text = "收貨人地址 :";
+            // 
+            // txbMOdr_RAddress
+            // 
+            txbMOdr_RAddress.BackColor = SystemColors.Window;
+            txbMOdr_RAddress.BorderStyle = BorderStyle.None;
+            txbMOdr_RAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            txbMOdr_RAddress.Location = new Point(152, 324);
+            txbMOdr_RAddress.Name = "txbMOdr_RAddress";
+            txbMOdr_RAddress.ReadOnly = true;
+            txbMOdr_RAddress.RightToLeft = RightToLeft.Yes;
+            txbMOdr_RAddress.Size = new Size(295, 25);
+            txbMOdr_RAddress.TabIndex = 52;
+            txbMOdr_RAddress.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lbMOdr_OAddress
+            // 
+            lbMOdr_OAddress.AutoEllipsis = true;
+            lbMOdr_OAddress.AutoSize = true;
+            lbMOdr_OAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_OAddress.Location = new Point(32, 260);
+            lbMOdr_OAddress.Name = "lbMOdr_OAddress";
+            lbMOdr_OAddress.Size = new Size(114, 24);
+            lbMOdr_OAddress.TabIndex = 51;
+            lbMOdr_OAddress.Text = "訂購人地址 :";
+            // 
+            // lbMOdr_Patment
+            // 
+            lbMOdr_Patment.AutoEllipsis = true;
+            lbMOdr_Patment.AutoSize = true;
+            lbMOdr_Patment.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_Patment.Location = new Point(32, 188);
+            lbMOdr_Patment.Name = "lbMOdr_Patment";
+            lbMOdr_Patment.Size = new Size(95, 24);
+            lbMOdr_Patment.TabIndex = 50;
+            lbMOdr_Patment.Text = "付款方式 :";
+            // 
+            // txbMOdr_OAddress
+            // 
+            txbMOdr_OAddress.BackColor = SystemColors.Window;
+            txbMOdr_OAddress.BorderStyle = BorderStyle.None;
+            txbMOdr_OAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            txbMOdr_OAddress.Location = new Point(152, 255);
+            txbMOdr_OAddress.Name = "txbMOdr_OAddress";
+            txbMOdr_OAddress.ReadOnly = true;
+            txbMOdr_OAddress.RightToLeft = RightToLeft.Yes;
+            txbMOdr_OAddress.Size = new Size(295, 25);
+            txbMOdr_OAddress.TabIndex = 49;
+            txbMOdr_OAddress.TextAlign = HorizontalAlignment.Right;
+            // 
+            // lbMOdr_Date
+            // 
+            lbMOdr_Date.AutoEllipsis = true;
+            lbMOdr_Date.AutoSize = true;
+            lbMOdr_Date.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_Date.Location = new Point(32, 151);
+            lbMOdr_Date.Name = "lbMOdr_Date";
+            lbMOdr_Date.Size = new Size(95, 24);
+            lbMOdr_Date.TabIndex = 48;
+            lbMOdr_Date.Text = "訂購日期 :";
+            // 
+            // flpMOdr
+            // 
+            flpMOdr.AutoScroll = true;
+            flpMOdr.BackgroundImage = Properties.Resources.shopping_cart2;
+            flpMOdr.BackgroundImageLayout = ImageLayout.Center;
+            flpMOdr.BorderStyle = BorderStyle.FixedSingle;
+            flpMOdr.Location = new Point(16, 376);
+            flpMOdr.Name = "flpMOdr";
+            flpMOdr.Size = new Size(431, 328);
+            flpMOdr.TabIndex = 47;
+            // 
+            // lbMOdr
+            // 
+            lbMOdr.AutoSize = true;
+            lbMOdr.Font = new Font("Microsoft JhengHei UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            lbMOdr.Location = new Point(32, 41);
+            lbMOdr.Name = "lbMOdr";
+            lbMOdr.Size = new Size(146, 41);
+            lbMOdr.TabIndex = 46;
+            lbMOdr.Text = "訂單確認";
+            // 
+            // cbMOdr_Number
+            // 
+            cbMOdr_Number.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbMOdr_Number.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbMOdr_Number.FormattingEnabled = true;
+            cbMOdr_Number.Location = new Point(124, 114);
+            cbMOdr_Number.Name = "cbMOdr_Number";
+            cbMOdr_Number.Size = new Size(159, 28);
+            cbMOdr_Number.TabIndex = 44;
+            // 
+            // lbMOdr_Number
+            // 
+            lbMOdr_Number.AutoEllipsis = true;
+            lbMOdr_Number.AutoSize = true;
+            lbMOdr_Number.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_Number.Location = new Point(32, 114);
+            lbMOdr_Number.Name = "lbMOdr_Number";
+            lbMOdr_Number.Size = new Size(86, 24);
+            lbMOdr_Number.TabIndex = 45;
+            lbMOdr_Number.Text = "訂單編號";
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button1.Location = new Point(351, 708);
+            button1.Name = "button1";
+            button1.Size = new Size(96, 43);
+            button1.TabIndex = 58;
+            button1.Text = "下一頁";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1435,6 +1644,9 @@ namespace MarketPos
             tbOrderHistory.ResumeLayout(false);
             tbOrderHistory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            tbMemOrder.ResumeLayout(false);
+            tbMemOrder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ptbMOdr).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1551,5 +1763,21 @@ namespace MarketPos
         private ComboBox cbUnPage;
         private Button btnUnBackPage;
         private Button btnUnNextPage;
+        private TabPage tbMemOrder;
+        private PictureBox ptbMOdr;
+        private TextBox txbMOdr_Total;
+        private Label lbMOdr_RName;
+        private Label lbMOdr_OName;
+        private Label lbMOdr_RAddress;
+        private TextBox txbMOdr_RAddress;
+        private Label lbMOdr_OAddress;
+        private Label lbMOdr_Patment;
+        private TextBox txbMOdr_OAddress;
+        private Label lbMOdr_Date;
+        private FlowLayoutPanel flpMOdr;
+        private Label lbMOdr;
+        private ComboBox cbMOdr_Number;
+        private Label lbMOdr_Number;
+        private Button button1;
     }
 }

@@ -20,5 +20,6 @@ namespace MarketPos.Models
         public string Origin { get; set; } = string.Empty;
         public int Stock { get; set; }
         public bool IsShelve { get; set; }
+        public bool Confirmed { get; set; }
     }
 }

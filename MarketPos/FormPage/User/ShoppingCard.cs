@@ -15,7 +15,7 @@ namespace MarketPos
     {
         private ProductsData? productsData;
         private bool isShoppingCar;
-        public static event EventHandler<KeyValuePair<int, int>>? OrderItemChange;
+        public static event EventHandler<OrderDetail>? OrderItemChange;
         public static event EventHandler<int>? OrderItemDelete;
         public int total;
 
@@ -45,6 +45,21 @@ namespace MarketPos
 
             txbTotal.Text += (data.Price * quantity) + "$";
             total = Convert.ToInt16(data.Price * quantity);
+
+            //開啟管理者訂單確認功能
+            if (Form1.member.Level > 2) return;
+
+            btnDelete.Enabled = false;
+            btnDelete.Visible = false;
+
+            CheckBox ckbConfirmed = new CheckBox();
+            ckbConfirmed.Text = "商品訂單確認";
+            ckbConfirmed.Location = btnDelete.Location; // 設置按鈕位置
+            ckbConfirmed.Size = btnDelete.Size;
+            ckbConfirmed.Font = btnDelete.Font;
+            ckbConfirmed.
+            ckbConfirmed.CheckedChanged += ckbConfirmed_CheckedChanged; // 設置按鈕點擊事件處理程序
+            this.Controls.Add(ckbConfirmed);
         }
 
         private void cbCount_SelectedIndexChanged(object? sender, EventArgs e)
@@ -52,8 +67,15 @@ namespace MarketPos
             if (sender == null) return;
             if (productsData == null) return;
 
-            KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbCount.SelectedIndex + 1);
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.productID=productsData.Id;
+            orderDetail.quantity = cbCount.SelectedIndex + 1;
             OrderItemChange?.Invoke(this, orderDetail);
+        }
+
+        private void ckbConfirmed_CheckedChanged(object? sender, EventArgs e)
+        {
+            
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -63,6 +85,7 @@ namespace MarketPos
 
             OrderItemDelete?.Invoke(this, productsData.Id);
         }
+
         private void shoppingCard_Click(object sender, EventArgs e)
         {
             if (productsData == null) return;

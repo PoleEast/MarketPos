@@ -16,5 +16,7 @@ namespace MarketPos.Models
         public DateTime PlacedDate { get; set; }
         public bool IsPaid { get; set; }
         public int Payment { get; set; }
+        public bool Confirmed { get; set; }
+        public string Comment { get; set; } = string.Empty;
     }
 }

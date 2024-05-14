@@ -471,7 +471,7 @@ namespace MarketPos
 
         /// <summary></summary>
         /// <returns>回傳-1為sql錯誤 回傳0為查不到訂單</returns>
-        public static async Task<int> Odr_GetMemberOrder(int id)
+        public static async Task<int> Odr_GetMemberOrderID(int id)
         {
             if (!await DS_ConnectionSql()) return -1;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -531,16 +531,16 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"創建新購物清單失敗\n{ex}"); return; }
         }
 
-        public static async Task Odr_CreateOrderDetail(int orderid, int productid, int quantity)
+        public static async Task Odr_CreateOrderDetail(OrderDetail orderDetail)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"INSERT INTO OrderDetails(orderID,productID,quantity)
                            VALUES(@orderID,@productID,@quantity)";
             SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@orderID", orderid);
-            com.Parameters.AddWithValue("@productID", productid);
-            com.Parameters.AddWithValue("@quantity", quantity);
+            com.Parameters.AddWithValue("@orderID", orderDetail.orderID);
+            com.Parameters.AddWithValue("@productID", orderDetail.productID);
+            com.Parameters.AddWithValue("@quantity", orderDetail.quantity);
             try
             {
                 conn.Open();
@@ -551,12 +551,12 @@ namespace MarketPos
 
 
         /// <returns>Dictionary key=產品ID value=數量</returns>
-        public static async Task<Dictionary<int, int>> Odr_GetOrderDetail(int orderid)
+        public static async Task<List<OrderDetail>> Odr_GetOrderDetail(int orderid)
         {
-            Dictionary<int, int> orderDetail = [];
-            if (!await DS_ConnectionSql()) return orderDetail;
+            List<OrderDetail> orderDetails = [];
+            if (!await DS_ConnectionSql()) return orderDetails;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT productID,quantity
+            string sql = @"SELECT productID,quantity,confirmed
                            FROM OrderDetails
                            WHERE orderID=@orderid";
             SqlCommand com = new SqlCommand(sql, conn);
@@ -567,14 +567,19 @@ namespace MarketPos
                 using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                 {
-                    orderDetail.Add((int)reader["productID"], (int)reader["quantity"]);
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.productID = (int)reader["productID"];
+                    orderDetail.quantity = (int)reader["quantity"];
+                    orderDetail.confirmed = (bool)reader["confirmed"];
+
+                    orderDetails.Add(orderDetail);
                 }
-                return orderDetail;
+                return orderDetails;
             }
             catch (Exception ex) { MessageBox.Show($"獲取商品詳細清單錯誤\n{ex}"); return []; }
         }
 
-        public static async Task Odr_UpdateOrderDetail(int orderid, int productid, int quantity)
+        public static async Task Odr_UpdateOrderDetail(OrderDetail orderDetail)
         {
             if (!await DS_ConnectionSql()) { return; }
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -582,9 +587,9 @@ namespace MarketPos
                            SET quantity = @quantity
                            WHERE orderID = @orderid AND productID=@productid";
             SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@orderid", orderid);
-            com.Parameters.AddWithValue("@productid", productid);
-            com.Parameters.AddWithValue("@quantity", quantity);
+            com.Parameters.AddWithValue("@orderid", orderDetail.orderID);
+            com.Parameters.AddWithValue("@productid", orderDetail.productID);
+            com.Parameters.AddWithValue("@quantity", orderDetail.quantity);
             try
             {
                 conn.Open();
@@ -629,7 +634,7 @@ namespace MarketPos
         }
 
         public static async Task<bool> Odr_orderPlaced(int orderid, int paymentMethodID, string ordererName, string ordererAddress,
-            string receiverName, string receiverAddress, Dictionary<int, int> orderDetail)
+            string receiverName, string receiverAddress, List<OrderDetail> orderDetails)
         {
             if (!await DS_ConnectionSql()) return false;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -659,15 +664,15 @@ namespace MarketPos
 
                     com.CommandText = sqlStock;
                     //修改庫存數目
-                    foreach (var item in orderDetail)
+                    foreach (var item in orderDetails)
                     {
                         com.Parameters.Clear();
 
-                        var product = Form1.shelveProducts.First(o => o.Id == item.Key);
-                        int stock = product.Stock - item.Value;
+                        var product = Form1.shelveProducts.First(o => o.Id == item.productID);
+                        int stock = product.Stock - item.quantity;
                         if (stock < 0) throw new Exception();
 
-                        com.Parameters.AddWithValue("@id", item.Key);
+                        com.Parameters.AddWithValue("@id", item.productID);
                         com.Parameters.AddWithValue("@stock", stock);
                         com.ExecuteNonQuery();
                     }
@@ -722,6 +727,8 @@ namespace MarketPos
                 order.ReceiverAddress = (string)reader["receiverAddress"];
                 order.Payment = (int)reader["paymentMethodID"];
                 order.PlacedDate = (DateTime)reader["placedDate"];
+                order.Comment = (string)reader["comment"];
+                order.Confirmed = (bool)reader["confirmed"];
 
                 return order;
             }

@@ -13,7 +13,7 @@ namespace MarketPos
 {
     public partial class Detail_PCard : Form
     {
-        public static event EventHandler<KeyValuePair<int, int>>? OrderItemAdded;
+        public static event EventHandler<OrderDetail>? OrderItemAdded;
         private ProductsData productsData = new();
         private string[] imageFiles = [];
 
@@ -48,7 +48,9 @@ namespace MarketPos
             if (Form1.member == null || Form1.member.Id == 0) { MessageBox.Show("請先登入會員"); return; }
             if (!(cbQuantity.SelectedIndex >= 0)) { MessageBox.Show("請選擇數量"); return; }
 
-            KeyValuePair<int, int> orderDetail = new KeyValuePair<int, int>(productsData.Id, cbQuantity.SelectedIndex + 1);
+            OrderDetail orderDetail = new();
+            orderDetail.productID= productsData.Id;
+            orderDetail.quantity = cbQuantity.SelectedIndex + 1;
             OrderItemAdded?.Invoke(this, orderDetail);
             this.Close();
         }

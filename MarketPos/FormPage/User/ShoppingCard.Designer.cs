@@ -41,7 +41,7 @@
             lbName.AutoEllipsis = true;
             lbName.AutoSize = true;
             lbName.Font = new Font("Microsoft JhengHei UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            lbName.Location = new Point(3, 21);
+            lbName.Location = new Point(3, 9);
             lbName.Name = "lbName";
             lbName.Size = new Size(54, 26);
             lbName.TabIndex = 28;
@@ -88,7 +88,7 @@
             lbPrice.AutoEllipsis = true;
             lbPrice.AutoSize = true;
             lbPrice.Font = new Font("Microsoft JhengHei UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbPrice.Location = new Point(93, 64);
+            lbPrice.Location = new Point(84, 64);
             lbPrice.Name = "lbPrice";
             lbPrice.Size = new Size(42, 19);
             lbPrice.TabIndex = 34;

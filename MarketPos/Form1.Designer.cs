@@ -139,9 +139,8 @@ namespace MarketPos
             lbOdr_Histroy = new Label();
             cbOdr_Number = new ComboBox();
             lbOdr_Number = new Label();
-            btn_Login = new Button();
-            lbMember = new Label();
-            tbMemOrder = new TabPage();
+            tbManOrder = new TabPage();
+            button1 = new Button();
             ptbMOdr = new PictureBox();
             txbMOdr_Total = new TextBox();
             lbMOdr_RName = new Label();
@@ -149,14 +148,15 @@ namespace MarketPos
             lbMOdr_RAddress = new Label();
             txbMOdr_RAddress = new TextBox();
             lbMOdr_OAddress = new Label();
-            lbMOdr_Patment = new Label();
+            lbMOdr_Payment = new Label();
             txbMOdr_OAddress = new TextBox();
             lbMOdr_Date = new Label();
             flpMOdr = new FlowLayoutPanel();
             lbMOdr = new Label();
             cbMOdr_Number = new ComboBox();
             lbMOdr_Number = new Label();
-            button1 = new Button();
+            btn_Login = new Button();
+            lbMember = new Label();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -171,7 +171,7 @@ namespace MarketPos
             ((System.ComponentModel.ISupportInitialize)ptbMember).BeginInit();
             tbOrderHistory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            tbMemOrder.SuspendLayout();
+            tbManOrder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptbMOdr).BeginInit();
             SuspendLayout();
             // 
@@ -976,7 +976,7 @@ namespace MarketPos
             tbcControl.Controls.Add(tbAddProduct);
             tbcControl.Controls.Add(tbMenberEdit);
             tbcControl.Controls.Add(tbOrderHistory);
-            tbcControl.Controls.Add(tbMemOrder);
+            tbcControl.Controls.Add(tbManOrder);
             tbcControl.Location = new Point(1114, 49);
             tbcControl.Name = "tbcControl";
             tbcControl.SelectedIndex = 0;
@@ -1396,53 +1396,41 @@ namespace MarketPos
             lbOdr_Number.TabIndex = 13;
             lbOdr_Number.Text = "訂單編號";
             // 
-            // btn_Login
+            // tbManOrder
             // 
-            btn_Login.BackColor = SystemColors.GradientActiveCaption;
-            btn_Login.Cursor = Cursors.Hand;
-            btn_Login.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btn_Login.Location = new Point(1442, 14);
-            btn_Login.Name = "btn_Login";
-            btn_Login.Size = new Size(96, 43);
-            btn_Login.TabIndex = 30;
-            btn_Login.Text = "註冊/登入";
-            btn_Login.UseVisualStyleBackColor = false;
-            btn_Login.Click += btn_Login_Click;
+            tbManOrder.Controls.Add(button1);
+            tbManOrder.Controls.Add(ptbMOdr);
+            tbManOrder.Controls.Add(txbMOdr_Total);
+            tbManOrder.Controls.Add(lbMOdr_RName);
+            tbManOrder.Controls.Add(lbMOdr_OName);
+            tbManOrder.Controls.Add(lbMOdr_RAddress);
+            tbManOrder.Controls.Add(txbMOdr_RAddress);
+            tbManOrder.Controls.Add(lbMOdr_OAddress);
+            tbManOrder.Controls.Add(lbMOdr_Payment);
+            tbManOrder.Controls.Add(txbMOdr_OAddress);
+            tbManOrder.Controls.Add(lbMOdr_Date);
+            tbManOrder.Controls.Add(flpMOdr);
+            tbManOrder.Controls.Add(lbMOdr);
+            tbManOrder.Controls.Add(cbMOdr_Number);
+            tbManOrder.Controls.Add(lbMOdr_Number);
+            tbManOrder.Location = new Point(4, 24);
+            tbManOrder.Name = "tbManOrder";
+            tbManOrder.Padding = new Padding(3);
+            tbManOrder.Size = new Size(462, 754);
+            tbManOrder.TabIndex = 4;
+            tbManOrder.Text = "訂單確認";
+            tbManOrder.UseVisualStyleBackColor = true;
             // 
-            // lbMember
+            // button1
             // 
-            lbMember.AutoEllipsis = true;
-            lbMember.AutoSize = true;
-            lbMember.Font = new Font("Microsoft JhengHei UI", 15.75F, FontStyle.Italic, GraphicsUnit.Point, 136);
-            lbMember.Location = new Point(1244, 20);
-            lbMember.Name = "lbMember";
-            lbMember.Size = new Size(0, 26);
-            lbMember.TabIndex = 31;
-            // 
-            // tbMemOrder
-            // 
-            tbMemOrder.Controls.Add(button1);
-            tbMemOrder.Controls.Add(ptbMOdr);
-            tbMemOrder.Controls.Add(txbMOdr_Total);
-            tbMemOrder.Controls.Add(lbMOdr_RName);
-            tbMemOrder.Controls.Add(lbMOdr_OName);
-            tbMemOrder.Controls.Add(lbMOdr_RAddress);
-            tbMemOrder.Controls.Add(txbMOdr_RAddress);
-            tbMemOrder.Controls.Add(lbMOdr_OAddress);
-            tbMemOrder.Controls.Add(lbMOdr_Patment);
-            tbMemOrder.Controls.Add(txbMOdr_OAddress);
-            tbMemOrder.Controls.Add(lbMOdr_Date);
-            tbMemOrder.Controls.Add(flpMOdr);
-            tbMemOrder.Controls.Add(lbMOdr);
-            tbMemOrder.Controls.Add(cbMOdr_Number);
-            tbMemOrder.Controls.Add(lbMOdr_Number);
-            tbMemOrder.Location = new Point(4, 24);
-            tbMemOrder.Name = "tbMemOrder";
-            tbMemOrder.Padding = new Padding(3);
-            tbMemOrder.Size = new Size(462, 754);
-            tbMemOrder.TabIndex = 4;
-            tbMemOrder.Text = "訂單確認";
-            tbMemOrder.UseVisualStyleBackColor = true;
+            button1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            button1.Location = new Point(351, 708);
+            button1.Name = "button1";
+            button1.Size = new Size(96, 43);
+            button1.TabIndex = 58;
+            button1.Text = "下一頁";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // ptbMOdr
             // 
@@ -1522,16 +1510,16 @@ namespace MarketPos
             lbMOdr_OAddress.TabIndex = 51;
             lbMOdr_OAddress.Text = "訂購人地址 :";
             // 
-            // lbMOdr_Patment
+            // lbMOdr_Payment
             // 
-            lbMOdr_Patment.AutoEllipsis = true;
-            lbMOdr_Patment.AutoSize = true;
-            lbMOdr_Patment.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbMOdr_Patment.Location = new Point(32, 188);
-            lbMOdr_Patment.Name = "lbMOdr_Patment";
-            lbMOdr_Patment.Size = new Size(95, 24);
-            lbMOdr_Patment.TabIndex = 50;
-            lbMOdr_Patment.Text = "付款方式 :";
+            lbMOdr_Payment.AutoEllipsis = true;
+            lbMOdr_Payment.AutoSize = true;
+            lbMOdr_Payment.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            lbMOdr_Payment.Location = new Point(32, 188);
+            lbMOdr_Payment.Name = "lbMOdr_Payment";
+            lbMOdr_Payment.Size = new Size(95, 24);
+            lbMOdr_Payment.TabIndex = 50;
+            lbMOdr_Payment.Text = "付款方式 :";
             // 
             // txbMOdr_OAddress
             // 
@@ -1587,6 +1575,7 @@ namespace MarketPos
             cbMOdr_Number.Name = "cbMOdr_Number";
             cbMOdr_Number.Size = new Size(159, 28);
             cbMOdr_Number.TabIndex = 44;
+            cbMOdr_Number.SelectedIndexChanged += cbMOdr_Number_SelectedIndexChanged;
             // 
             // lbMOdr_Number
             // 
@@ -1599,15 +1588,28 @@ namespace MarketPos
             lbMOdr_Number.TabIndex = 45;
             lbMOdr_Number.Text = "訂單編號";
             // 
-            // button1
+            // btn_Login
             // 
-            button1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            button1.Location = new Point(351, 708);
-            button1.Name = "button1";
-            button1.Size = new Size(96, 43);
-            button1.TabIndex = 58;
-            button1.Text = "下一頁";
-            button1.UseVisualStyleBackColor = true;
+            btn_Login.BackColor = SystemColors.GradientActiveCaption;
+            btn_Login.Cursor = Cursors.Hand;
+            btn_Login.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btn_Login.Location = new Point(1442, 14);
+            btn_Login.Name = "btn_Login";
+            btn_Login.Size = new Size(96, 43);
+            btn_Login.TabIndex = 30;
+            btn_Login.Text = "註冊/登入";
+            btn_Login.UseVisualStyleBackColor = false;
+            btn_Login.Click += btn_Login_Click;
+            // 
+            // lbMember
+            // 
+            lbMember.AutoEllipsis = true;
+            lbMember.AutoSize = true;
+            lbMember.Font = new Font("Microsoft JhengHei UI", 15.75F, FontStyle.Italic, GraphicsUnit.Point, 136);
+            lbMember.Location = new Point(1244, 20);
+            lbMember.Name = "lbMember";
+            lbMember.Size = new Size(0, 26);
+            lbMember.TabIndex = 31;
             // 
             // Form1
             // 
@@ -1644,8 +1646,8 @@ namespace MarketPos
             tbOrderHistory.ResumeLayout(false);
             tbOrderHistory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            tbMemOrder.ResumeLayout(false);
-            tbMemOrder.PerformLayout();
+            tbManOrder.ResumeLayout(false);
+            tbManOrder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptbMOdr).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -1763,7 +1765,7 @@ namespace MarketPos
         private ComboBox cbUnPage;
         private Button btnUnBackPage;
         private Button btnUnNextPage;
-        private TabPage tbMemOrder;
+        private TabPage tbManOrder;
         private PictureBox ptbMOdr;
         private TextBox txbMOdr_Total;
         private Label lbMOdr_RName;
@@ -1771,7 +1773,7 @@ namespace MarketPos
         private Label lbMOdr_RAddress;
         private TextBox txbMOdr_RAddress;
         private Label lbMOdr_OAddress;
-        private Label lbMOdr_Patment;
+        private Label lbMOdr_Payment;
         private TextBox txbMOdr_OAddress;
         private Label lbMOdr_Date;
         private FlowLayoutPanel flpMOdr;

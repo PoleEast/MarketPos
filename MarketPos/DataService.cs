@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Net.Http;
+using System.Numerics;
 using System.Text;
 using System.Transactions;
 using System.Web;
@@ -584,12 +585,13 @@ namespace MarketPos
             if (!await DS_ConnectionSql()) { return; }
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"UPDATE OrderDetails 
-                           SET quantity = @quantity
+                           SET quantity = @quantity,confirmed = @confirmed
                            WHERE orderID = @orderid AND productID=@productid";
             SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@orderid", orderDetail.orderID);
             com.Parameters.AddWithValue("@productid", orderDetail.productID);
             com.Parameters.AddWithValue("@quantity", orderDetail.quantity);
+            com.Parameters.AddWithValue("@confirmed", orderDetail.confirmed);
             try
             {
                 conn.Open();
@@ -685,17 +687,29 @@ namespace MarketPos
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">id傳入0代表為管理者</param>
+        /// <returns></returns>
         public static async Task<List<int>> Odr_getHistoryNum(int id)
         {
             List<int> orderNums = [];
             if (!await DS_ConnectionSql()) return orderNums;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT id FROM Orders WHERE memberID=@id AND placed = 1";
-            using SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@id", id);
+            string sql = @"SELECT id FROM Orders WHERE 1=1 ";
+            using SqlCommand com = new SqlCommand();
+            if (id != 0)
+            {
+                sql += @"AND memberID=@id ";
+                com.Parameters.AddWithValue("@id", id);
+            }
+            sql += @"AND placed = 1";
             try
             {
                 conn.Open();
+                com.CommandText = sql;
+                com.Connection = conn;
                 using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                     orderNums.Add((int)reader["id"]);
@@ -705,15 +719,14 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"獲取歷史訂單編號失敗\n{ex}"); return []; }
         }
 
-        public static async Task<Order> Odr_GetOrderData(int orderid, int memberid)
+        public static async Task<Order> Odr_GetOrderData(int orderid)
         {
             Order order = new Order();
             if (!await DS_ConnectionSql()) return order;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT * FROM Orders WHERE id=@orderid AND memberID=@memberid";
+            string sql = @"SELECT * FROM Orders WHERE id=@orderid AND placed = 1";
             using SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@orderid", orderid);
-            com.Parameters.AddWithValue("@memberid", memberid);
             try
             {
                 conn.Open();
@@ -733,6 +746,23 @@ namespace MarketPos
                 return order;
             }
             catch (Exception ex) { MessageBox.Show($"獲取歷史訂單資料失敗\n{ex}"); return order; }
+        }
+
+        public static async Task<bool> Odr_ConfirmedChange(OrderDetail orderDetail)
+        {
+            if (!await DS_ConnectionSql()) return false;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE INTO Orders SET confirmed=@confirmed WHERE id=@orderid";
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@confirmed", orderDetail.confirmed);
+            com.Parameters.AddWithValue("@id", orderDetail.orderID);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex) { MessageBox.Show($"訂單確認狀態更改失敗\n{ex}"); return false; };
         }
     }
 }

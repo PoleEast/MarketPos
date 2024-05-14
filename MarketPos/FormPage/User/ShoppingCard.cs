@@ -14,8 +14,10 @@ namespace MarketPos
     public partial class ShoppingCard : UserControl
     {
         private ProductsData? productsData;
+        private OrderDetail? orderDetail;
         private bool isShoppingCar;
         public static event EventHandler<OrderDetail>? OrderItemChange;
+        public static event EventHandler<OrderDetail>? ConfirmedChange;
         public static event EventHandler<int>? OrderItemDelete;
         public int total;
 
@@ -27,24 +29,27 @@ namespace MarketPos
             InitializeComponent();
             this.isShoppingCar = isShoppingCar;
         }
-        public void SetCard(ProductsData data, int quantity)
+        public void SetCard(ProductsData data, OrderDetail detail)
         {
             productsData = data;
+            orderDetail = detail;
             lbName.Text = data.Name;
             lbPrice.Text += data.Price.ToString() + "$";
 
             //設定是否要啟用更改數量功能
             for (int i = 1; i <= data.Stock; i++)
                 cbCount.Items.Add(i);
-            cbCount.SelectedIndex = quantity - 1;
+            cbCount.SelectedIndex = detail.quantity - 1;
             if (isShoppingCar)
             {
                 cbCount.SelectedIndexChanged += cbCount_SelectedIndexChanged;
                 cbCount.Enabled = true;
+                btnDelete.Enabled = true;
+                btnDelete.Visible = true;
             }
 
-            txbTotal.Text += (data.Price * quantity) + "$";
-            total = Convert.ToInt16(data.Price * quantity);
+            txbTotal.Text += (data.Price * detail.quantity) + "$";
+            total = Convert.ToInt16(data.Price * detail.quantity);
 
             //開啟管理者訂單確認功能
             if (Form1.member.Level > 2) return;
@@ -53,29 +58,35 @@ namespace MarketPos
             btnDelete.Visible = false;
 
             CheckBox ckbConfirmed = new CheckBox();
+            ckbConfirmed.Name = "ckbConfirmed";
             ckbConfirmed.Text = "商品訂單確認";
             ckbConfirmed.Location = btnDelete.Location; // 設置按鈕位置
             ckbConfirmed.Size = btnDelete.Size;
             ckbConfirmed.Font = btnDelete.Font;
-            ckbConfirmed.
+            ckbConfirmed.Checked = detail.confirmed;
             ckbConfirmed.CheckedChanged += ckbConfirmed_CheckedChanged; // 設置按鈕點擊事件處理程序
             this.Controls.Add(ckbConfirmed);
+
         }
 
         private void cbCount_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (sender == null) return;
-            if (productsData == null) return;
+            if (sender == null || orderDetail == null) return;
 
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.productID=productsData.Id;
             orderDetail.quantity = cbCount.SelectedIndex + 1;
             OrderItemChange?.Invoke(this, orderDetail);
         }
 
         private void ckbConfirmed_CheckedChanged(object? sender, EventArgs e)
         {
-            
+            CheckBox? ckbConfirmed = sender as CheckBox;
+            if (orderDetail == null || orderDetail.productID == 0 || ckbConfirmed == null) { MessageBox.Show("orderDetail獲取失敗"); return; }
+
+            if (ckbConfirmed.Checked != orderDetail.confirmed)
+            {
+                orderDetail.confirmed = ckbConfirmed.Checked;
+                ConfirmedChange?.Invoke(this, orderDetail);
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

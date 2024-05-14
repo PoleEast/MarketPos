@@ -62,12 +62,14 @@
             // 
             // btnDelete
             // 
+            btnDelete.Enabled = false;
             btnDelete.Location = new Point(3, 63);
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(75, 23);
             btnDelete.TabIndex = 32;
             btnDelete.Text = "刪除";
             btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Visible = false;
             btnDelete.Click += btnDelete_Click;
             // 
             // txbTotal
@@ -77,6 +79,7 @@
             txbTotal.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
             txbTotal.Location = new Point(198, 60);
             txbTotal.Name = "txbTotal";
+            txbTotal.ReadOnly = true;
             txbTotal.Size = new Size(207, 25);
             txbTotal.TabIndex = 33;
             txbTotal.Text = "金額:";

@@ -66,6 +66,7 @@ namespace MarketPos
             ckbConfirmed.Checked = detail.confirmed;
             ckbConfirmed.CheckedChanged += ckbConfirmed_CheckedChanged; // 設置按鈕點擊事件處理程序
             this.Controls.Add(ckbConfirmed);
+            this.Cursor = Cursors.Default;
 
         }
 
@@ -99,7 +100,7 @@ namespace MarketPos
 
         private void shoppingCard_Click(object sender, EventArgs e)
         {
-            if (productsData == null) return;
+            if (productsData == null || Form1.member.Level < 3) return;
             Detail_PCard detail_PCard = new(productsData);
             detail_PCard.StartPosition = FormStartPosition.CenterParent;
             detail_PCard.ShowDialog();

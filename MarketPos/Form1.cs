@@ -672,6 +672,7 @@ namespace MarketPos
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
             if (flowLayoutPanel.Name == "flp_shoppingCar") textBox = txbTotal;
             else if (flowLayoutPanel.Name == "flpOdr_Histroy") textBox = txbOdr_Total;
+            else if (flowLayoutPanel.Name == "flpMOdr") textBox = txbMOdr_Total;
 
             List<ShoppingCard> shoppingCards = flowLayoutPanel.Controls.OfType<ShoppingCard>().ToList();
             if (shoppingCards.Count == 0)

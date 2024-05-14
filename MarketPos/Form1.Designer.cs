@@ -140,7 +140,7 @@ namespace MarketPos
             cbOdr_Number = new ComboBox();
             lbOdr_Number = new Label();
             tbManOrder = new TabPage();
-            button1 = new Button();
+            btnConfirmed = new Button();
             ptbMOdr = new PictureBox();
             txbMOdr_Total = new TextBox();
             lbMOdr_RName = new Label();
@@ -1398,7 +1398,7 @@ namespace MarketPos
             // 
             // tbManOrder
             // 
-            tbManOrder.Controls.Add(button1);
+            tbManOrder.Controls.Add(btnConfirmed);
             tbManOrder.Controls.Add(ptbMOdr);
             tbManOrder.Controls.Add(txbMOdr_Total);
             tbManOrder.Controls.Add(lbMOdr_RName);
@@ -1421,16 +1421,16 @@ namespace MarketPos
             tbManOrder.Text = "訂單確認";
             tbManOrder.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnConfirmed
             // 
-            button1.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            button1.Location = new Point(351, 708);
-            button1.Name = "button1";
-            button1.Size = new Size(96, 43);
-            button1.TabIndex = 58;
-            button1.Text = "下一頁";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnConfirmed.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnConfirmed.Location = new Point(351, 708);
+            btnConfirmed.Name = "btnConfirmed";
+            btnConfirmed.Size = new Size(96, 43);
+            btnConfirmed.TabIndex = 58;
+            btnConfirmed.Text = "確認";
+            btnConfirmed.UseVisualStyleBackColor = true;
+            btnConfirmed.Click += button1_Click;
             // 
             // ptbMOdr
             // 
@@ -1780,6 +1780,6 @@ namespace MarketPos
         private Label lbMOdr;
         private ComboBox cbMOdr_Number;
         private Label lbMOdr_Number;
-        private Button button1;
+        private Button btnConfirmed;
     }
 }

@@ -77,6 +77,7 @@
             txbTotal.BackColor = SystemColors.Menu;
             txbTotal.BorderStyle = BorderStyle.None;
             txbTotal.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            txbTotal.ImeMode = ImeMode.Off;
             txbTotal.Location = new Point(198, 60);
             txbTotal.Name = "txbTotal";
             txbTotal.ReadOnly = true;

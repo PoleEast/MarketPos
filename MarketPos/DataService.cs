@@ -557,7 +557,7 @@ namespace MarketPos
             List<OrderDetail> orderDetails = [];
             if (!await DS_ConnectionSql()) return orderDetails;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT productID,quantity,confirmed
+            string sql = @"SELECT productID,quantity,confirmed,orderID
                            FROM OrderDetails
                            WHERE orderID=@orderid";
             SqlCommand com = new SqlCommand(sql, conn);
@@ -571,6 +571,7 @@ namespace MarketPos
                     OrderDetail orderDetail = new OrderDetail();
                     orderDetail.productID = (int)reader["productID"];
                     orderDetail.quantity = (int)reader["quantity"];
+                    orderDetail.orderID = (int)reader["orderID"];
                     orderDetail.confirmed = (bool)reader["confirmed"];
 
                     orderDetails.Add(orderDetail);

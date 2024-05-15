@@ -536,9 +536,35 @@ namespace MarketPos
             //會員訂單處理
             getShoppingOrderID();
             orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+
+            //處理訂單完售問題
+            CheckOrderDetails(orderDetails, shelveProducts);
+
             setShoppingCard(orderDetails, flp_shoppingCar, true);
             setOrderHistroy();
             setManagerOrder();
+        }
+
+        private async void CheckOrderDetails(List<OrderDetail> orderDetails, List<ProductsData> shelveProducts)
+        {
+            var itemsToRemove = new List<OrderDetail>();
+
+            foreach (var item in orderDetails)
+            {
+                var productdata = shelveProducts.FirstOrDefault(o => o.Id == item.productID);
+                if (productdata == null) continue;
+                if (productdata.Stock < item.quantity)
+                {
+                    await DataService.Odr_DeleteOrderDetail(member.OrderId, productdata.Id);
+                    itemsToRemove.Add(item);
+                    MessageBox.Show($"{productdata.Name}\n此商品庫存完售或不足，請重新下定");
+                }
+            }
+
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                orderDetails.Remove(itemToRemove);
+            }
         }
 
         private async void setOrderHistroy()
@@ -551,7 +577,6 @@ namespace MarketPos
         private async void setManagerOrder()
         {
             if (member == null || member.Id == 0) return;
-
             cbMOdr_Number.DataSource = await DataService.Odr_getHistoryNum(0);
         }
 
@@ -644,17 +669,28 @@ namespace MarketPos
 
         /// <param name="orderDetail">訂單詳細資料</param>
         /// <param name="flp">設置的版面</param>
-        private void setShoppingCard(List<OrderDetail> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
+        private async void setShoppingCard(List<OrderDetail> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
         {
+            getProductCardsDatas(await DataService.P_getProductCardsDatas());
             flp.Controls.Clear();
             foreach (var item in orderDetail)
             {
                 ShoppingCard shoppingCard = new ShoppingCard(isShoppingCar);
                 List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];
 
-                ProductsData? productsData = datas.FirstOrDefault(o => o.Id == item.productID && (o.IsShelve || !isShoppingCar));
+                ProductsData? productsData = datas.FirstOrDefault(o => o.Id == item.productID);
 
-                if (productsData == null) { MessageBox.Show($"找無此筆商品:{item.productID}，請與克服聯繫"); continue; }
+                if (productsData == null || ((!productsData.IsShelve || item.quantity > productsData.Stock) && isShoppingCar))
+                {
+                    string name = productsData == null ? string.Empty : productsData.Name;
+                    MessageBox.Show($"找無此筆商品或商品已下架:\n{item.productID} {name}");
+                    await DataService.Odr_DeleteOrderDetail(member.OrderId, item.productID);
+                    if (ptb_Sort.Tag != null)
+                        productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
+                    Set_Page();
+                    orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
+                    continue;
+                }
                 shoppingCard.SetCard(productsData, item);
                 flp.Controls.Add(shoppingCard);
             }
@@ -847,9 +883,13 @@ namespace MarketPos
             txbMOdr_RAddress.Text = orderData.ReceiverAddress;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void btnConfirmed_Click(object sender, EventArgs e)
         {
-            
+            if (member.Level > 2) { MessageBox.Show("您並沒有此權限"); return; }
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("您並沒有此選擇訂單"); return; }
+
+            await DataService.Odr_UpdateConfirmed(true, (int)cbMOdr_Number.SelectedValue);
+            setManagerOrder();
         }
     }
 }

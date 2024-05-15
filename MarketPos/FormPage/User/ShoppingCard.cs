@@ -37,18 +37,22 @@ namespace MarketPos
             lbPrice.Text += data.Price.ToString() + "$";
 
             //設定是否要啟用更改數量功能
-            for (int i = 1; i <= data.Stock; i++)
-                cbCount.Items.Add(i);
-            cbCount.SelectedIndex = detail.quantity - 1;
             if (isShoppingCar)
             {
+                for (int i = 1; i <= data.Stock; i++)
+                    cbCount.Items.Add(i);
+                cbCount.SelectedIndex = detail.quantity - 1;
                 cbCount.SelectedIndexChanged += cbCount_SelectedIndexChanged;
                 cbCount.Enabled = true;
                 btnDelete.Enabled = true;
                 btnDelete.Visible = true;
             }
-
-            txbTotal.Text += (data.Price * detail.quantity) + "$";
+            else
+            {
+                cbCount.Visible = false;
+                lbCount.Text += ": " + detail.quantity.ToString();
+            }
+            txbTotal.Text += Math.Floor(data.Price * detail.quantity) + "$";
             total = Convert.ToInt16(data.Price * detail.quantity);
 
             //開啟管理者訂單確認功能

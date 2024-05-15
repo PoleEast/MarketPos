@@ -1430,7 +1430,7 @@ namespace MarketPos
             btnConfirmed.TabIndex = 58;
             btnConfirmed.Text = "確認";
             btnConfirmed.UseVisualStyleBackColor = true;
-            btnConfirmed.Click += button1_Click;
+            btnConfirmed.Click += btnConfirmed_Click;
             // 
             // ptbMOdr
             // 

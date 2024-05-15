@@ -19,10 +19,21 @@ namespace MarketPos
     {
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
-        public static string ConnString =
-        "Data Source=1.175.105.241,3453;Initial Catalog = dbMarketPos; User ID = MarkPosMan; Password=markpos;";
+        public static string ConnString = string.Empty;
         private static async Task<bool> DS_ConnectionSql()
         {
+            if (ConnString == string.Empty)
+            {
+                string filePath = @"../../../connString.txt";
+                try
+                {
+                    ConnString = File.ReadAllText(filePath);
+                }
+                catch
+                {
+                    MessageBox.Show("請設定好資料庫連接字串");
+                }
+            }
             using SqlConnection conn = new(ConnString);
             try
             {
@@ -688,6 +699,22 @@ namespace MarketPos
             }
         }
 
+        public static async Task Odr_UpdateConfirmed(bool confirmed, int id)
+        {
+            if (!await DS_ConnectionSql()) return;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE Orders SET confirmed=@confirmed WHERE id=@id";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@confirmed", confirmed);
+            com.Parameters.AddWithValue("@id", id);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"訂單確認狀態更新失敗\n{ex}"); return; }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -704,6 +731,10 @@ namespace MarketPos
             {
                 sql += @"AND memberID=@id ";
                 com.Parameters.AddWithValue("@id", id);
+            }
+            else
+            {
+                sql += @"AND confirmed=0 ";
             }
             sql += @"ORDER BY confirmed ASC, id DESC";
             try

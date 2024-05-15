@@ -157,6 +157,7 @@ namespace MarketPos
             lbMOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
+            btnMessage = new Button();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -1398,6 +1399,7 @@ namespace MarketPos
             // 
             // tbManOrder
             // 
+            tbManOrder.Controls.Add(btnMessage);
             tbManOrder.Controls.Add(btnConfirmed);
             tbManOrder.Controls.Add(ptbMOdr);
             tbManOrder.Controls.Add(txbMOdr_Total);
@@ -1611,6 +1613,16 @@ namespace MarketPos
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
             // 
+            // btnMessage
+            // 
+            btnMessage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnMessage.Location = new Point(249, 708);
+            btnMessage.Name = "btnMessage";
+            btnMessage.Size = new Size(96, 43);
+            btnMessage.TabIndex = 59;
+            btnMessage.Text = "傳送訊息";
+            btnMessage.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1781,5 +1793,6 @@ namespace MarketPos
         private ComboBox cbMOdr_Number;
         private Label lbMOdr_Number;
         private Button btnConfirmed;
+        private Button btnMessage;
     }
 }

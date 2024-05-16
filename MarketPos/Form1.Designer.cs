@@ -140,6 +140,8 @@ namespace MarketPos
             cbOdr_Number = new ComboBox();
             lbOdr_Number = new Label();
             tbManOrder = new TabPage();
+            lbMOdr_IsRead = new Label();
+            btnMessage = new Button();
             btnConfirmed = new Button();
             ptbMOdr = new PictureBox();
             txbMOdr_Total = new TextBox();
@@ -157,7 +159,6 @@ namespace MarketPos
             lbMOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
-            btnMessage = new Button();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -1399,6 +1400,7 @@ namespace MarketPos
             // 
             // tbManOrder
             // 
+            tbManOrder.Controls.Add(lbMOdr_IsRead);
             tbManOrder.Controls.Add(btnMessage);
             tbManOrder.Controls.Add(btnConfirmed);
             tbManOrder.Controls.Add(ptbMOdr);
@@ -1423,6 +1425,27 @@ namespace MarketPos
             tbManOrder.Text = "訂單確認";
             tbManOrder.UseVisualStyleBackColor = true;
             // 
+            // lbMOdr_IsRead
+            // 
+            lbMOdr_IsRead.AutoSize = true;
+            lbMOdr_IsRead.Location = new Point(152, 723);
+            lbMOdr_IsRead.Name = "lbMOdr_IsRead";
+            lbMOdr_IsRead.Size = new Size(91, 15);
+            lbMOdr_IsRead.TabIndex = 60;
+            lbMOdr_IsRead.Text = "使用者未讀訊息";
+            lbMOdr_IsRead.Visible = false;
+            // 
+            // btnMessage
+            // 
+            btnMessage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnMessage.Location = new Point(249, 708);
+            btnMessage.Name = "btnMessage";
+            btnMessage.Size = new Size(96, 43);
+            btnMessage.TabIndex = 59;
+            btnMessage.Text = "傳送訊息";
+            btnMessage.UseVisualStyleBackColor = true;
+            btnMessage.Click += btnMessage_Click;
+            // 
             // btnConfirmed
             // 
             btnConfirmed.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
@@ -1430,7 +1453,7 @@ namespace MarketPos
             btnConfirmed.Name = "btnConfirmed";
             btnConfirmed.Size = new Size(96, 43);
             btnConfirmed.TabIndex = 58;
-            btnConfirmed.Text = "確認";
+            btnConfirmed.Text = "確認訂單";
             btnConfirmed.UseVisualStyleBackColor = true;
             btnConfirmed.Click += btnConfirmed_Click;
             // 
@@ -1557,6 +1580,7 @@ namespace MarketPos
             flpMOdr.Name = "flpMOdr";
             flpMOdr.Size = new Size(431, 328);
             flpMOdr.TabIndex = 47;
+            flpMOdr.ControlAdded += flp_ControlChange;
             // 
             // lbMOdr
             // 
@@ -1612,16 +1636,6 @@ namespace MarketPos
             lbMember.Name = "lbMember";
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
-            // 
-            // btnMessage
-            // 
-            btnMessage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnMessage.Location = new Point(249, 708);
-            btnMessage.Name = "btnMessage";
-            btnMessage.Size = new Size(96, 43);
-            btnMessage.TabIndex = 59;
-            btnMessage.Text = "傳送訊息";
-            btnMessage.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1794,5 +1808,6 @@ namespace MarketPos
         private Label lbMOdr_Number;
         private Button btnConfirmed;
         private Button btnMessage;
+        private Label lbMOdr_IsRead;
     }
 }

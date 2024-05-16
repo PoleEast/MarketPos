@@ -29,32 +29,24 @@
         private void InitializeComponent()
         {
             lbExplain = new Label();
-            txbUserInput = new TextBox();
             btnOk = new Button();
             btnCancel = new Button();
+            txbUserInput = new TextBox();
             SuspendLayout();
             // 
             // lbExplain
             // 
             lbExplain.AutoSize = true;
             lbExplain.Font = new Font("Microsoft JhengHei UI", 12F);
-            lbExplain.Location = new Point(27, 32);
+            lbExplain.Location = new Point(27, 9);
             lbExplain.Name = "lbExplain";
             lbExplain.Size = new Size(54, 20);
             lbExplain.TabIndex = 0;
             lbExplain.Text = "label1";
             // 
-            // txbUserInput
-            // 
-            txbUserInput.Font = new Font("Microsoft JhengHei UI", 12F);
-            txbUserInput.Location = new Point(27, 68);
-            txbUserInput.Name = "txbUserInput";
-            txbUserInput.Size = new Size(274, 28);
-            txbUserInput.TabIndex = 1;
-            // 
             // btnOk
             // 
-            btnOk.Location = new Point(171, 122);
+            btnOk.Location = new Point(192, 105);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(60, 28);
             btnOk.TabIndex = 2;
@@ -64,7 +56,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(241, 122);
+            btnCancel.Location = new Point(262, 105);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(60, 28);
             btnCancel.TabIndex = 3;
@@ -72,17 +64,25 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
-            // UserInput
+            // txbUserInput
+            // 
+            txbUserInput.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            txbUserInput.Location = new Point(27, 47);
+            txbUserInput.Name = "txbUserInput";
+            txbUserInput.Size = new Size(295, 28);
+            txbUserInput.TabIndex = 4;
+            // 
+            // UserInputForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(327, 162);
+            ClientSize = new Size(334, 144);
+            Controls.Add(txbUserInput);
             Controls.Add(btnCancel);
             Controls.Add(btnOk);
-            Controls.Add(txbUserInput);
             Controls.Add(lbExplain);
-            Name = "UserInput";
-            Text = "Form2";
+            Name = "UserInputForm";
+            Text = "請輸入文字";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -90,8 +90,8 @@
         #endregion
 
         private Label lbExplain;
-        private TextBox txbUserInput;
         private Button btnOk;
         private Button btnCancel;
+        private TextBox txbUserInput;
     }
 }

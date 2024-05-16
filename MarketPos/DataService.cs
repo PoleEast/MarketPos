@@ -796,5 +796,20 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"訂單確認狀態更改失敗\n{ex}"); return false; };
         }
+        public static async Task Odr_SetMessage(int orderid, string comment)
+        {
+            if (!await DS_ConnectionSql()) return;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"UPDATE Orders SET comment=@comment,isRead=0 WHERE id=@orderid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@orderid", orderid);
+            com.Parameters.AddWithValue("@comment", comment);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show($"更新訂單訊息失敗{ex}"); }
+        }
     }
 }

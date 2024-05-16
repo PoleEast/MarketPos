@@ -287,9 +287,9 @@ namespace MarketPos
 
             //輸入確認
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
-            if (string.IsNullOrEmpty(userInput.userinput)) return;
+            if (string.IsNullOrEmpty(userInput.userinputStr)) return;
 
-            await DataService.MP_AddCategoryType(userInput.userinput);
+            await DataService.MP_AddCategoryType(userInput.userinputStr);
             cb_init();
         }
 
@@ -302,10 +302,10 @@ namespace MarketPos
 
             //輸入確認
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
-            if (string.IsNullOrEmpty(userInput.userinput)) return;
+            if (string.IsNullOrEmpty(userInput.userinputStr)) return;
 
             //將新類別輸入資料庫
-            await DataService.MP_AddOriginType(userInput.userinput);
+            await DataService.MP_AddOriginType(userInput.userinputStr);
             cb_init();
         }
 
@@ -665,7 +665,44 @@ namespace MarketPos
             await DataService.Odr_UpdateOrderDetail(e);
             orderDetails = await DataService.Odr_GetOrderDetail(e.orderID);
             setShoppingCard(orderDetails, flp_shoppingCar, false);
+
+            //獲取訊息字串和產品名稱
+            List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];
+            ProductsData? productsData = datas.FirstOrDefault(o => o.Id == e.productID);
+            if (productsData == null) return;
+
+            Order order = await DataService.Odr_GetOrderData(e.orderID);
+            string comment = order.Comment;
+            if (comment == "ERROR") return;
+            if (e.confirmed && (string.IsNullOrEmpty(comment) || !comment.Contains(productsData.Name))) return;
+            if (!e.confirmed) comment += $"商品{productsData.Name}發生問題\n";
+
+            //修改訊息
+            UserInputForm userInput = new UserInputForm($"訂單:{e.orderID}的訊息", comment);
+            userInput.ShowDialog();
+            if (userInput.DialogResult == DialogResult.OK)
+            {
+                comment = userInput.userinputStr;
+                await DataService.Odr_SetMessage(e.orderID, comment);
+            }
         }
+
+        private async void setOdrMessage(int orderid)
+        {
+            Order order = await DataService.Odr_GetOrderData(orderid);
+            string comment = order.Comment;
+            if (comment == "ERROR") return;
+
+            //修改訊息
+            UserInputForm userInput = new UserInputForm($"訂單:{orderid}的訊息", comment);
+            userInput.ShowDialog();
+            if (userInput.DialogResult == DialogResult.OK)
+            {
+                comment = userInput.userinputStr;
+                await DataService.Odr_SetMessage(orderid, comment);
+            }
+        }
+
 
         /// <param name="orderDetail">訂單詳細資料</param>
         /// <param name="flp">設置的版面</param>
@@ -890,6 +927,13 @@ namespace MarketPos
 
             await DataService.Odr_UpdateConfirmed(true, (int)cbMOdr_Number.SelectedValue);
             setManagerOrder();
+        }
+
+        private void btnMessage_Click(object sender, EventArgs e)
+        {
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("請選擇單號"); return; }
+            int orderid = (int)cbMOdr_Number.SelectedValue;
+            setOdrMessage(orderid);
         }
     }
 }

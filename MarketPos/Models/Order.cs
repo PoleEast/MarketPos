@@ -18,5 +18,6 @@ namespace MarketPos.Models
         public int Payment { get; set; }
         public bool Confirmed { get; set; }
         public string Comment { get; set; } = string.Empty;
+        public bool isCancel { get; set; } 
     }
 }

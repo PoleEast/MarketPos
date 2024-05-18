@@ -426,7 +426,16 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level > 2) { MessageBox.Show("查無此資料"); return; }
+            RefreshUI(data);
+        }
+        /// <summary>
+        /// 包裝好一般版本得畫面更新
+        /// </summary>
+        /// <param name="data">塞選後的資料,如果沒傳入null會抓取所有商品</param>
+        private async void RefreshUI(List<ProductsData>? data)
+        {
+            if (data ==null)
+                data = await DataService.P_getProductCardsDatas();
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
@@ -435,7 +444,6 @@ namespace MarketPos
             }
             productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
-
         }
 
         private void btnS_WeightToggle_Click(object sender, EventArgs e)
@@ -548,11 +556,11 @@ namespace MarketPos
 
         private async void getUnreadMessage()
         {
-            List<Order> orders=await DataService.Odr_GetUnreadMessage(member.Id);
-            foreach (Order order in orders) 
+            List<Order> orders = await DataService.Odr_GetUnreadMessage(member.Id);
+            foreach (Order order in orders)
             {
                 MessageBox.Show($"來自訂單:{order.Id}的訊息:\n\n{order.Comment}");
-                await DataService.Odr_SetMessage(order.Id,order.Comment,true);
+                await DataService.Odr_SetMessage(order.Id, order.Comment, true);
             }
         }
 
@@ -697,7 +705,7 @@ namespace MarketPos
             if (userInput.DialogResult == DialogResult.OK)
             {
                 comment = userInput.userinputStr;
-                await DataService.Odr_SetMessage(e.orderID, comment,false);
+                await DataService.Odr_SetMessage(e.orderID, comment, false);
             }
         }
 
@@ -712,8 +720,8 @@ namespace MarketPos
             userInput.ShowDialog();
             if (userInput.DialogResult == DialogResult.OK)
             {
-                comment = userInput.userinputStr;
-                await DataService.Odr_SetMessage(orderid, comment,false);
+                comment = userInput.userinputStr + "\n";
+                await DataService.Odr_SetMessage(orderid, comment, false);
             }
         }
 
@@ -948,6 +956,35 @@ namespace MarketPos
             if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("請選擇單號"); return; }
             int orderid = (int)cbMOdr_Number.SelectedValue;
             setOdrMessage(orderid);
+        }
+
+        private async void btnCancelOrder_Click(object sender, EventArgs e)
+        {
+            if (member.Level > 2) { MessageBox.Show("您並沒有此權限"); return; }
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("您並沒有此選擇訂單"); return; }
+            int orderid = (int)cbMOdr_Number.SelectedValue;
+
+            //取消訂單
+            DialogResult = MessageBox.Show($"您確認要將訂單:{orderid}取消嗎?","取消訂單",MessageBoxButtons.OKCancel);
+            if (DialogResult == DialogResult.Cancel) return;
+            if (!await DataService.Odr_SetOrderCancel(orderid, true)) return;
+            await DataService.Odr_UpdateConfirmed(true, orderid);
+
+            //將庫存數量加回去
+            List<OrderDetail> orderDetails = await DataService.Odr_GetOrderDetail(orderid);
+            List<ProductsData> Data = await DataService.P_getProductCardsDatas();
+
+            List<ProductsData> UpdateDatas = Data.Where(pd => orderDetails.Any(od => od.productID == pd.Id)).ToList();
+            foreach (var item in UpdateDatas)
+            {
+                OrderDetail? orderDetail= orderDetails.FirstOrDefault(o => o.productID == item.Id);
+                if (orderDetail == null) { MessageBox.Show($"商品:{item.Name}\n退貨後庫存數量更改發生問題"); continue; }
+                item.Stock += orderDetail.quantity;
+                await DataService.MP_UpdateProduct(item);
+            }
+
+            RefreshUI(null);
+            setManagerOrder();
         }
     }
 }

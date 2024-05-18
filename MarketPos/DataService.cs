@@ -699,14 +699,14 @@ namespace MarketPos
             }
         }
 
-        public static async Task Odr_UpdateConfirmed(bool confirmed, int id)
+        public static async Task Odr_UpdateConfirmed(bool confirmed, int orderid)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"UPDATE Orders SET confirmed=@confirmed WHERE id=@id";
             SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@confirmed", confirmed);
-            com.Parameters.AddWithValue("@id", id);
+            com.Parameters.AddWithValue("@id", orderid);
             try
             {
                 conn.Open();
@@ -774,6 +774,7 @@ namespace MarketPos
                 order.PlacedDate = (DateTime)reader["placedDate"];
                 order.Comment = (string)reader["comment"];
                 order.Confirmed = (bool)reader["confirmed"];
+                order.isCancel = (bool)reader["isCancel"];
 
                 return order;
             }
@@ -836,6 +837,23 @@ namespace MarketPos
                 return orders;
             }
             catch(Exception ex) { MessageBox.Show($"訂單訊息獲取失敗\n{ex}");return []; }
+        }
+
+        public static async Task<bool> Odr_SetOrderCancel(int orderid,bool isCancel)
+        {
+            if(!await DS_ConnectionSql()) return false;
+            SqlConnection conn= new SqlConnection(ConnString);
+            string sql = @"UPDATE Orders SET isCancel=@isCancel WHERE id=@orderid";
+            SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@isCancel",isCancel);
+            com.Parameters.AddWithValue("@orderid",orderid);
+            try
+            {
+                conn.Open();
+                com.ExecuteNonQuery();
+                return true;
+            }
+            catch(Exception ex) { MessageBox.Show($"更改訂單取消狀態失敗\n{ex}");return false;}
         }
     }
 }

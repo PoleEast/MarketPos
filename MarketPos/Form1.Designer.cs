@@ -159,6 +159,7 @@ namespace MarketPos
             lbMOdr_Number = new Label();
             btn_Login = new Button();
             lbMember = new Label();
+            btnCancelOrder = new Button();
             tbcProdut.SuspendLayout();
             tbProduct.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptb_Sort).BeginInit();
@@ -1400,6 +1401,7 @@ namespace MarketPos
             // 
             // tbManOrder
             // 
+            tbManOrder.Controls.Add(btnCancelOrder);
             tbManOrder.Controls.Add(lbMOdr_IsRead);
             tbManOrder.Controls.Add(btnMessage);
             tbManOrder.Controls.Add(btnConfirmed);
@@ -1428,7 +1430,7 @@ namespace MarketPos
             // lbMOdr_IsRead
             // 
             lbMOdr_IsRead.AutoSize = true;
-            lbMOdr_IsRead.Location = new Point(152, 723);
+            lbMOdr_IsRead.Location = new Point(36, 723);
             lbMOdr_IsRead.Name = "lbMOdr_IsRead";
             lbMOdr_IsRead.Size = new Size(91, 15);
             lbMOdr_IsRead.TabIndex = 60;
@@ -1438,7 +1440,7 @@ namespace MarketPos
             // btnMessage
             // 
             btnMessage.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btnMessage.Location = new Point(249, 708);
+            btnMessage.Location = new Point(148, 708);
             btnMessage.Name = "btnMessage";
             btnMessage.Size = new Size(96, 43);
             btnMessage.TabIndex = 59;
@@ -1576,9 +1578,9 @@ namespace MarketPos
             flpMOdr.BackgroundImage = Properties.Resources.shopping_cart2;
             flpMOdr.BackgroundImageLayout = ImageLayout.Center;
             flpMOdr.BorderStyle = BorderStyle.FixedSingle;
-            flpMOdr.Location = new Point(16, 376);
+            flpMOdr.Location = new Point(16, 338);
             flpMOdr.Name = "flpMOdr";
-            flpMOdr.Size = new Size(431, 328);
+            flpMOdr.Size = new Size(431, 366);
             flpMOdr.TabIndex = 47;
             flpMOdr.ControlAdded += flp_ControlChange;
             // 
@@ -1636,6 +1638,17 @@ namespace MarketPos
             lbMember.Name = "lbMember";
             lbMember.Size = new Size(0, 26);
             lbMember.TabIndex = 31;
+            // 
+            // btnCancelOrder
+            // 
+            btnCancelOrder.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnCancelOrder.Location = new Point(250, 708);
+            btnCancelOrder.Name = "btnCancelOrder";
+            btnCancelOrder.Size = new Size(96, 43);
+            btnCancelOrder.TabIndex = 61;
+            btnCancelOrder.Text = "取消訂單";
+            btnCancelOrder.UseVisualStyleBackColor = true;
+            btnCancelOrder.Click += btnCancelOrder_Click;
             // 
             // Form1
             // 
@@ -1809,5 +1822,6 @@ namespace MarketPos
         private Button btnConfirmed;
         private Button btnMessage;
         private Label lbMOdr_IsRead;
+        private Button btnCancelOrder;
     }
 }

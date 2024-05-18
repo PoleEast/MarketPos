@@ -510,7 +510,7 @@ namespace MarketPos
         /// 
         public static async Task<int> Odr_getLatestOrderNum()
         {
-            if (!await DS_ConnectionSql()) return -1;
+            if (!await DS_ConnectionSql()) return 23000000;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"SELECT MAX(id) AS id
                            FROM Orders";
@@ -796,20 +796,46 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"訂單確認狀態更改失敗\n{ex}"); return false; };
         }
-        public static async Task Odr_SetMessage(int orderid, string comment)
+        public static async Task Odr_SetMessage(int orderid, string comment,bool isRead)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"UPDATE Orders SET comment=@comment,isRead=0 WHERE id=@orderid";
+            string sql = @"UPDATE Orders SET comment=@comment,isRead=@isRead WHERE id=@orderid";
             SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@orderid", orderid);
             com.Parameters.AddWithValue("@comment", comment);
+            com.Parameters.AddWithValue("@isRead", isRead);
             try
             {
                 conn.Open();
                 com.ExecuteNonQuery();
             }
             catch (Exception ex) { MessageBox.Show($"更新訂單訊息失敗{ex}"); }
+        }
+
+        public static async Task<List<Order>> Odr_GetUnreadMessage(int memberid)
+        {
+            List<Order> orders = new List<Order>();
+            if (!await DS_ConnectionSql()) return orders;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT id,comment FROM Orders WHERE memberID=@memberid AND isRead=0";
+            SqlCommand com=new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@memberid", memberid);
+            try
+            {
+                conn.Open();
+                SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read()) 
+                {
+                    Order order = new();
+                    order.Id = (int)reader["id"];
+                    order.Comment = (string)reader["comment"];
+
+                    orders.Add(order);
+                }
+                return orders;
+            }
+            catch(Exception ex) { MessageBox.Show($"訂單訊息獲取失敗\n{ex}");return []; }
         }
     }
 }

@@ -1264,10 +1264,10 @@ namespace MarketPos
             // 
             lbOdr_RName.AutoEllipsis = true;
             lbOdr_RName.AutoSize = true;
-            lbOdr_RName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbOdr_RName.Location = new Point(22, 300);
+            lbOdr_RName.Font = new Font("新細明體", 12F);
+            lbOdr_RName.Location = new Point(22, 290);
             lbOdr_RName.Name = "lbOdr_RName";
-            lbOdr_RName.Size = new Size(114, 24);
+            lbOdr_RName.Size = new Size(95, 16);
             lbOdr_RName.TabIndex = 41;
             lbOdr_RName.Text = "收貨人姓名 :";
             // 
@@ -1275,10 +1275,10 @@ namespace MarketPos
             // 
             lbOdr_OName.AutoEllipsis = true;
             lbOdr_OName.AutoSize = true;
-            lbOdr_OName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbOdr_OName.Location = new Point(22, 229);
+            lbOdr_OName.Font = new Font("新細明體", 12F);
+            lbOdr_OName.Location = new Point(22, 230);
             lbOdr_OName.Name = "lbOdr_OName";
-            lbOdr_OName.Size = new Size(114, 24);
+            lbOdr_OName.Size = new Size(95, 16);
             lbOdr_OName.TabIndex = 40;
             lbOdr_OName.Text = "訂購人姓名 :";
             // 
@@ -1286,10 +1286,10 @@ namespace MarketPos
             // 
             lbOdr_RAddress.AutoEllipsis = true;
             lbOdr_RAddress.AutoSize = true;
-            lbOdr_RAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbOdr_RAddress.Location = new Point(22, 335);
+            lbOdr_RAddress.Font = new Font("新細明體", 12F);
+            lbOdr_RAddress.Location = new Point(22, 320);
             lbOdr_RAddress.Name = "lbOdr_RAddress";
-            lbOdr_RAddress.Size = new Size(114, 24);
+            lbOdr_RAddress.Size = new Size(95, 16);
             lbOdr_RAddress.TabIndex = 39;
             lbOdr_RAddress.Text = "收貨人地址 :";
             // 
@@ -1297,12 +1297,12 @@ namespace MarketPos
             // 
             txbOdr_RAdress.BackColor = SystemColors.Window;
             txbOdr_RAdress.BorderStyle = BorderStyle.None;
-            txbOdr_RAdress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            txbOdr_RAdress.Location = new Point(142, 330);
+            txbOdr_RAdress.Font = new Font("新細明體", 12F);
+            txbOdr_RAdress.Location = new Point(114, 320);
             txbOdr_RAdress.Name = "txbOdr_RAdress";
             txbOdr_RAdress.ReadOnly = true;
             txbOdr_RAdress.RightToLeft = RightToLeft.Yes;
-            txbOdr_RAdress.Size = new Size(295, 25);
+            txbOdr_RAdress.Size = new Size(295, 20);
             txbOdr_RAdress.TabIndex = 38;
             txbOdr_RAdress.TextAlign = HorizontalAlignment.Right;
             txbOdr_RAdress.TextChanged += lb_TextChanged;
@@ -1311,10 +1311,10 @@ namespace MarketPos
             // 
             lbOdr_OAddress.AutoEllipsis = true;
             lbOdr_OAddress.AutoSize = true;
-            lbOdr_OAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbOdr_OAddress.Location = new Point(22, 266);
+            lbOdr_OAddress.Font = new Font("新細明體", 12F);
+            lbOdr_OAddress.Location = new Point(22, 260);
             lbOdr_OAddress.Name = "lbOdr_OAddress";
-            lbOdr_OAddress.Size = new Size(114, 24);
+            lbOdr_OAddress.Size = new Size(95, 16);
             lbOdr_OAddress.TabIndex = 37;
             lbOdr_OAddress.Text = "訂購人地址 :";
             // 
@@ -1333,12 +1333,12 @@ namespace MarketPos
             // 
             txbOdr_OAdress.BackColor = SystemColors.Window;
             txbOdr_OAdress.BorderStyle = BorderStyle.None;
-            txbOdr_OAdress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            txbOdr_OAdress.Location = new Point(142, 261);
+            txbOdr_OAdress.Font = new Font("新細明體", 12F);
+            txbOdr_OAdress.Location = new Point(114, 260);
             txbOdr_OAdress.Name = "txbOdr_OAdress";
             txbOdr_OAdress.ReadOnly = true;
             txbOdr_OAdress.RightToLeft = RightToLeft.Yes;
-            txbOdr_OAdress.Size = new Size(295, 25);
+            txbOdr_OAdress.Size = new Size(295, 20);
             txbOdr_OAdress.TabIndex = 35;
             txbOdr_OAdress.TextAlign = HorizontalAlignment.Right;
             txbOdr_OAdress.TextChanged += lb_TextChanged;
@@ -1482,10 +1482,10 @@ namespace MarketPos
             // 
             lbMOdr_RName.AutoEllipsis = true;
             lbMOdr_RName.AutoSize = true;
-            lbMOdr_RName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbMOdr_RName.Location = new Point(32, 294);
+            lbMOdr_RName.Font = new Font("微軟正黑體", 12F);
+            lbMOdr_RName.Location = new Point(32, 280);
             lbMOdr_RName.Name = "lbMOdr_RName";
-            lbMOdr_RName.Size = new Size(114, 24);
+            lbMOdr_RName.Size = new Size(97, 20);
             lbMOdr_RName.TabIndex = 55;
             lbMOdr_RName.Text = "收貨人姓名 :";
             // 
@@ -1493,10 +1493,10 @@ namespace MarketPos
             // 
             lbMOdr_OName.AutoEllipsis = true;
             lbMOdr_OName.AutoSize = true;
-            lbMOdr_OName.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbMOdr_OName.Location = new Point(32, 223);
+            lbMOdr_OName.Font = new Font("微軟正黑體", 12F);
+            lbMOdr_OName.Location = new Point(30, 220);
             lbMOdr_OName.Name = "lbMOdr_OName";
-            lbMOdr_OName.Size = new Size(114, 24);
+            lbMOdr_OName.Size = new Size(97, 20);
             lbMOdr_OName.TabIndex = 54;
             lbMOdr_OName.Text = "訂購人姓名 :";
             // 
@@ -1504,10 +1504,10 @@ namespace MarketPos
             // 
             lbMOdr_RAddress.AutoEllipsis = true;
             lbMOdr_RAddress.AutoSize = true;
-            lbMOdr_RAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbMOdr_RAddress.Location = new Point(32, 329);
+            lbMOdr_RAddress.Font = new Font("微軟正黑體", 12F);
+            lbMOdr_RAddress.Location = new Point(32, 310);
             lbMOdr_RAddress.Name = "lbMOdr_RAddress";
-            lbMOdr_RAddress.Size = new Size(114, 24);
+            lbMOdr_RAddress.Size = new Size(97, 20);
             lbMOdr_RAddress.TabIndex = 53;
             lbMOdr_RAddress.Text = "收貨人地址 :";
             // 
@@ -1515,12 +1515,12 @@ namespace MarketPos
             // 
             txbMOdr_RAddress.BackColor = SystemColors.Window;
             txbMOdr_RAddress.BorderStyle = BorderStyle.None;
-            txbMOdr_RAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            txbMOdr_RAddress.Location = new Point(152, 324);
+            txbMOdr_RAddress.Font = new Font("微軟正黑體", 12F);
+            txbMOdr_RAddress.Location = new Point(124, 310);
             txbMOdr_RAddress.Name = "txbMOdr_RAddress";
             txbMOdr_RAddress.ReadOnly = true;
             txbMOdr_RAddress.RightToLeft = RightToLeft.Yes;
-            txbMOdr_RAddress.Size = new Size(295, 25);
+            txbMOdr_RAddress.Size = new Size(295, 22);
             txbMOdr_RAddress.TabIndex = 52;
             txbMOdr_RAddress.TextAlign = HorizontalAlignment.Right;
             // 
@@ -1528,10 +1528,10 @@ namespace MarketPos
             // 
             lbMOdr_OAddress.AutoEllipsis = true;
             lbMOdr_OAddress.AutoSize = true;
-            lbMOdr_OAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            lbMOdr_OAddress.Location = new Point(32, 260);
+            lbMOdr_OAddress.Font = new Font("微軟正黑體", 12F);
+            lbMOdr_OAddress.Location = new Point(32, 250);
             lbMOdr_OAddress.Name = "lbMOdr_OAddress";
-            lbMOdr_OAddress.Size = new Size(114, 24);
+            lbMOdr_OAddress.Size = new Size(97, 20);
             lbMOdr_OAddress.TabIndex = 51;
             lbMOdr_OAddress.Text = "訂購人地址 :";
             // 
@@ -1550,12 +1550,12 @@ namespace MarketPos
             // 
             txbMOdr_OAddress.BackColor = SystemColors.Window;
             txbMOdr_OAddress.BorderStyle = BorderStyle.None;
-            txbMOdr_OAddress.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 136);
-            txbMOdr_OAddress.Location = new Point(152, 255);
+            txbMOdr_OAddress.Font = new Font("微軟正黑體", 12F);
+            txbMOdr_OAddress.Location = new Point(126, 250);
             txbMOdr_OAddress.Name = "txbMOdr_OAddress";
             txbMOdr_OAddress.ReadOnly = true;
             txbMOdr_OAddress.RightToLeft = RightToLeft.Yes;
-            txbMOdr_OAddress.Size = new Size(295, 25);
+            txbMOdr_OAddress.Size = new Size(295, 22);
             txbMOdr_OAddress.TabIndex = 49;
             txbMOdr_OAddress.TextAlign = HorizontalAlignment.Right;
             // 

@@ -426,14 +426,14 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
-            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level < 3) { MessageBox.Show("查無此資料"); return; }
+            if (data.Where(o => o.IsShelve).Count() == 0 && member.Level > 2) { MessageBox.Show("查無此資料"); return; }
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
                 MessageBox.Show("找不到ptb_Sort.tag");
                 return;
             }
-            productSort("名稱", ptb_Sort.Tag.ToString() == "descendingOrder");
+            productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
 
         }
@@ -543,6 +543,17 @@ namespace MarketPos
             setShoppingCard(orderDetails, flp_shoppingCar, true);
             setOrderHistroy();
             setManagerOrder();
+            getUnreadMessage();
+        }
+
+        private async void getUnreadMessage()
+        {
+            List<Order> orders=await DataService.Odr_GetUnreadMessage(member.Id);
+            foreach (Order order in orders) 
+            {
+                MessageBox.Show($"來自訂單:{order.Id}的訊息:\n\n{order.Comment}");
+                await DataService.Odr_SetMessage(order.Id,order.Comment,true);
+            }
         }
 
         private async void CheckOrderDetails(List<OrderDetail> orderDetails, List<ProductsData> shelveProducts)
@@ -603,6 +614,9 @@ namespace MarketPos
             int orderid = await DataService.Odr_GetMemberOrderID(member.Id);
             if (orderid == 0)
             {
+                string latestOrderNum = (await DataService.Odr_getLatestOrderNum()).ToString();
+                nextOrderNum = latestOrderNum.Substring(0, 5) == DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") ?
+                    int.Parse(latestOrderNum) - (int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + "0000")) + 1 : 1;
                 await DataService.Odr_CreateNewOrder(Odr_getLatestOrderNum(), member.Id);
                 orderid = await DataService.Odr_GetMemberOrderID(member.Id);
             }
@@ -683,7 +697,7 @@ namespace MarketPos
             if (userInput.DialogResult == DialogResult.OK)
             {
                 comment = userInput.userinputStr;
-                await DataService.Odr_SetMessage(e.orderID, comment);
+                await DataService.Odr_SetMessage(e.orderID, comment,false);
             }
         }
 
@@ -699,7 +713,7 @@ namespace MarketPos
             if (userInput.DialogResult == DialogResult.OK)
             {
                 comment = userInput.userinputStr;
-                await DataService.Odr_SetMessage(orderid, comment);
+                await DataService.Odr_SetMessage(orderid, comment,false);
             }
         }
 

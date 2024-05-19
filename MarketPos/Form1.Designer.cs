@@ -153,7 +153,6 @@ namespace MarketPos
             lbS_Price = new Label();
             lbS_Category = new Label();
             lbS_Name = new Label();
-            btntest = new Button();
             tbcControl = new TabControl();
             tbMenberEdit = new TabPage();
             btnAccountEdit = new Button();
@@ -1628,17 +1627,6 @@ namespace MarketPos
             lbS_Name.TabIndex = 1;
             lbS_Name.Text = "名稱";
             // 
-            // btntest
-            // 
-            btntest.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
-            btntest.Location = new Point(859, 14);
-            btntest.Name = "btntest";
-            btntest.Size = new Size(96, 43);
-            btntest.TabIndex = 32;
-            btntest.Text = "測試";
-            btntest.UseVisualStyleBackColor = true;
-            btntest.Click += btntest_Click_1;
-            // 
             // tbcControl
             // 
             tbcControl.Controls.Add(tbMemSerch);
@@ -2141,7 +2129,6 @@ namespace MarketPos
             ClientSize = new Size(1584, 861);
             Controls.Add(lbMember);
             Controls.Add(btn_Login);
-            Controls.Add(btntest);
             Controls.Add(tbcControl);
             Controls.Add(label1);
             Controls.Add(tbcProdut);
@@ -2242,7 +2229,6 @@ namespace MarketPos
         private FlowLayoutPanel flp_shoppingCar;
         private Button btn_Login;
         private Label lbMember;
-        private Button btntest;
         private TextBox txbTotal;
         private PictureBox ptb_Buy;
         private TabPage tbMenberEdit;

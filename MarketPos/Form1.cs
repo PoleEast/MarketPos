@@ -261,6 +261,14 @@ namespace MarketPos
             if (result == DialogResult.Cancel) return;
 
             insertProduct();
+
+            txbAddP_name.Text = string.Empty;
+            txbAddP_price.Text = string.Empty;
+            txbAddP_weight.Text = string.Empty;
+            rtbAddP_description.Text = string.Empty;
+
+            RefreshUI();
+            cb_init();
         }
 
         //限制輸入為數字
@@ -380,13 +388,7 @@ namespace MarketPos
         //將資料填入cb
         private async void cb_init()
         {
-            cbAddP_category.Items.Clear();
-            cbAddP_origin.Items.Clear();
             cbAddP_stock.Items.Clear();
-            cbS_Category.Items.Clear();
-            cbS_Origin.Items.Clear();
-            cbOdrSProduct.Items.Clear();
-            cbOdrSPayMent.Items.Clear();
             await DataService.P_GetCategoryType();
             await DataService.P_GetOriginType();
             await DataService.Odr_GetPayment();
@@ -450,13 +452,14 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"輸入錯誤{ex}"); return; }
 
             var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "以上", btnS_WeightToggle.Text == "以上");
+            if (data.Count == 0) { MessageBox.Show("查無此商品"); return; }
             RefreshUI(data);
         }
         /// <summary>
         /// 包裝好一般版本得畫面更新
         /// </summary>
         /// <param name="data">塞選後的資料,如果沒傳入null會抓取所有商品</param>
-        private async void RefreshUI(List<ProductsData>? data)
+        private async void RefreshUI(List<ProductsData>? data = null)
         {
             if (data == null)
                 data = await DataService.P_getProductCardsDatas();
@@ -953,7 +956,6 @@ namespace MarketPos
 
             if (orderData.isCancel)
             {
-                MessageBox.Show("此筆訂單已取消");
                 btnOdrCancelOdr.Enabled = false;
                 ptbOdr.Image = Properties.Resources.cancel;
             }
@@ -1109,6 +1111,7 @@ namespace MarketPos
                 await DataService.MP_UpdateProduct(item);
             }
 
+            setOrderHistroy();
             RefreshUI(null);
         }
 
@@ -1244,7 +1247,7 @@ namespace MarketPos
 
         private void btnOdrToday_Click(object sender, EventArgs e)
         {
-            dtpOdrTime.Value = DateTime.Now;
+            dtpOdrTime.Value = DateTime.Now.AddDays(-1);
             dtpOdrTime2.Value = DateTime.Now;
         }
 

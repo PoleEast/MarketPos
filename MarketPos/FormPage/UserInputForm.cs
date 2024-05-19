@@ -39,7 +39,7 @@ namespace MarketPos
         private void btnOk_Click(object sender, EventArgs e)
         {
             if (richTextBox == null)
-                userinputStr = lbExplain.Text.Trim();
+                userinputStr = txbUserInput.Text.Trim();
             else
                 userinputStr = richTextBox.Text;
             DialogResult = DialogResult.OK;

@@ -21,13 +21,13 @@ namespace MarketPos.FormPage
         {
             InitializeComponent();
         }
-        public async void SetForm(int orderID)
+        public void SetForm(int orderID)
         {
             lb_OrderNum.Text += orderID.ToString();
 
-            Dictionary<int, string> payments = await DataService.Odr_GetPayment();
-            cb_PayMent.DisplayMember = "Value";
-            cb_PayMent.ValueMember = "Key";
+            Dictionary<string, int> payments =DataService.payDict;
+            cb_PayMent.DisplayMember = "key";
+            cb_PayMent.ValueMember = "Value";
             cb_PayMent.DataSource = new BindingSource(payments, null);
         }
 

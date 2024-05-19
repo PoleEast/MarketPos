@@ -19,6 +19,7 @@ namespace MarketPos
     {
         public static Dictionary<string, int> categorysDict = [];
         public static Dictionary<string, int> originsDict = [];
+        public static Dictionary<string, int> payDict = [];
         public static string ConnString = string.Empty;
         private static async Task<bool> DS_ConnectionSql()
         {
@@ -126,7 +127,7 @@ namespace MarketPos
                 if (productsData.Price > decimal.Zero)
                 {
                     sqlSelect += $" AND Price {priceSortString} @Price ";
-                    cmd.Parameters.AddWithValue("Price", productsData.Price);
+                    cmd.Parameters.AddWithValue("@Price", productsData.Price);
                 }
                 if (productsData.Weight > 0.0)
                 {
@@ -436,6 +437,38 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return member; }
         }
 
+        public static async Task<List<Member>> Mem_SearchId(string keyword)
+        {
+            List<Member> members = new List<Member>();
+            if (!await DS_ConnectionSql()) return members;
+            using SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT * FROM Member WHERE name LIKE @keyword";
+
+            using SqlCommand com = new SqlCommand(sql, conn);
+            com.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+            try
+            {
+                conn.Open();
+                using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read())
+                {
+                    Member member = new()
+                    {
+                        Id = (int)reader["ID"],
+                        Name = (string)reader["name"],
+                        Level = (int)reader["level"],
+                        Email = reader["email"] != DBNull.Value ? (string)reader["email"] : string.Empty,
+                        Phone = reader["phone"] != DBNull.Value ? (string)reader["phone"] : string.Empty,
+                        Address = reader["address"] != DBNull.Value ? (string)reader["address"] : string.Empty
+                    };
+                    members.Add(member);
+                }
+                return members;
+            }
+            catch (Exception ex) { MessageBox.Show($"驗證會員發生錯誤\n{ex}"); return members; }
+        }
+
+
         public static async Task<bool> Mem_EditProfile(string name, string address, string email, string phone, int id)
         {
             if (!await DS_ConnectionSql()) return false;
@@ -629,10 +662,10 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"訂單商品刪除失敗\n{ex}"); return; }
         }
 
-        public static async Task<Dictionary<int, string>> Odr_GetPayment()
+        public static async Task Odr_GetPayment()
         {
-            Dictionary<int, string> payments = [];
-            if (!await DS_ConnectionSql()) return payments;
+            payDict.Clear();
+            if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"SELECT * FROM [PaymentMethods]";
             SqlCommand com = new SqlCommand(sql, conn);
@@ -641,10 +674,10 @@ namespace MarketPos
                 conn.Open();
                 SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
-                    payments.Add((int)reader["id"], (string)reader["name"]);
-                return payments;
+                    payDict.Add((string)reader["name"], (int)reader["id"]);
+                return;
             }
-            catch (Exception ex) { MessageBox.Show($"獲取付款方式失敗\n{ex}"); return payments; }
+            catch (Exception ex) { MessageBox.Show($"獲取付款方式失敗\n{ex}"); return; }
         }
 
         public static async Task<bool> Odr_orderPlaced(int orderid, int paymentMethodID, string ordererName, string ordererAddress,
@@ -732,10 +765,6 @@ namespace MarketPos
                 sql += @"AND memberID=@id ";
                 com.Parameters.AddWithValue("@id", id);
             }
-            else
-            {
-                sql += @"AND confirmed=0 ";
-            }
             sql += @"ORDER BY confirmed ASC, id DESC";
             try
             {
@@ -766,6 +795,7 @@ namespace MarketPos
                 if (!reader.HasRows) return order;
 
                 reader.Read();
+                order.MemberId = (int)reader["memberID"];
                 order.OrdererName = (string)reader["ordererName"];
                 order.OrdererAddress = (string)reader["ordererAddress"];
                 order.ReceiverName = (string)reader["receiverName"];
@@ -775,6 +805,7 @@ namespace MarketPos
                 order.Comment = (string)reader["comment"];
                 order.Confirmed = (bool)reader["confirmed"];
                 order.isCancel = (bool)reader["isCancel"];
+                order.isRead = (bool)reader["isRead"];
 
                 return order;
             }
@@ -797,7 +828,7 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"訂單確認狀態更改失敗\n{ex}"); return false; };
         }
-        public static async Task Odr_SetMessage(int orderid, string comment,bool isRead)
+        public static async Task Odr_SetMessage(int orderid, string comment, bool isRead)
         {
             if (!await DS_ConnectionSql()) return;
             using SqlConnection conn = new SqlConnection(ConnString);
@@ -820,13 +851,13 @@ namespace MarketPos
             if (!await DS_ConnectionSql()) return orders;
             using SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"SELECT id,comment FROM Orders WHERE memberID=@memberid AND isRead=0";
-            SqlCommand com=new SqlCommand(sql, conn);
+            SqlCommand com = new SqlCommand(sql, conn);
             com.Parameters.AddWithValue("@memberid", memberid);
             try
             {
                 conn.Open();
                 SqlDataReader reader = com.ExecuteReader();
-                while (reader.Read()) 
+                while (reader.Read())
                 {
                     Order order = new();
                     order.Id = (int)reader["id"];
@@ -836,24 +867,178 @@ namespace MarketPos
                 }
                 return orders;
             }
-            catch(Exception ex) { MessageBox.Show($"訂單訊息獲取失敗\n{ex}");return []; }
+            catch (Exception ex) { MessageBox.Show($"訂單訊息獲取失敗\n{ex}"); return []; }
         }
 
-        public static async Task<bool> Odr_SetOrderCancel(int orderid,bool isCancel)
+        public static async Task<bool> Odr_SetOrderCancel(int orderid, bool isCancel)
         {
-            if(!await DS_ConnectionSql()) return false;
-            SqlConnection conn= new SqlConnection(ConnString);
+            if (!await DS_ConnectionSql()) return false;
+            SqlConnection conn = new SqlConnection(ConnString);
             string sql = @"UPDATE Orders SET isCancel=@isCancel WHERE id=@orderid";
             SqlCommand com = new SqlCommand(sql, conn);
-            com.Parameters.AddWithValue("@isCancel",isCancel);
-            com.Parameters.AddWithValue("@orderid",orderid);
+            com.Parameters.AddWithValue("@isCancel", isCancel);
+            com.Parameters.AddWithValue("@orderid", orderid);
             try
             {
                 conn.Open();
                 com.ExecuteNonQuery();
                 return true;
             }
-            catch(Exception ex) { MessageBox.Show($"更改訂單取消狀態失敗\n{ex}");return false;}
+            catch (Exception ex) { MessageBox.Show($"更改訂單取消狀態失敗\n{ex}"); return false; }
+        }
+
+        /// <summary>
+        /// quantitysort true為以上，false為以下
+        /// </summary>
+        /// <returns>查到的資料列表</returns>
+        public static async Task<List<OrderDetail>> Odr_SelectOrderDetails(OrderDetail orderDetail, bool? quantitysort = null, bool? isconfirmed = null)
+        {
+            List<OrderDetail> orderDetails = [];
+            if (!await DS_ConnectionSql()) return orderDetails;
+            string sqlSelect = @"SELECT * FROM OrderDetails WHERE 1=1";
+
+            string quantitysortString = string.Empty;
+            if (quantitysort.HasValue)
+                quantitysortString = (bool)quantitysort ? ">=" : "<=";
+
+            using SqlConnection conn = new(ConnString);
+            using SqlCommand cmd = conn.CreateCommand();
+            conn.Open();
+            try
+            {
+                //設定搜尋字串
+                if (orderDetail.productID != 0)
+                {
+                    sqlSelect += " AND productID=@productID ";
+                    cmd.Parameters.AddWithValue("@productID", orderDetail.productID);
+                }
+                if (orderDetail.quantity > 0)
+                {
+                    sqlSelect += $" AND quantity {quantitysortString} @quantity";
+                    cmd.Parameters.AddWithValue("@quantity", orderDetail.quantity);
+                }
+                if (isconfirmed.HasValue)
+                {
+                    sqlSelect += $" AND confirmed=@confirmed ";
+                    cmd.Parameters.AddWithValue("@confirmed", isconfirmed);
+                }
+
+                cmd.Connection = conn;
+                cmd.CommandText = sqlSelect;
+                await using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    OrderDetail data = new()
+                    {
+                        orderID = (int)reader["orderID"],
+                        productID = (int)reader["productID"],
+                        quantity = (int)reader["quantity"],
+                        confirmed = (bool)reader["confirmed"]
+                    };
+                    orderDetails.Add(data);
+                }
+                return orderDetails;
+            }
+            catch (Exception ex) { MessageBox.Show($"查尋訂單細節錯誤:\n{ex}"); return orderDetails; }
+        }
+        public static async Task<List<Order>> Odr_SelectOrders
+            (Order order, DateTime? starttime = null, DateTime? endtime = null, bool? isCancel = null, bool? isConfirmed = null,bool? isRead=null)
+        {
+            List<Order> Orders = [];
+            if (!await DS_ConnectionSql()) return Orders;
+            string sqlSelect = @"SELECT * FROM Orders WHERE 1=1 AND placed=1";
+            using SqlConnection conn = new(ConnString);
+            using SqlCommand cmd = conn.CreateCommand();
+            conn.Open();
+            try
+            {
+                //設定搜尋字串
+                if (order.Id > 0)
+                {
+                    sqlSelect += " AND id=@orderid ";
+                    cmd.Parameters.AddWithValue("@orderid", order.Id);
+                }
+                if (order.MemberId > 0)
+                {
+                    sqlSelect += " AND memberID=@memberID ";
+                    cmd.Parameters.AddWithValue("@memberID", order.MemberId);
+                }
+                if (starttime.HasValue)
+                {
+                    sqlSelect += $" AND placedDate>=@starttime ";
+                    cmd.Parameters.AddWithValue("@starttime", starttime);
+                }
+                if (endtime.HasValue)
+                {
+                    sqlSelect += $" AND placedDate<=@endtime ";
+                    cmd.Parameters.AddWithValue("@endtime", endtime);
+                }
+                if (isCancel.HasValue)
+                {
+                    sqlSelect += $" AND isCancel=@isCancel ";
+                    cmd.Parameters.AddWithValue("@isCancel", isCancel);
+                }
+                if (isConfirmed.HasValue)
+                {
+                    sqlSelect += $" AND confirmed=@confirmed ";
+                    cmd.Parameters.AddWithValue("@confirmed", isConfirmed);
+                }
+                if(isRead.HasValue)
+                {
+                    sqlSelect += $" AND isRead=@isRead ";
+                    cmd.Parameters.AddWithValue("@isRead", isRead);
+                }
+                if (order.Payment > 0)
+                {
+                    sqlSelect += " AND paymentMethodID=@payment ";
+                    cmd.Parameters.AddWithValue("@payment", order.Payment);
+                }
+                if (!string.IsNullOrEmpty(order.OrdererAddress))
+                {
+                    sqlSelect += " AND ordererAddress LIKE '%@OrdererAddress%' ";
+                    cmd.Parameters.AddWithValue("@OrdererAddress", order.OrdererAddress);
+                }
+                if (!string.IsNullOrEmpty(order.OrdererName))
+                {
+                    sqlSelect += " AND ordererName LIKE '%@OrdererName%' ";
+                    cmd.Parameters.AddWithValue("@OrdererName", order.OrdererName);
+                }
+                if (!string.IsNullOrEmpty(order.ReceiverAddress))
+                {
+                    sqlSelect += " AND receiverAddress LIKE '%@ReceiverAddress%' ";
+                    cmd.Parameters.AddWithValue("@ReceiverAddress", order.ReceiverAddress);
+                }
+                if (!string.IsNullOrEmpty(order.ReceiverName))
+                {
+                    sqlSelect += " AND receiverName LIKE '%@ReceiverName%' ";
+                    cmd.Parameters.AddWithValue("@ReceiverName", order.ReceiverName);
+                }
+
+                cmd.Connection = conn;
+                cmd.CommandText = sqlSelect;
+                await using SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Order data = new()
+                    {
+                        Id = (int)reader["id"],
+                        MemberId = (int)reader["memberID"],
+                        OrdererName = (string)reader["ordererName"],
+                        OrdererAddress = (string)reader["ordererAddress"],
+                        ReceiverName = (string)reader["receiverName"],
+                        ReceiverAddress = (string)reader["receiverAddress"],
+                        Payment = (int)reader["paymentMethodID"],
+                        PlacedDate = (DateTime)reader["placedDate"],
+                        Comment = (string)reader["comment"],
+                        Confirmed = (bool)reader["confirmed"],
+                        isCancel = (bool)reader["isCancel"],
+                        isRead = (bool)reader["isRead"]
+                    };
+                    Orders.Add(data);
+                }
+                return Orders;
+            }
+            catch (Exception ex) { MessageBox.Show($"查尋訂單細節錯誤:\n{ex}"); return Orders; }
         }
     }
 }

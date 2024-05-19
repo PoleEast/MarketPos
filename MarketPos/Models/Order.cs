@@ -9,6 +9,7 @@ namespace MarketPos.Models
     internal class Order
     {
         public int Id { get; set; }
+        public int MemberId { get; set; }
         public string OrdererName { get; set; } = string.Empty;
         public string OrdererAddress { get; set; } = string.Empty;
         public string ReceiverName { get; set; } = string.Empty;
@@ -19,5 +20,6 @@ namespace MarketPos.Models
         public bool Confirmed { get; set; }
         public string Comment { get; set; } = string.Empty;
         public bool isCancel { get; set; } 
+        public bool isRead {  get; set; }
     }
 }

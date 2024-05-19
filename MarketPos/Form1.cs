@@ -1,4 +1,4 @@
-using Microsoft.VisualBasic.ApplicationServices;
+ï»¿using Microsoft.VisualBasic.ApplicationServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using System.Data.SqlClient;
@@ -21,6 +21,8 @@ using System.Text;
 using MarketPos.Models;
 using MarketPos.FormPage.Manager;
 using System.Collections.Generic;
+using System.Resources;
+using System.Linq;
 
 namespace MarketPos
 {
@@ -31,8 +33,7 @@ namespace MarketPos
         public static List<ProductsData> shelveProducts = [];
         public List<ProductsData> unshelveProducts = [];
 
-        //key¬Oid,value¬O¼Æ¶q
-        private static List<OrderDetail> orderDetails = [];
+        private List<OrderDetail> orderDetails = [];
         private List<ProductCard> productCards = [];
         private List<ProductCard> unShelveProductCards = [];
         private List<TabPage> tabPagesControl = [];
@@ -47,13 +48,13 @@ namespace MarketPos
         {
             getProductCardsDatas(await DataService.P_getProductCardsDatas());
 
-            //³]©w³Ì·s­q³æ½s¸¹ ®æ¦¡ex:"yydddoooo"
+            //è¨­å®šæœ€æ–°è¨‚å–®ç·¨è™Ÿ æ ¼å¼ex:"yydddoooo"
             string latestOrderNum = (await DataService.Odr_getLatestOrderNum()).ToString();
 
             nextOrderNum = latestOrderNum.Substring(0, 5) == DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") ?
                 int.Parse(latestOrderNum) - (int.Parse(DateTime.Now.ToString("yy") + DateTime.Now.DayOfYear.ToString("D3") + "0000")) + 1 : 1;
 
-            //§ì¨ú¤¶­±©Ò¦³¥d¤ù
+            //æŠ“å–ä»‹é¢æ‰€æœ‰å¡ç‰‡
             productCards.Add(productCard1);
             productCards.Add(productCard2);
             productCards.Add(productCard3);
@@ -72,7 +73,7 @@ namespace MarketPos
             unShelveProductCards.Add(productCard15);
             unShelveProductCards.Add(productCard16);
 
-            //UIªì©l¤Æ¥Î
+            //UIåˆå§‹åŒ–ç”¨
             cb_Sort.SelectedIndex = 0;
             cb_Sort.SelectedIndexChanged += cb_Sort_SelectedIndexChanged;
             Detail_PCard.OrderItemAdded += Detail_PCard_OrderItemAdded;
@@ -84,11 +85,11 @@ namespace MarketPos
             tabPagesControl = tbcControl.TabPages.Cast<TabPage>().ToList();
             tabPagesProduct = tbcProdut.TabPages.Cast<TabPage>().ToList();
 
-            //Åv­­¥\¯àªì©l¤Æ
+            //æ¬Šé™åŠŸèƒ½åˆå§‹åŒ–
             levelControl(4);
 
-            //¼È®É¨Ï¥Î
-            productSort("¦WºÙ", true);
+            //æš«æ™‚ä½¿ç”¨
+            productSort("åç¨±", true);
             Set_Page();
             cb_init();
         }
@@ -99,46 +100,46 @@ namespace MarketPos
             unshelveProducts = datas.Where(o => !o.IsShelve).ToList();
         }
 
-        //·s¼Wtab«á½Ğ¨ì³o¸Ì³]©wÅv­­
+        //æ–°å¢tabå¾Œè«‹åˆ°é€™è£¡è¨­å®šæ¬Šé™
         private void levelControl(int level)
         {
-#pragma warning disable CS8604 // ¥i¯à¦³ Null °Ñ¦Ò¤Ş¼Æ¡C
+#pragma warning disable CS8604 // å¯èƒ½æœ‰ Null åƒè€ƒå¼•æ•¸ã€‚
 
             tbcControl.TabPages.Clear();
             tbcProdut.TabPages.Clear();
 
             try
             {
-                //³X«ÈÅv­­
+                //è¨ªå®¢æ¬Šé™
                 if (level <= 4)
                 {
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMemSerch"));
                     tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbProduct"));
+                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbOrderMan"));
                 }
-                //·|­ûÅv­­
+                //æœƒå“¡æ¬Šé™
                 if (level == 3)
                 {
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMenberEdit"));
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbOrderHistory"));
                 }
-                //ºŞ²z­ûÅv­­
+                //ç®¡ç†å“¡æ¬Šé™
                 if (level <= 2)
                 {
                     tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbUnshelve"));
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbAddProduct"));
-                    tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbManOrder"));
                 }
-                //¨t²Î³Ì°ªºŞ²z­û
+                //ç³»çµ±æœ€é«˜ç®¡ç†å“¡
                 if (level == 1)
                 {
                 }
             }
-            catch { MessageBox.Show("¥X²{­«¤j¿ù»~Åv­­¤À³Î"); }
-#pragma warning disable CS8604 // ¥i¯à¦³ Null °Ñ¦Ò¤Ş¼Æ¡C
+            catch { MessageBox.Show("å‡ºç¾é‡å¤§éŒ¯èª¤æ¬Šé™åˆ†å‰²"); }
+#pragma warning disable CS8604 // å¯èƒ½æœ‰ Null åƒè€ƒå¼•æ•¸ã€‚
         }
 
         /// <summary>
-        /// ¨Ì·Ó­¶­±°Ó«~¼Æ¶q¨ÓÀò¨ú¸ê®Æ¨ÃÅã¥Ü¥X¨Ó
+        /// ä¾ç…§é é¢å•†å“æ•¸é‡ä¾†ç²å–è³‡æ–™ä¸¦é¡¯ç¤ºå‡ºä¾†
         /// </summary>
         private void setProductCardsDatas(int page)
         {
@@ -146,12 +147,12 @@ namespace MarketPos
 
             productCards.ForEach(o => o.init());
 
-            //­pºâ»İ­n­ş­Ó°Ï¶¡ªº°Ó«~
+            //è¨ˆç®—éœ€è¦å“ªå€‹å€é–“çš„å•†å“
             int uip_Count = productCards.Count;
             int first = uip_Count * page - uip_Count;
             int last = shelveProducts.Count - first < 8 ? shelveProducts.Count : first + uip_Count;
 
-            //±N°Ó«~Åã¥Ü¥X¨Ó
+            //å°‡å•†å“é¡¯ç¤ºå‡ºä¾†
             for (int i = first; i < last; i++)
                 currentUI_Cards.Add(shelveProducts[i]);
 
@@ -163,7 +164,7 @@ namespace MarketPos
         }
 
         /// <summary>
-        /// ±N¸ê®Æ¶ñ¤JÁÙªÅ¯Êªº¥d¤ù
+        /// å°‡è³‡æ–™å¡«å…¥é‚„ç©ºç¼ºçš„å¡ç‰‡
         /// </summary>
         private void setProductCardsData(ProductsData productsData)
         {
@@ -173,7 +174,7 @@ namespace MarketPos
 
         private void setUnShelveCardsDatas(int page)
         {
-            //ºŞ²zªÌ¥\¯à
+            //ç®¡ç†è€…åŠŸèƒ½
             if (member == null) return;
             if (member.Level > 2) return;
 
@@ -216,59 +217,59 @@ namespace MarketPos
         }
 
         /// <summary>
-        /// true¬°desc,false¬°asce
+        /// trueç‚ºdesc,falseç‚ºasce
         /// </summary>
         /// <param name="condition"></param>
         /// <param name="mode"></param>
         public void productSort(string condition, bool mode)
         {
-            if (condition == "¦WºÙ")
+            if (condition == "åç¨±")
                 shelveProducts.Sort((a, b) => mode ? -string.Compare(a.Name, b.Name) : string.Compare(a.Name, b.Name));
-            else if (condition == "ºØÃş")
+            else if (condition == "ç¨®é¡")
                 shelveProducts.Sort((a, b) => mode ? -a.Category.CompareTo(b.Category) : a.Category.CompareTo(b.Category));
-            else if (condition == "»ù®æ")
+            else if (condition == "åƒ¹æ ¼")
                 shelveProducts.Sort((a, b) => mode ? -a.Price.CompareTo(b.Price) : a.Price.CompareTo(b.Price));
-            else if (condition == "­«¶q")
+            else if (condition == "é‡é‡")
                 shelveProducts.Sort((a, b) => mode ? -a.Weight.CompareTo(b.Weight) : a.Weight.CompareTo(b.Weight));
-            else if (condition == "²£¦a")
+            else if (condition == "ç”¢åœ°")
                 shelveProducts.Sort((a, b) => mode ? -a.Origin.CompareTo(b.Origin) : a.Origin.CompareTo(b.Origin));
             else
             {
-                MessageBox.Show("°Ó«~±Æ§Ç¥X²{¿ù»~");
+                MessageBox.Show("å•†å“æ’åºå‡ºç¾éŒ¯èª¤");
                 return;
             }
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
         {
-            //½T»{¨Ï¥ÎªÌ¦³µL¿é¤J¼Æ­È
+            //ç¢ºèªä½¿ç”¨è€…æœ‰ç„¡è¼¸å…¥æ•¸å€¼
             if (string.IsNullOrEmpty(txbAddP_name.Text) ||
                 string.IsNullOrEmpty(txbAddP_price.Text) ||
                 string.IsNullOrEmpty(txbAddP_weight.Text))
-            { MessageBox.Show("½Ğ¿é¤J¥¿½TªºÄæ¦ì®æ¦¡"); return; }
+            { MessageBox.Show("è«‹è¼¸å…¥æ­£ç¢ºçš„æ¬„ä½æ ¼å¼"); return; }
 
-            //½T»{¨Ï¥ÎªÌ¦³µL¿ï¾Ü¼Æ­È
+            //ç¢ºèªä½¿ç”¨è€…æœ‰ç„¡é¸æ“‡æ•¸å€¼
             if (cbAddP_origin.SelectedIndex == -1 ||
                 cbAddP_stock.SelectedIndex == -1 ||
                 cbAddP_category.SelectedIndex == -1)
-            { MessageBox.Show("½Ğ¿ï¾Ü¥¿½Tªº¿ï³æ"); return; }
+            { MessageBox.Show("è«‹é¸æ“‡æ­£ç¢ºçš„é¸å–®"); return; }
 
-            //¨Ï¥ÎªÌ½T»{¸ê®Æ
-            DialogResult result = MessageBox.Show($"½T»{­n¼W¥[°Ó«~:\n¦WºÙ:{txbAddP_name.Text}\nºØÃş:{cbAddP_category.Text}\n" +
-                $"»ù®æ:{txbAddP_price.Text}\n­«¶q:{txbAddP_weight.Text}\n²£¦a:{cbAddP_origin.Text}\n" +
-                $"®w¦s:{cbAddP_stock.Text}", "½T»{", MessageBoxButtons.OKCancel);
+            //ä½¿ç”¨è€…ç¢ºèªè³‡æ–™
+            DialogResult result = MessageBox.Show($"ç¢ºèªè¦å¢åŠ å•†å“:\nåç¨±:{txbAddP_name.Text}\nç¨®é¡:{cbAddP_category.Text}\n" +
+                $"åƒ¹æ ¼:{txbAddP_price.Text}\né‡é‡:{txbAddP_weight.Text}\nç”¢åœ°:{cbAddP_origin.Text}\n" +
+                $"åº«å­˜:{cbAddP_stock.Text}", "ç¢ºèª", MessageBoxButtons.OKCancel);
             if (result == DialogResult.Cancel) return;
 
             insertProduct();
         }
 
-        //­­¨î¿é¤J¬°¼Æ¦r
-        private void checkNum_KeyPress(object sender, KeyPressEventArgs e)
+        //é™åˆ¶è¼¸å…¥ç‚ºæ•¸å­—
+        private void checkNum_KeyPress(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
         }
-        //­­¨î¿é¤J¬°±K½X
+        //é™åˆ¶è¼¸å…¥ç‚ºå¯†ç¢¼
         private void checkPassword_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar >= 'a' && e.KeyChar <= 'z') ||
@@ -280,12 +281,12 @@ namespace MarketPos
 
         private async void cbAddCategoryType_Click(object sender, EventArgs e)
         {
-            UserInputForm userInput = new("½Ğ¿é¤J·s¼WªºÃş§O:")
+            UserInputForm userInput = new("è«‹è¼¸å…¥æ–°å¢çš„é¡åˆ¥:")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            //¿é¤J½T»{
+            //è¼¸å…¥ç¢ºèª
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
             if (string.IsNullOrEmpty(userInput.userinputStr)) return;
 
@@ -295,16 +296,16 @@ namespace MarketPos
 
         private async void btnAddOriginType_Click(object sender, EventArgs e)
         {
-            UserInputForm userInput = new("½Ğ¿é¤J·s¼Wªº²£¦a:")
+            UserInputForm userInput = new("è«‹è¼¸å…¥æ–°å¢çš„ç”¢åœ°:")
             {
                 StartPosition = FormStartPosition.CenterParent
             };
 
-            //¿é¤J½T»{
+            //è¼¸å…¥ç¢ºèª
             if (userInput.ShowDialog(this) == DialogResult.Cancel) return;
             if (string.IsNullOrEmpty(userInput.userinputStr)) return;
 
-            //±N·sÃş§O¿é¤J¸ê®Æ®w
+            //å°‡æ–°é¡åˆ¥è¼¸å…¥è³‡æ–™åº«
             await DataService.MP_AddOriginType(userInput.userinputStr);
             cb_init();
         }
@@ -313,7 +314,7 @@ namespace MarketPos
         {
             int p_count = shelveProducts.Count;
 
-            //­q¥¿page­¶¼Æ
+            //è¨‚æ­£pageé æ•¸
             int page = (int)Math.Floor(p_count / 8d);
             if (p_count % 8 != 0) page++;
 
@@ -321,17 +322,17 @@ namespace MarketPos
             for (int i = 1; i <= page; i++)
                 cbPage.Items.Add(i.ToString());
 
-            //§ó§ïUI¼Æ­È
+            //æ›´æ”¹UIæ•¸å€¼
             if (cbPage.Items.Count != 0) cbPage.SelectedIndex = 0;
-            lbPage.Text = $"/{page}­¶";
+            lbPage.Text = $"/{page}é ";
 
 
-            //ºŞ²zªÌ¥\¯à
+            //ç®¡ç†è€…åŠŸèƒ½
             if (member == null) return;
             if (member.Level > 2) return;
             int unp_count = unshelveProducts.Count;
 
-            //­q¥¿page­¶¼Æ
+            //è¨‚æ­£pageé æ•¸
             page = (int)Math.Floor(unp_count / 8d);
             if (unp_count % 8 != 0) page++;
 
@@ -339,9 +340,9 @@ namespace MarketPos
             for (int i = 1; i <= page; i++)
                 cbUnPage.Items.Add(i.ToString());
 
-            //§ó§ïUI¼Æ­È
+            //æ›´æ”¹UIæ•¸å€¼
             if (cbUnPage.Items.Count != 0) cbUnPage.SelectedIndex = 0;
-            lbUnPage.Text = $"/{page}­¶";
+            lbUnPage.Text = $"/{page}é ";
         }
 
         private void cbPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -376,7 +377,7 @@ namespace MarketPos
                 cbUnPage.SelectedIndex--;
         }
 
-        //±N¸ê®Æ¶ñ¤Jcb
+        //å°‡è³‡æ–™å¡«å…¥cb
         private async void cb_init()
         {
             cbAddP_category.Items.Clear();
@@ -384,8 +385,12 @@ namespace MarketPos
             cbAddP_stock.Items.Clear();
             cbS_Category.Items.Clear();
             cbS_Origin.Items.Clear();
+            cbOdrSProduct.Items.Clear();
+            cbOdrSPayMent.Items.Clear();
             await DataService.P_GetCategoryType();
             await DataService.P_GetOriginType();
+            await DataService.Odr_GetPayment();
+            List<ProductsData> datas = [.. shelveProducts, .. unshelveProducts];
             for (int i = 0; i < 100; i++)
                 cbAddP_stock.Items.Add(i);
 
@@ -408,6 +413,25 @@ namespace MarketPos
             cbS_Origin.ValueMember = "Value";
             cbS_Origin.DataSource = new BindingSource(DataService.originsDict, null);
             cbS_Origin.SelectedIndex = -1;
+
+            cbOdrSPayMent.DisplayMember = "Key";
+            cbOdrSPayMent.ValueMember = "Value";
+            cbOdrSPayMent.DataSource = new BindingSource(DataService.payDict, null);
+            cbOdrSPayMent.SelectedIndex = -1;
+
+            Dictionary<string, int> productDict = new Dictionary<string, int>();
+            foreach (var item in datas)
+            {
+                productDict.Add(item.Name, item.Id);
+            }
+
+            cbOdrSProduct.DisplayMember = "Key";
+            cbOdrSProduct.ValueMember = "Value";
+            cbOdrSProduct.DataSource = new BindingSource(productDict, null);
+            cbOdrSProduct.SelectedIndex = -1;
+
+            cbOdrSIsCancel.SelectedIndex = 0;
+            cbOdrSIsConfirmed.SelectedIndex = 0;
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)
@@ -423,23 +447,23 @@ namespace MarketPos
                 productData.Weight = weight;
                 productData.Origin = cbS_Origin.Text;
             }
-            catch (Exception ex) { MessageBox.Show($"¿é¤J¿ù»~{ex}"); return; }
+            catch (Exception ex) { MessageBox.Show($"è¼¸å…¥éŒ¯èª¤{ex}"); return; }
 
-            var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "¥H¤W", btnS_WeightToggle.Text == "¥H¤W");
+            var data = await DataService.P_SelectProducts(productData, btnS_PriceToggle.Text == "ä»¥ä¸Š", btnS_WeightToggle.Text == "ä»¥ä¸Š");
             RefreshUI(data);
         }
         /// <summary>
-        /// ¥]¸Ë¦n¤@¯ëª©¥»±oµe­±§ó·s
+        /// åŒ…è£å¥½ä¸€èˆ¬ç‰ˆæœ¬å¾—ç•«é¢æ›´æ–°
         /// </summary>
-        /// <param name="data">¶ë¿ï«áªº¸ê®Æ,¦pªG¨S¶Ç¤Jnull·|§ì¨ú©Ò¦³°Ó«~</param>
+        /// <param name="data">å¡é¸å¾Œçš„è³‡æ–™,å¦‚æœæ²’å‚³å…¥nullæœƒæŠ“å–æ‰€æœ‰å•†å“</param>
         private async void RefreshUI(List<ProductsData>? data)
         {
-            if (data ==null)
+            if (data == null)
                 data = await DataService.P_getProductCardsDatas();
             getProductCardsDatas(data);
             if (ptb_Sort.Tag == null)
             {
-                MessageBox.Show("§ä¤£¨ìptb_Sort.tag");
+                MessageBox.Show("æ‰¾ä¸åˆ°ptb_Sort.tag");
                 return;
             }
             productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
@@ -448,18 +472,18 @@ namespace MarketPos
 
         private void btnS_WeightToggle_Click(object sender, EventArgs e)
         {
-            if (btnS_WeightToggle.Text == "¥H¤W")
-                btnS_WeightToggle.Text = "¥H¤U";
-            else if (btnS_WeightToggle.Text == "¥H¤U")
-                btnS_WeightToggle.Text = "¥H¤W";
+            if (btnS_WeightToggle.Text == "ä»¥ä¸Š")
+                btnS_WeightToggle.Text = "ä»¥ä¸‹";
+            else if (btnS_WeightToggle.Text == "ä»¥ä¸‹")
+                btnS_WeightToggle.Text = "ä»¥ä¸Š";
         }
 
         private void btnS_PriceToggle_Click(object sender, EventArgs e)
         {
-            if (btnS_PriceToggle.Text == "¥H¤W")
-                btnS_PriceToggle.Text = "¥H¤U";
-            else if (btnS_PriceToggle.Text == "¥H¤U")
-                btnS_PriceToggle.Text = "¥H¤W";
+            if (btnS_PriceToggle.Text == "ä»¥ä¸Š")
+                btnS_PriceToggle.Text = "ä»¥ä¸‹";
+            else if (btnS_PriceToggle.Text == "ä»¥ä¸‹")
+                btnS_PriceToggle.Text = "ä»¥ä¸Š";
         }
 
         private async void btnS_Clear_Click(object sender, EventArgs e)
@@ -473,10 +497,10 @@ namespace MarketPos
             getProductCardsDatas(await DataService.P_getProductCardsDatas());
             if (ptb_Sort.Tag == null)
             {
-                MessageBox.Show("§ä¤£¨ìptb_Sort.tag");
+                MessageBox.Show("æ‰¾ä¸åˆ°ptb_Sort.tag");
                 return;
             }
-            productSort("¦WºÙ", ptb_Sort.Tag.ToString() == "descendingOrder");
+            productSort("åç¨±", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
         }
 
@@ -516,11 +540,11 @@ namespace MarketPos
             }
             else
             {
-                //µn¥X¥\¯à
+                //ç™»å‡ºåŠŸèƒ½
                 member = new Member();
                 flp_shoppingCar.Controls.Clear();
                 orderDetails = [];
-                btn_Login.Text = "µù¥U/µn¤J";
+                btn_Login.Text = "è¨»å†Š/ç™»å…¥";
                 lbMember.Text = string.Empty;
                 ptb_Buy.Enabled = false;
                 ptb_Buy.Visible = false;
@@ -530,22 +554,22 @@ namespace MarketPos
         }
         private async void LoginForMem_LoginSuccess(object? sender, Member e)
         {
-            if (sender == null) { MessageBox.Show("µn¤Jµøµ¡¬°ªÅ"); return; }
-            if (e.Id == 0) { MessageBox.Show("¬dµL¦¹¥Î¤á¦WºÙ"); return; };
+            if (sender == null) { MessageBox.Show("ç™»å…¥è¦–çª—ç‚ºç©º"); return; }
+            if (e.Id == 0) { MessageBox.Show("æŸ¥ç„¡æ­¤ç”¨æˆ¶åç¨±"); return; };
 
             member = e;
 
-            //UI³]¸m
+            //UIè¨­ç½®
             ptb_Buy.Enabled = true;
             ptb_Buy.Visible = true;
             levelControl(member.Level);
             setMemberProfile(false);
 
-            //·|­û­q³æ³B²z
+            //æœƒå“¡è¨‚å–®è™•ç†
             getShoppingOrderID();
             orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
 
-            //³B²z­q³æ§¹°â°İÃD
+            //è™•ç†è¨‚å–®å®Œå”®å•é¡Œ
             CheckOrderDetails(orderDetails, shelveProducts);
 
             setShoppingCard(orderDetails, flp_shoppingCar, true);
@@ -559,7 +583,7 @@ namespace MarketPos
             List<Order> orders = await DataService.Odr_GetUnreadMessage(member.Id);
             foreach (Order order in orders)
             {
-                MessageBox.Show($"¨Ó¦Û­q³æ:{order.Id}ªº°T®§:\n\n{order.Comment}");
+                MessageBox.Show($"ä¾†è‡ªè¨‚å–®:{order.Id}çš„è¨Šæ¯:\n\n{order.Comment}");
                 await DataService.Odr_SetMessage(order.Id, order.Comment, true);
             }
         }
@@ -576,7 +600,7 @@ namespace MarketPos
                 {
                     await DataService.Odr_DeleteOrderDetail(member.OrderId, productdata.Id);
                     itemsToRemove.Add(item);
-                    MessageBox.Show($"{productdata.Name}\n¦¹°Ó«~®w¦s§¹°â©Î¤£¨¬¡A½Ğ­«·s¤U©w");
+                    MessageBox.Show($"{productdata.Name}\næ­¤å•†å“åº«å­˜å®Œå”®æˆ–ä¸è¶³ï¼Œè«‹é‡æ–°ä¸‹å®š");
                 }
             }
 
@@ -600,15 +624,15 @@ namespace MarketPos
         }
 
         /// <summary>
-        /// ¦p»İ­«·s§ì¨ú·|­û¸ê®Æ½Ğ¶Ç¤Jtrue
+        /// å¦‚éœ€é‡æ–°æŠ“å–æœƒå“¡è³‡æ–™è«‹å‚³å…¥true
         /// </summary>
         private async void setMemberProfile(bool mode)
         {
             if (member == null || member.Id == 0) return;
             if (mode) member = await DataService.Mem_Login(member.Account, member.HashPassword);
 
-            lbMember.Text = $"Åwªï¦^¨Ó: {member.Name}";
-            btn_Login.Text = "µn¥X";
+            lbMember.Text = $"æ­¡è¿å›ä¾†: {member.Name}";
+            btn_Login.Text = "ç™»å‡º";
             if (member == null || member.Id == 0) return;
             txbMem_Name.Text = member.Name;
             txbMem_Email.Text = member.Email;
@@ -659,10 +683,10 @@ namespace MarketPos
             getProductCardsDatas(await DataService.P_getProductCardsDatas());
             if (ptb_Sort.Tag == null)
             {
-                MessageBox.Show("§ä¤£¨ìptb_Sort.tag");
+                MessageBox.Show("æ‰¾ä¸åˆ°ptb_Sort.tag");
                 return;
             }
-            productSort("¦WºÙ", ptb_Sort.Tag.ToString() == "descendingOrder");
+            productSort("åç¨±", ptb_Sort.Tag.ToString() == "descendingOrder");
             Set_Page();
         }
 
@@ -688,7 +712,7 @@ namespace MarketPos
             orderDetails = await DataService.Odr_GetOrderDetail(e.orderID);
             setShoppingCard(orderDetails, flp_shoppingCar, false);
 
-            //Àò¨ú°T®§¦r¦ê©M²£«~¦WºÙ
+            //ç²å–è¨Šæ¯å­—ä¸²å’Œç”¢å“åç¨±
             List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];
             ProductsData? productsData = datas.FirstOrDefault(o => o.Id == e.productID);
             if (productsData == null) return;
@@ -697,10 +721,10 @@ namespace MarketPos
             string comment = order.Comment;
             if (comment == "ERROR") return;
             if (e.confirmed && (string.IsNullOrEmpty(comment) || !comment.Contains(productsData.Name))) return;
-            if (!e.confirmed) comment += $"°Ó«~{productsData.Name}µo¥Í°İÃD\n";
+            if (!e.confirmed) comment += $"å•†å“{productsData.Name}ç™¼ç”Ÿå•é¡Œ\n";
 
-            //­×§ï°T®§
-            UserInputForm userInput = new UserInputForm($"­q³æ:{e.orderID}ªº°T®§", comment);
+            //ä¿®æ”¹è¨Šæ¯
+            UserInputForm userInput = new UserInputForm($"è¨‚å–®:{e.orderID}çš„è¨Šæ¯", comment);
             userInput.ShowDialog();
             if (userInput.DialogResult == DialogResult.OK)
             {
@@ -715,8 +739,8 @@ namespace MarketPos
             string comment = order.Comment;
             if (comment == "ERROR") return;
 
-            //­×§ï°T®§
-            UserInputForm userInput = new UserInputForm($"­q³æ:{orderid}ªº°T®§", comment);
+            //ä¿®æ”¹è¨Šæ¯
+            UserInputForm userInput = new UserInputForm($"è¨‚å–®:{orderid}çš„è¨Šæ¯", comment);
             userInput.ShowDialog();
             if (userInput.DialogResult == DialogResult.OK)
             {
@@ -726,8 +750,8 @@ namespace MarketPos
         }
 
 
-        /// <param name="orderDetail">­q³æ¸Ô²Ó¸ê®Æ</param>
-        /// <param name="flp">³]¸mªºª©­±</param>
+        /// <param name="orderDetail">è¨‚å–®è©³ç´°è³‡æ–™</param>
+        /// <param name="flp">è¨­ç½®çš„ç‰ˆé¢</param>
         private async void setShoppingCard(List<OrderDetail> orderDetail, FlowLayoutPanel flp, bool isShoppingCar)
         {
             getProductCardsDatas(await DataService.P_getProductCardsDatas());
@@ -742,10 +766,10 @@ namespace MarketPos
                 if (productsData == null || ((!productsData.IsShelve || item.quantity > productsData.Stock) && isShoppingCar))
                 {
                     string name = productsData == null ? string.Empty : productsData.Name;
-                    MessageBox.Show($"§äµL¦¹µ§°Ó«~©Î°Ó«~¤w¤U¬[:\n{item.productID} {name}");
+                    MessageBox.Show($"æ‰¾ç„¡æ­¤ç­†å•†å“æˆ–å•†å“å·²ä¸‹æ¶:\n{item.productID} {name}");
                     await DataService.Odr_DeleteOrderDetail(member.OrderId, item.productID);
                     if (ptb_Sort.Tag != null)
-                        productSort("¦WºÙ", ptb_Sort.Tag.ToString() == "descendingOrder");
+                        productSort("åç¨±", ptb_Sort.Tag.ToString() == "descendingOrder");
                     Set_Page();
                     orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
                     continue;
@@ -756,14 +780,14 @@ namespace MarketPos
         }
 
         /// <summary>
-        /// ­pºâÁ`ª÷ÃB
+        /// è¨ˆç®—ç¸½é‡‘é¡
         /// </summary>
         private void flp_ControlChange(object sender, EventArgs e)
         {
             FlowLayoutPanel? flowLayoutPanel = sender as FlowLayoutPanel;
             if (flowLayoutPanel == null) return;
 
-            //¿ï¾Ü­n±Nª÷ÃB¿é¥X¦b­ş­Ótxb
+            //é¸æ“‡è¦å°‡é‡‘é¡è¼¸å‡ºåœ¨å“ªå€‹txb
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
             if (flowLayoutPanel.Name == "flp_shoppingCar") textBox = txbTotal;
             else if (flowLayoutPanel.Name == "flpOdr_Histroy") textBox = txbOdr_Total;
@@ -772,13 +796,13 @@ namespace MarketPos
             List<ShoppingCard> shoppingCards = flowLayoutPanel.Controls.OfType<ShoppingCard>().ToList();
             if (shoppingCards.Count == 0)
                 textBox.Text = string.Empty;
-            else textBox.Text = "Á`ª÷ÃB:" + shoppingCards.Sum(o => o.total).ToString() + "$";
+            else textBox.Text = "ç¸½é‡‘é¡:" + shoppingCards.Sum(o => o.total).ToString() + "$";
         }
 
         private async void ptb_Buy_Click(object sender, EventArgs e)
         {
-            if (member == null || member.Id == 0) { MessageBox.Show("½Ğ¥ıµn¤J·|­û"); return; }
-            if (orderDetails.Count == 0) { MessageBox.Show("ÁÊª«¨®¥Ø«e¬OªÅªÅªº"); return; }
+            if (member == null || member.Id == 0) { MessageBox.Show("è«‹å…ˆç™»å…¥æœƒå“¡"); return; }
+            if (orderDetails.Count == 0) { MessageBox.Show("è³¼ç‰©è»Šç›®å‰æ˜¯ç©ºç©ºçš„"); return; }
 
             PurchaseForm purchaseForm = new PurchaseForm();
             purchaseForm.StartPosition = FormStartPosition.CenterParent;
@@ -787,18 +811,18 @@ namespace MarketPos
 
             if (purchaseForm.DialogResult != DialogResult.OK) return;
 
-            //­×§ï­q³æª¬ºA
+            //ä¿®æ”¹è¨‚å–®ç‹€æ…‹
             if (await DataService.Odr_orderPlaced(member.OrderId, purchaseForm.payment, purchaseForm.OName,
                 purchaseForm.OAddress, purchaseForm.RName, purchaseForm.RAddress, orderDetails))
             {
-                MessageBox.Show("­q³æ¤U³æ¦¨¥\");
+                MessageBox.Show("è¨‚å–®ä¸‹å–®æˆåŠŸ");
 
-                //ªì©l¤Æ­q³æ
+                //åˆå§‹åŒ–è¨‚å–®
                 getShoppingOrderID();
                 orderDetails = await DataService.Odr_GetOrderDetail(member.OrderId);
                 setShoppingCard(orderDetails, flp_shoppingCar, true);
 
-                //­«·sÀò¨ú°Ó«~¸ê®Æ
+                //é‡æ–°ç²å–å•†å“è³‡æ–™
                 getProductCardsDatas(await DataService.P_getProductCardsDatas());
                 if (ptb_Sort.Tag != null)
                     productSort(cb_Sort.Text, ptb_Sort.Tag.ToString() == "descendingOrder");
@@ -815,17 +839,17 @@ namespace MarketPos
                 @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
             string phonePattern = @"^09\d{8}$";
 
-            if (string.IsNullOrEmpty(txbMem_Name.Text)) { MessageBox.Show("½Ğ¶ñ¤J­n§ó§ïªº¦W¦r"); return; }
+            if (string.IsNullOrEmpty(txbMem_Name.Text)) { MessageBox.Show("è«‹å¡«å…¥è¦æ›´æ”¹çš„åå­—"); return; }
             if (!string.IsNullOrEmpty(txbMem_Email.Text) && !Regex.IsMatch(txbMem_Email.Text, emailPattern))
-            { MessageBox.Show("½Ğ¶ñ¤J¥¿½TªºMAIL¦a§}"); return; }
+            { MessageBox.Show("è«‹å¡«å…¥æ­£ç¢ºçš„MAILåœ°å€"); return; }
             if (!Regex.IsMatch(txbMem_Phone.Text, phonePattern) && !string.IsNullOrEmpty(txbMem_Phone.Text))
-            { MessageBox.Show("½Ğ¶ñ¤J¥¿½Tªº¤â¾÷¸¹½X"); return; }
+            { MessageBox.Show("è«‹å¡«å…¥æ­£ç¢ºçš„æ‰‹æ©Ÿè™Ÿç¢¼"); return; }
 
             if (!await DataService.Mem_EditProfile(txbMem_Name.Text.Trim(), txbMem_Address.Text.Trim(),
                     txbMem_Email.Text.Trim(), txbMem_Phone.Text, member.Id))
                 return;
 
-            MessageBox.Show("·|­û°ò¥»¸ê®Æ§ó·s¦¨¥\");
+            MessageBox.Show("æœƒå“¡åŸºæœ¬è³‡æ–™æ›´æ–°æˆåŠŸ");
             setMemberProfile(true);
         }
 
@@ -838,18 +862,18 @@ namespace MarketPos
             string check = txbCheck.Text.Trim();
             List<string> list = [oldPassword, newPassword, check];
 
-            if (list.Any(string.IsNullOrEmpty)) { MessageBox.Show("½Ğ¿é¤J·sÂÂ±K½X"); return; }
-            if (!newPassword.Equals(check)) { MessageBox.Show("±K½X¿é¤J¤£¤@­P"); return; }
-            if (newPassword.Length < 6) { MessageBox.Show("½Ğ¿é¤J¥¿½Tªº±K½X®æ¦¡¡A½Ğ¤j©ó6­Ó­^¤å¼Æ¦r"); return; }
+            if (list.Any(string.IsNullOrEmpty)) { MessageBox.Show("è«‹è¼¸å…¥æ–°èˆŠå¯†ç¢¼"); return; }
+            if (!newPassword.Equals(check)) { MessageBox.Show("å¯†ç¢¼è¼¸å…¥ä¸ä¸€è‡´"); return; }
+            if (newPassword.Length < 6) { MessageBox.Show("è«‹è¼¸å…¥æ­£ç¢ºçš„å¯†ç¢¼æ ¼å¼ï¼Œè«‹å¤§æ–¼6å€‹è‹±æ–‡æ•¸å­—"); return; }
 
 
             string oldSaltStr = await DataService.Mem_LoginGetSalt(member.Account);
             byte[] oldSalt = Convert.FromBase64String(oldSaltStr);
             byte[] oldHashpassword = GHashPassword(oldPassword, oldSalt);
             string oldHashpasswordStr = Convert.ToBase64String(oldHashpassword);
-            if (member.HashPassword != oldHashpasswordStr) { MessageBox.Show("ÂÂ±K½Xµn¤J¿ù»~"); return; }
+            if (member.HashPassword != oldHashpasswordStr) { MessageBox.Show("èˆŠå¯†ç¢¼ç™»å…¥éŒ¯èª¤"); return; }
 
-            //±K½X¥[±K
+            //å¯†ç¢¼åŠ å¯†
             byte[] newSalt = CreateSalt();
             string newSaltStr = Convert.ToBase64String(newSalt);
             byte[] newHashpassword = GHashPassword(newPassword, newSalt);
@@ -858,15 +882,15 @@ namespace MarketPos
             if (await DataService.Mem_EditAccount(newHashpasswordStr, newSaltStr, member.Account))
             {
                 member = await DataService.Mem_Login(member.Account, newHashpasswordStr);
-                if (member == null || member.Id == 0) MessageBox.Show("¥X²{¿ù»~½Ğ»P§JªAÁpÃ´");
-                MessageBox.Show("±K½X§ó§ï¦¨¥\");
+                if (member == null || member.Id == 0) MessageBox.Show("å‡ºç¾éŒ¯èª¤è«‹èˆ‡å…‹æœè¯ç¹«");
+                MessageBox.Show("å¯†ç¢¼æ›´æ”¹æˆåŠŸ");
                 txbOldPassword.Text = string.Empty;
                 txbPassword.Text = string.Empty;
                 txbCheck.Text = string.Empty;
             }
         }
 
-        //²£¥ÍÆQ¤Ú
+        //ç”¢ç”Ÿé¹½å·´
         public static byte[] CreateSalt()
         {
             byte[] buffer = new byte[16];
@@ -875,13 +899,13 @@ namespace MarketPos
             return buffer;
         }
 
-        //hash¨Ó·½https://ithelp.ithome.com.tw/articles/10266660
+        //hashä¾†æºhttps://ithelp.ithome.com.tw/articles/10266660
         public static byte[] GHashPassword(string password, byte[] salt)
         {
             var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
             argon2.Salt = salt;
-            argon2.DegreeOfParallelism = 4; // 4 ®Ö¤ß´N³]¦¨ 8
-            argon2.Iterations = 3; // ­¡¥N¹Bºâ¦¸¼Æ
+            argon2.DegreeOfParallelism = 4; // 4 æ ¸å¿ƒå°±è¨­æˆ 8
+            argon2.Iterations = 3; // è¿­ä»£é‹ç®—æ¬¡æ•¸
             argon2.MemorySize = 512 * 512;
 
             return argon2.GetBytes(16);
@@ -892,12 +916,12 @@ namespace MarketPos
             System.Windows.Forms.Label? label = sender as System.Windows.Forms.Label;
             if (label == null) return;
 
-            // ­pºâ¤å¦r¼e«×©M¼ĞÅÒ¼e«×ªº¤ñ¨Ò
+            // è¨ˆç®—æ–‡å­—å¯¬åº¦å’Œæ¨™ç±¤å¯¬åº¦çš„æ¯”ä¾‹
             int minFontSize = 6;
             if (string.IsNullOrEmpty(label.Text)) return;
             float ratio = 200f / TextRenderer.MeasureText(label.Text, label.Font).Width;
 
-            // ¦pªG¤ñ¨Ò¤p©ó1¡A½Õ¾ã¦rÅé¤j¤p
+            // å¦‚æœæ¯”ä¾‹å°æ–¼1ï¼Œèª¿æ•´å­—é«”å¤§å°
             if (ratio < 1)
             {
                 int newSize = (int)(label.Font.Size * ratio);
@@ -913,15 +937,32 @@ namespace MarketPos
             int orderid = (int)cbOdr_Number.SelectedValue;
             var orderDetails = await DataService.Odr_GetOrderDetail(orderid);
             var orderData = await DataService.Odr_GetOrderData(orderid);
-            var paymentmethod = await DataService.Odr_GetPayment();
+            var paymentmethod = DataService.payDict;
 
             setShoppingCard(orderDetails, flpOdr_Histroy, false);
-            lbOdr_date.Text = "­qÁÊ¤é´Á : " + orderData.PlacedDate.ToString("yyyy¦~MM¤ëdd¤é");
-            lbOdr_Payment.Text = "¥I´Ú¤è¦¡ : " + paymentmethod[orderData.Payment];
-            lbOdr_OName.Text = "­qÁÊ¤H©m¦W :" + orderData.OrdererName;
+            lbOdr_date.Text = "è¨‚è³¼æ—¥æœŸ : " + orderData.PlacedDate.ToString("yyyyå¹´MMæœˆddæ—¥");
+            lbOdr_Payment.Text = "ä»˜æ¬¾æ–¹å¼ : " + paymentmethod.FirstOrDefault(o => o.Value == orderData.Payment).Key;
+            lbOdr_OName.Text = "è¨‚è³¼äººå§“å :" + orderData.OrdererName;
             txbOdr_OAdress.Text = orderData.OrdererAddress;
-            lbOdr_RName.Text = "¦¬³f¤H©m¦W :" + orderData.ReceiverName;
+            lbOdr_RName.Text = "æ”¶è²¨äººå§“å :" + orderData.ReceiverName;
             txbOdr_RAdress.Text = orderData.ReceiverAddress;
+            if (!orderData.isRead) lbOdrIsRead.Visible = true;
+            else lbOdrIsRead.Visible = false;
+            if (!orderData.Confirmed) lbOdrIsConfirmed.Visible = true;
+            else lbOdrIsConfirmed.Visible = false;
+
+            if (orderData.isCancel)
+            {
+                MessageBox.Show("æ­¤ç­†è¨‚å–®å·²å–æ¶ˆ");
+                btnOdrCancelOdr.Enabled = false;
+                ptbOdr.Image = Properties.Resources.cancel;
+            }
+            else
+            {
+                ptbOdr.Image = Properties.Resources.file;
+                btnOdrCancelOdr.Enabled = true;
+                lbOdrIsConfirmed.Visible = false;
+            }
         }
 
         private async void cbMOdr_Number_SelectedIndexChanged(object sender, EventArgs e)
@@ -931,21 +972,71 @@ namespace MarketPos
             int orderid = (int)cbMOdr_Number.SelectedValue;
             var orderDetails = await DataService.Odr_GetOrderDetail(orderid);
             var orderData = await DataService.Odr_GetOrderData(orderid);
-            var paymentmethod = await DataService.Odr_GetPayment();
+            var paymentmethod = DataService.payDict;
 
             setShoppingCard(orderDetails, flpMOdr, false);
-            lbMOdr_Date.Text = "­qÁÊ¤é´Á : " + orderData.PlacedDate.ToString("yyyy¦~MM¤ëdd¤é");
-            lbMOdr_Payment.Text = "¥I´Ú¤è¦¡ : " + paymentmethod[orderData.Payment];
-            lbMOdr_OName.Text = "­qÁÊ¤H©m¦W :" + orderData.OrdererName;
+            lbMOdr_Date.Text = "è¨‚è³¼æ—¥æœŸ : " + orderData.PlacedDate.ToString("yyyyå¹´MMæœˆddæ—¥");
+            lbMOdr_Payment.Text = "ä»˜æ¬¾æ–¹å¼ : " + paymentmethod.FirstOrDefault(o => o.Value == orderData.Payment).Key;
+            lbMOdr_OName.Text = "è¨‚è³¼äººå§“å :" + orderData.OrdererName;
             txbMOdr_OAddress.Text = orderData.OrdererAddress;
-            lbMOdr_RName.Text = "¦¬³f¤H©m¦W :" + orderData.ReceiverName;
+            lbMOdr_RName.Text = "æ”¶è²¨äººå§“å :" + orderData.ReceiverName;
             txbMOdr_RAddress.Text = orderData.ReceiverAddress;
+
+            //è¨‚å–®ç‹€æ…‹
+            if (!orderData.isRead)
+            {
+                lbMOdr_IsRead.Visible = true;
+                ptbMOdr_isRead.Visible = true;
+            }
+            else
+            {
+                lbMOdr_IsRead.Visible = false;
+                ptbMOdr_isRead.Visible = false;
+            }
+
+            if (orderData.isCancel)
+            {
+                lbMOdr_IsCancel.Visible = true;
+                ptbMOdr_IsCancel.Visible = true;
+                btnMOdrConfirmed.Enabled = false;
+                btnMOdrCancel.Enabled = false;
+                ptbMOdr_Confirmed.Visible = false;
+                lbMOdr_Confirmed.Visible = false;
+                lbMOdr_unConfirmed.Visible = false;
+                ptbMOdr_unConfirmed.Visible = false;
+                return;
+            }
+            else
+            {
+                lbMOdr_IsCancel.Visible = false;
+                ptbMOdr_IsCancel.Visible = false;
+                btnMOdrConfirmed.Enabled = false;
+                btnMOdrCancel.Enabled = false;
+            }
+
+            if (!orderData.Confirmed)
+            {
+                lbMOdr_unConfirmed.Visible = true;
+                ptbMOdr_unConfirmed.Visible = true;
+                btnMOdrConfirmed.Enabled = true;
+                btnMOdrCancel.Enabled = true;
+                ptbMOdr_Confirmed.Visible = false;
+                lbMOdr_Confirmed.Visible = false;
+            }
+            else
+            {
+                lbMOdr_unConfirmed.Visible = false;
+                ptbMOdr_unConfirmed.Visible = false;
+                btnMOdrConfirmed.Enabled = false;
+                ptbMOdr_Confirmed.Visible = true;
+                lbMOdr_Confirmed.Visible = true;
+            }
         }
 
         private async void btnConfirmed_Click(object sender, EventArgs e)
         {
-            if (member.Level > 2) { MessageBox.Show("±z¨Ã¨S¦³¦¹Åv­­"); return; }
-            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("±z¨Ã¨S¦³¦¹¿ï¾Ü­q³æ"); return; }
+            if (member.Level > 2) { MessageBox.Show("æ‚¨ä¸¦æ²’æœ‰æ­¤æ¬Šé™"); return; }
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("æ‚¨ä¸¦æ²’æœ‰æ­¤é¸æ“‡è¨‚å–®"); return; }
 
             await DataService.Odr_UpdateConfirmed(true, (int)cbMOdr_Number.SelectedValue);
             setManagerOrder();
@@ -953,38 +1044,226 @@ namespace MarketPos
 
         private void btnMessage_Click(object sender, EventArgs e)
         {
-            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("½Ğ¿ï¾Ü³æ¸¹"); return; }
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("è«‹é¸æ“‡å–®è™Ÿ"); return; }
             int orderid = (int)cbMOdr_Number.SelectedValue;
             setOdrMessage(orderid);
         }
-
+        private void btnOdrComment_Click(object sender, EventArgs e)
+        {
+            if (cbOdr_Number.SelectedValue == null) { MessageBox.Show("è«‹é¸æ“‡å–®è™Ÿ"); return; }
+            int orderid = (int)cbOdr_Number.SelectedValue;
+            setOdrMessage(orderid);
+        }
         private async void btnCancelOrder_Click(object sender, EventArgs e)
         {
-            if (member.Level > 2) { MessageBox.Show("±z¨Ã¨S¦³¦¹Åv­­"); return; }
-            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("±z¨Ã¨S¦³¦¹¿ï¾Ü­q³æ"); return; }
+            if (member.Level > 2) { MessageBox.Show("æ‚¨ä¸¦æ²’æœ‰æ­¤æ¬Šé™"); return; }
+            if (cbMOdr_Number.SelectedValue == null) { MessageBox.Show("æ‚¨ä¸¦æ²’æœ‰æ­¤é¸æ“‡è¨‚å–®"); return; }
             int orderid = (int)cbMOdr_Number.SelectedValue;
 
-            //¨ú®ø­q³æ
-            DialogResult = MessageBox.Show($"±z½T»{­n±N­q³æ:{orderid}¨ú®ø¶Ü?","¨ú®ø­q³æ",MessageBoxButtons.OKCancel);
+            //å–æ¶ˆè¨‚å–®
+            DialogResult = MessageBox.Show($"æ‚¨ç¢ºèªè¦å°‡è¨‚å–®:{orderid}å–æ¶ˆå—?", "å–æ¶ˆè¨‚å–®", MessageBoxButtons.OKCancel);
             if (DialogResult == DialogResult.Cancel) return;
             if (!await DataService.Odr_SetOrderCancel(orderid, true)) return;
             await DataService.Odr_UpdateConfirmed(true, orderid);
 
-            //±N®w¦s¼Æ¶q¥[¦^¥h
+            //å°‡åº«å­˜æ•¸é‡åŠ å›å»
             List<OrderDetail> orderDetails = await DataService.Odr_GetOrderDetail(orderid);
             List<ProductsData> Data = await DataService.P_getProductCardsDatas();
 
             List<ProductsData> UpdateDatas = Data.Where(pd => orderDetails.Any(od => od.productID == pd.Id)).ToList();
             foreach (var item in UpdateDatas)
             {
-                OrderDetail? orderDetail= orderDetails.FirstOrDefault(o => o.productID == item.Id);
-                if (orderDetail == null) { MessageBox.Show($"°Ó«~:{item.Name}\n°h³f«á®w¦s¼Æ¶q§ó§ïµo¥Í°İÃD"); continue; }
+                OrderDetail? orderDetail = orderDetails.FirstOrDefault(o => o.productID == item.Id);
+                if (orderDetail == null) { MessageBox.Show($"å•†å“:{item.Name}\né€€è²¨å¾Œåº«å­˜æ•¸é‡æ›´æ”¹ç™¼ç”Ÿå•é¡Œ"); continue; }
                 item.Stock += orderDetail.quantity;
                 await DataService.MP_UpdateProduct(item);
             }
 
             RefreshUI(null);
             setManagerOrder();
+        }
+
+        private async void btnOdrCancelOdr_Click(object sender, EventArgs e)
+        {
+            if (cbOdr_Number.SelectedValue == null) { MessageBox.Show("æ‚¨ä¸¦æ²’æœ‰æ­¤é¸æ“‡è¨‚å–®"); return; }
+            int orderid = (int)cbOdr_Number.SelectedValue;
+            Order order = await DataService.Odr_GetOrderData(orderid);
+            if (order.Confirmed) { MessageBox.Show("è³£å®¶å·²ç¢ºèªè¨‚å–®æˆ–å‡ºè²¨è«‹èˆ‡è³£å®¶è¯ç¹«"); return; }
+
+            //å–æ¶ˆè¨‚å–®
+            DialogResult = MessageBox.Show($"æ‚¨ç¢ºèªè¦å°‡è¨‚å–®:{orderid}å–æ¶ˆå—?", "å–æ¶ˆè¨‚å–®", MessageBoxButtons.OKCancel);
+            if (DialogResult == DialogResult.Cancel) return;
+            if (!await DataService.Odr_SetOrderCancel(orderid, true)) return;
+            await DataService.Odr_UpdateConfirmed(true, orderid);
+
+            //å°‡åº«å­˜æ•¸é‡åŠ å›å»
+            List<OrderDetail> orderDetails = await DataService.Odr_GetOrderDetail(orderid);
+            List<ProductsData> Data = await DataService.P_getProductCardsDatas();
+
+            List<ProductsData> UpdateDatas = Data.Where(pd => orderDetails.Any(od => od.productID == pd.Id)).ToList();
+            foreach (var item in UpdateDatas)
+            {
+                OrderDetail? orderDetail = orderDetails.FirstOrDefault(o => o.productID == item.Id);
+                if (orderDetail == null) { MessageBox.Show($"å•†å“:{item.Name}\né€€è²¨å¾Œåº«å­˜æ•¸é‡æ›´æ”¹ç™¼ç”Ÿå•é¡Œ"); continue; }
+                item.Stock += orderDetail.quantity;
+                await DataService.MP_UpdateProduct(item);
+            }
+
+            RefreshUI(null);
+        }
+
+        private void rbtnOdrS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnOdrSId.Checked)
+            {
+                txbOdrSName.KeyPress += checkNum_KeyPress;
+                txbOdrSName.Text = string.Empty;
+            }
+            else
+            {
+                txbOdrSName.KeyPress -= checkNum_KeyPress;
+                txbOdrSName.Text = string.Empty;
+            }
+        }
+
+        private async void btnOdrClear_Click(object sender, EventArgs e)
+        {
+            cbOdrSIsCancel.SelectedIndex = 0;
+            cbOdrSIsRead.SelectedIndex = 0;
+            cbOdrSIsConfirmed.SelectedIndex = 0;
+            cbOdrSPayMent.SelectedIndex = -1;
+            cbOdrSProduct.SelectedIndex = -1;
+            txbOdrSName.Text = string.Empty;
+            dtpOdrTime.Value = new DateTime(2020, 1, 1);
+            dtpOdrTime2.Value = DateTime.Now;
+
+            cbMOdr_Number.DataSource = await DataService.Odr_getHistoryNum(0);
+        }
+
+        private async void btnOdrSearch_Click(object sender, EventArgs e)
+        {
+            List<int> resultOrderids = new List<int>();
+            List<int> OrderidsByMember = new List<int>();
+            List<int> OrderidsByProduct = new List<int>();
+            List<int> OrderidsByOther = new List<int>();
+            List<int> memberID = new List<int>();
+            int productID = new();
+
+            if (cbOdrSProduct.SelectedValue != null && cbOdrSProduct.SelectedIndex != -1)
+                productID = (int)cbOdrSProduct.SelectedValue;
+
+            //åŠ å…¥ä¸é‡è¤‡çš„id
+            OrderidsByMember = await GetOrdersByMemberKeywordOrId(txbOdrSName.Text, rbtnOdrSId.Checked);
+            OrderidsByProduct = await GetOrdersByProductID(productID);
+
+            Order order = new Order();
+
+            bool? isCancel = null;
+            if (cbOdrSIsCancel.SelectedIndex == 1)
+                isCancel = true;
+            else if (cbOdrSIsCancel.SelectedIndex == 2)
+                isCancel = false;
+
+            bool? isConfirmed = null;
+            if (cbOdrSIsConfirmed.SelectedIndex == 1)
+                isConfirmed = true;
+            else if (cbOdrSIsConfirmed.SelectedIndex == 2)
+                isConfirmed = false;
+
+            bool? isRead = null;
+            if (cbOdrSIsRead.SelectedIndex == 1)
+                isRead = true;
+            else if (cbOdrSIsRead.SelectedIndex == 2)
+                isRead = false;
+
+            if (cbOdrSPayMent.SelectedValue != null && cbOdrSPayMent.SelectedIndex != -1)
+                order.Payment = (int)cbOdrSPayMent.SelectedValue;
+
+            List<Order> orders = await DataService.Odr_SelectOrders(order, dtpOdrTime.Value, dtpOdrTime2.Value, isCancel, isConfirmed, isRead);
+            OrderidsByOther = orders.Select(o => o.Id).ToList();
+
+            //å°‡é‡è¤‡å‘ä¿ç•™ï¼Œå‰ƒé™¤listç‚ºç©ºçš„
+            var nonEmptyLists = new List<IEnumerable<int>>
+            {
+                OrderidsByMember,
+                OrderidsByOther,
+                OrderidsByProduct
+            }.Where(list => list != null && list.Any());
+
+            if (nonEmptyLists.Any())
+            {
+                //Aggregate:å–ç¬¬ä¸€ä¸ªåˆ—è¡¨ä½œä¸ºåˆå§‹å€¼,ç„¶åå¯¹åç»­æ¯ä¸ªåˆ—è¡¨æ‰§è¡Œ Intersect æ“ä½œ
+                resultOrderids = nonEmptyLists.Aggregate((a, b) => a.Intersect(b)).ToList();
+            }
+            resultOrderids.Sort();
+            cbMOdr_Number.DataSource = resultOrderids;
+        }
+
+        private async Task<List<int>> GetOrdersByProductID(int productID, int? quantity = 0)
+        {
+            List<int> orderids = new List<int>();
+            if (productID <= 0) return orderids;
+
+            List<OrderDetail> orderDetails = new List<OrderDetail>();
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.productID = productID;
+
+            orderDetails = await DataService.Odr_SelectOrderDetails(orderDetail);
+            orderids = orderDetails.Select(o => o.orderID).Distinct().ToList();
+            return orderids;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keyword">ç©ºå­—ä¸²æœƒç›´æ¥å›å‚³</param>
+        /// <param name="mode">trueç‚ºç”¨id , falseç‚ºç”¨é—œéµå­—</param>
+        /// <returns></returns>
+        private async Task<List<int>> GetOrdersByMemberKeywordOrId(string keyword, bool mode)
+        {
+            List<int> memberID = new List<int>();
+            List<int> orderids = new List<int>();
+
+            if (string.IsNullOrEmpty(keyword)) return orderids;
+
+            //ç²å–æœƒå“¡id
+            if (mode) memberID.Add(int.Parse(txbOdrSName.Text));
+            else
+            {
+                List<Member> members = await DataService.Mem_SearchId(txbOdrSName.Text);
+                memberID = members.Select(o => o.Id).ToList();
+            }
+            if (memberID.Count <= 0) return orderids;
+
+            foreach (int item in memberID)
+            {
+                orderids.AddRange(await DataService.Odr_getHistoryNum(item));
+            }
+            return orderids;
+        }
+
+        private void btnOdrToday_Click(object sender, EventArgs e)
+        {
+            dtpOdrTime.Value = DateTime.Now;
+            dtpOdrTime2.Value = DateTime.Now;
+        }
+
+        private void btnOdrWeek_Click(object sender, EventArgs e)
+        {
+            dtpOdrTime.Value = DateTime.Now.AddDays(-7);
+            dtpOdrTime2.Value = DateTime.Now;
+        }
+
+        private void btnOdrMonth_Click(object sender, EventArgs e)
+        {
+            dtpOdrTime.Value = DateTime.Now.AddMonths(-1);
+            dtpOdrTime2.Value = DateTime.Now;
+        }
+
+        private void btnOdrYear_Click(object sender, EventArgs e)
+        {
+            dtpOdrTime.Value = DateTime.Now.AddYears(-1);
+            dtpOdrTime2.Value = DateTime.Now;
         }
     }
 }

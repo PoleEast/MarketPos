@@ -34,6 +34,9 @@
             txbTotal = new TextBox();
             lbPrice = new Label();
             cbCount = new ComboBox();
+            lbCancel = new Label();
+            ptbCancel = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)ptbCancel).BeginInit();
             SuspendLayout();
             // 
             // lbName
@@ -112,12 +115,42 @@
             cbCount.Size = new Size(50, 32);
             cbCount.TabIndex = 30;
             // 
+            // lbCancel
+            // 
+            lbCancel.AutoEllipsis = true;
+            lbCancel.AutoSize = true;
+            lbCancel.BackColor = Color.Transparent;
+            lbCancel.Font = new Font("Microsoft JhengHei UI", 24F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 136);
+            lbCancel.ForeColor = Color.Red;
+            lbCancel.Location = new Point(51, 23);
+            lbCancel.Name = "lbCancel";
+            lbCancel.Size = new Size(178, 41);
+            lbCancel.TabIndex = 35;
+            lbCancel.Text = "商品已取消";
+            lbCancel.Visible = false;
+            lbCancel.Click += shoppingCard_Click;
+            // 
+            // ptbCancel
+            // 
+            ptbCancel.BackColor = Color.Transparent;
+            ptbCancel.Image = Properties.Resources.cancelled;
+            ptbCancel.Location = new Point(235, 23);
+            ptbCancel.Name = "ptbCancel";
+            ptbCancel.Size = new Size(44, 41);
+            ptbCancel.SizeMode = PictureBoxSizeMode.StretchImage;
+            ptbCancel.TabIndex = 36;
+            ptbCancel.TabStop = false;
+            ptbCancel.Visible = false;
+            ptbCancel.Click += shoppingCard_Click;
+            // 
             // ShoppingCard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Menu;
             BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(ptbCancel);
+            Controls.Add(lbCancel);
             Controls.Add(lbPrice);
             Controls.Add(txbTotal);
             Controls.Add(btnDelete);
@@ -128,6 +161,7 @@
             Name = "ShoppingCard";
             Size = new Size(416, 89);
             Click += shoppingCard_Click;
+            ((System.ComponentModel.ISupportInitialize)ptbCancel).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -140,5 +174,7 @@
         private TextBox txbTotal;
         private Label lbPrice;
         private ComboBox cbCount;
+        private Label lbCancel;
+        private PictureBox ptbCancel;
     }
 }

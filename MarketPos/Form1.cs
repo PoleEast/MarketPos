@@ -115,7 +115,6 @@ namespace MarketPos
                 {
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMemSerch"));
                     tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbProduct"));
-                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbOrderMan"));
                 }
                 //會員權限
                 if (level == 3)
@@ -128,6 +127,7 @@ namespace MarketPos
                 {
                     tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbUnshelve"));
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbAddProduct"));
+                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbOrderMan"));
                 }
                 //系統最高管理員
                 if (level == 1)
@@ -710,7 +710,7 @@ namespace MarketPos
         {
             await DataService.Odr_UpdateOrderDetail(e);
             orderDetails = await DataService.Odr_GetOrderDetail(e.orderID);
-            setShoppingCard(orderDetails, flp_shoppingCar, false);
+            setShoppingCard(orderDetails, flpMOdr, false);
 
             //獲取訊息字串和產品名稱
             List<ProductsData> datas = [.. unshelveProducts, .. shelveProducts];

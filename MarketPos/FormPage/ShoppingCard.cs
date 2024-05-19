@@ -54,6 +54,11 @@ namespace MarketPos
             }
             txbTotal.Text += Math.Floor(data.Price * detail.quantity) + "$";
             total = Convert.ToInt16(data.Price * detail.quantity);
+            if(!detail.confirmed)
+            {
+                lbCancel.Visible = true;
+                ptbCancel.Visible = true;
+            }
 
             //開啟管理者訂單確認功能
             if (Form1.member.Level > 2) return;

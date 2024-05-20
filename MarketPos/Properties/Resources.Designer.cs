@@ -223,6 +223,16 @@ namespace MarketPos.Properties {
         /// <summary>
         ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
         /// </summary>
+        public static System.Drawing.Bitmap shopping_online {
+            get {
+                object obj = ResourceManager.GetObject("shopping_online", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
         public static System.Drawing.Bitmap StoreIcon {
             get {
                 object obj = ResourceManager.GetObject("StoreIcon", resourceCulture);

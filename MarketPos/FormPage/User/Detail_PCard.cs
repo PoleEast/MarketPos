@@ -40,7 +40,7 @@ namespace MarketPos
             rtbDescription.Text = productsData.Description;
             for (int i = 1; i <= productsData.Stock; i++)
                 cbQuantity.Items.Add(i);
-            cbQuantity.SelectedIndex = 0;
+            cbQuantity.SelectedIndex = -1;
         }
 
         private void btnS_Search_Click(object sender, EventArgs e)
@@ -49,7 +49,7 @@ namespace MarketPos
             if (!(cbQuantity.SelectedIndex >= 0)) { MessageBox.Show("請選擇數量"); return; }
 
             OrderDetail orderDetail = new();
-            orderDetail.productID= productsData.Id;
+            orderDetail.productID = productsData.Id;
             orderDetail.quantity = cbQuantity.SelectedIndex + 1;
             OrderItemAdded?.Invoke(this, orderDetail);
             this.Close();

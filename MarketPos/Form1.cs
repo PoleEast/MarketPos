@@ -1,28 +1,13 @@
-﻿using Microsoft.VisualBasic.ApplicationServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Drawing;
-using System.Data.SqlClient;
-using System.Linq.Expressions;
-using System.Globalization;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Xml.Linq;
-using MarketPos.Properties;
+﻿using MarketPos.Properties;
 using MarketPos.FormPage;
-using System.Drawing.Printing;
-using System.Windows.Forms;
-using System;
-using System.Reflection.Emit;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Security.Principal;
 using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using System.Text;
 using MarketPos.Models;
 using MarketPos.FormPage.Manager;
-using System.Collections.Generic;
-using System.Resources;
-using System.Linq;
+using OxyPlot;
+
 
 namespace MarketPos
 {
@@ -115,6 +100,7 @@ namespace MarketPos
                 {
                     tbcControl.TabPages.Add(tabPagesControl.FirstOrDefault(o => o.Name == "tbMemSerch"));
                     tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbProduct"));
+                    tbcProdut.TabPages.Add(tabPagesProduct.FirstOrDefault(o => o.Name == "tbSale"));
                 }
                 //會員權限
                 if (level == 3)
@@ -396,26 +382,29 @@ namespace MarketPos
             for (int i = 0; i < 100; i++)
                 cbAddP_stock.Items.Add(i);
 
+            //新增商品畫面
             cbAddP_category.DisplayMember = "Key";
             cbAddP_category.ValueMember = "Value";
             cbAddP_category.DataSource = new BindingSource(DataService.categorysDict, null);
             cbAddP_category.SelectedIndex = -1;
-
-            cbS_Category.DisplayMember = "Key";
-            cbS_Category.ValueMember = "Value";
-            cbS_Category.DataSource = new BindingSource(DataService.categorysDict, null);
-            cbS_Category.SelectedIndex = -1;
 
             cbAddP_origin.DisplayMember = "Key";
             cbAddP_origin.ValueMember = "Value";
             cbAddP_origin.DataSource = new BindingSource(DataService.originsDict, null);
             cbAddP_origin.SelectedIndex = -1;
 
+            //商品搜尋畫面
+            cbS_Category.DisplayMember = "Key";
+            cbS_Category.ValueMember = "Value";
+            cbS_Category.DataSource = new BindingSource(DataService.categorysDict, null);
+            cbS_Category.SelectedIndex = -1;
+
             cbS_Origin.DisplayMember = "Key";
             cbS_Origin.ValueMember = "Value";
             cbS_Origin.DataSource = new BindingSource(DataService.originsDict, null);
             cbS_Origin.SelectedIndex = -1;
 
+            //訂單管理畫面
             cbOdrSPayMent.DisplayMember = "Key";
             cbOdrSPayMent.ValueMember = "Value";
             cbOdrSPayMent.DataSource = new BindingSource(DataService.payDict, null);
@@ -434,6 +423,22 @@ namespace MarketPos
 
             cbOdrSIsCancel.SelectedIndex = 0;
             cbOdrSIsConfirmed.SelectedIndex = 0;
+
+            //銷售畫面
+            cbSLProduct.DisplayMember = "Key";
+            cbSLProduct.ValueMember = "Value";
+            cbSLProduct.DataSource = new BindingSource(productDict, null);
+            cbSLProduct.SelectedIndex = -1;
+
+            cbSLCategory.DisplayMember = "Key";
+            cbSLCategory.ValueMember = "Value";
+            cbSLCategory.DataSource = new BindingSource(DataService.categorysDict, null);
+            cbSLCategory.SelectedIndex = -1;
+
+            cbSLOrigin.DisplayMember = "Key";
+            cbSLOrigin.ValueMember = "Value";
+            cbSLOrigin.DataSource = new BindingSource(DataService.originsDict, null);
+            cbSLOrigin.SelectedIndex = -1;
         }
 
         private async void btnS_Search_Click(object sender, EventArgs e)
@@ -1267,6 +1272,47 @@ namespace MarketPos
         {
             dtpOdrTime.Value = DateTime.Now.AddYears(-1);
             dtpOdrTime2.Value = DateTime.Now;
+        }
+
+        private void btnSLClear_Click(object sender, EventArgs e)
+        {
+            cbSLCategory.SelectedIndex = -1;
+            cbSLOrigin.SelectedIndex = -1;
+            cbSLProduct.SelectedIndex = -1;
+            ckbSLTime1.Checked = false;
+
+            txbSLMember.Text = string.Empty;
+            dtpSLTime1.Value = new DateTime(2020, 1, 1);
+            dtpSLTime2.Value = DateTime.Now;
+
+            foreach (var item in gbSaleX.Controls)
+            {
+                if (item is RadioButton radioButton) radioButton.Checked = false;
+            }
+
+            foreach (var item in gbSaleY.Controls)
+            {
+                if (item is RadioButton radioButton) radioButton.Checked = false;
+            }
+        }
+
+        private void btnSLSearch_Click(object sender, EventArgs e)
+        {
+            bool hasTime = ckbSLTime1.Checked;
+
+            foreach (var item in gbSaleX.Controls)
+            {
+                if (item is RadioButton radioButton) radioButton.Checked = false;
+            }
+
+            foreach (var item in gbSaleY.Controls)
+            {
+                if (item is RadioButton radioButton) radioButton.Checked = false;
+            }
+
+
+            PlotModel plotModel = new PlotModel();
+            plotModel.Title = "";
         }
     }
 }

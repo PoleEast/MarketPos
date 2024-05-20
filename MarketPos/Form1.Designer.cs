@@ -114,6 +114,37 @@ namespace MarketPos
             lbMOdr_OAddress = new Label();
             lbMOdr_RAddress = new Label();
             txbMOdr_RAddress = new TextBox();
+            tbSale = new TabPage();
+            ptvSL = new OxyPlot.WindowsForms.PlotView();
+            lbSale = new Label();
+            gbSale = new GroupBox();
+            ptbSale = new PictureBox();
+            gbSaleY = new GroupBox();
+            rbtnSLOrderCount = new RadioButton();
+            rbtnSLTatal = new RadioButton();
+            rbtnSLQuantity = new RadioButton();
+            gbSaleX = new GroupBox();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
+            txbSLMember = new TextBox();
+            ckbSLTime1 = new CheckBox();
+            rbtnSLCategory = new RadioButton();
+            rbtnSLOrigin = new RadioButton();
+            rbtnSLMember = new RadioButton();
+            rbtnSLProduct = new RadioButton();
+            cbSLOrigin = new ComboBox();
+            cbSLCategory = new ComboBox();
+            label4 = new Label();
+            cbSLProduct = new ComboBox();
+            btnSLYear = new Button();
+            dtpSLTime1 = new DateTimePicker();
+            btnSLMonth = new Button();
+            lbSLTime2 = new Label();
+            btnSLWeek = new Button();
+            dtpSLTime2 = new DateTimePicker();
+            btnSLToday = new Button();
+            btnSLClear = new Button();
+            btnSLSearch = new Button();
             label1 = new Label();
             tbAddProduct = new TabPage();
             cbAddCategoryType = new Button();
@@ -208,6 +239,11 @@ namespace MarketPos
             gbOdrSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ptbOdrSearch).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ptbMOdr).BeginInit();
+            tbSale.SuspendLayout();
+            gbSale.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ptbSale).BeginInit();
+            gbSaleY.SuspendLayout();
+            gbSaleX.SuspendLayout();
             tbAddProduct.SuspendLayout();
             tbMemSerch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -225,6 +261,7 @@ namespace MarketPos
             tbcProdut.Controls.Add(tbProduct);
             tbcProdut.Controls.Add(tbUnshelve);
             tbcProdut.Controls.Add(tbOrderMan);
+            tbcProdut.Controls.Add(tbSale);
             tbcProdut.Location = new Point(28, 49);
             tbcProdut.Name = "tbcProdut";
             tbcProdut.SelectedIndex = 0;
@@ -1182,6 +1219,355 @@ namespace MarketPos
             txbMOdr_RAddress.Size = new Size(407, 26);
             txbMOdr_RAddress.TabIndex = 52;
             txbMOdr_RAddress.TextAlign = HorizontalAlignment.Right;
+            // 
+            // tbSale
+            // 
+            tbSale.Controls.Add(ptvSL);
+            tbSale.Controls.Add(lbSale);
+            tbSale.Controls.Add(gbSale);
+            tbSale.Location = new Point(4, 24);
+            tbSale.Name = "tbSale";
+            tbSale.Padding = new Padding(3);
+            tbSale.Size = new Size(1076, 754);
+            tbSale.TabIndex = 3;
+            tbSale.Text = "銷售狀態";
+            tbSale.UseVisualStyleBackColor = true;
+            // 
+            // ptvSL
+            // 
+            ptvSL.Location = new Point(20, 337);
+            ptvSL.Name = "ptvSL";
+            ptvSL.PanCursor = Cursors.Hand;
+            ptvSL.Size = new Size(1050, 386);
+            ptvSL.TabIndex = 65;
+            ptvSL.Text = "plotView1";
+            ptvSL.ZoomHorizontalCursor = Cursors.SizeWE;
+            ptvSL.ZoomRectangleCursor = Cursors.SizeNWSE;
+            ptvSL.ZoomVerticalCursor = Cursors.SizeNS;
+            // 
+            // lbSale
+            // 
+            lbSale.AutoSize = true;
+            lbSale.Font = new Font("Microsoft JhengHei UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            lbSale.Location = new Point(20, 23);
+            lbSale.Name = "lbSale";
+            lbSale.Size = new Size(146, 41);
+            lbSale.TabIndex = 64;
+            lbSale.Text = "銷售狀態";
+            // 
+            // gbSale
+            // 
+            gbSale.Controls.Add(ptbSale);
+            gbSale.Controls.Add(gbSaleY);
+            gbSale.Controls.Add(gbSaleX);
+            gbSale.Controls.Add(btnSLClear);
+            gbSale.Controls.Add(btnSLSearch);
+            gbSale.Font = new Font("Microsoft JhengHei UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            gbSale.Location = new Point(20, 83);
+            gbSale.Name = "gbSale";
+            gbSale.Size = new Size(1050, 248);
+            gbSale.TabIndex = 63;
+            gbSale.TabStop = false;
+            gbSale.Text = "銷售查詢";
+            // 
+            // ptbSale
+            // 
+            ptbSale.Image = Properties.Resources.shopping_online;
+            ptbSale.Location = new Point(846, 31);
+            ptbSale.Name = "ptbSale";
+            ptbSale.Size = new Size(204, 162);
+            ptbSale.SizeMode = PictureBoxSizeMode.CenterImage;
+            ptbSale.TabIndex = 76;
+            ptbSale.TabStop = false;
+            // 
+            // gbSaleY
+            // 
+            gbSaleY.Controls.Add(rbtnSLOrderCount);
+            gbSaleY.Controls.Add(rbtnSLTatal);
+            gbSaleY.Controls.Add(rbtnSLQuantity);
+            gbSaleY.Location = new Point(625, 31);
+            gbSaleY.Name = "gbSaleY";
+            gbSaleY.Size = new Size(215, 211);
+            gbSaleY.TabIndex = 75;
+            gbSaleY.TabStop = false;
+            gbSaleY.Text = "Y軸";
+            // 
+            // rbtnSLOrderCount
+            // 
+            rbtnSLOrderCount.AutoSize = true;
+            rbtnSLOrderCount.Location = new Point(25, 109);
+            rbtnSLOrderCount.Name = "rbtnSLOrderCount";
+            rbtnSLOrderCount.Size = new Size(104, 28);
+            rbtnSLOrderCount.TabIndex = 91;
+            rbtnSLOrderCount.TabStop = true;
+            rbtnSLOrderCount.Text = "訂單數量";
+            rbtnSLOrderCount.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLTatal
+            // 
+            rbtnSLTatal.AutoSize = true;
+            rbtnSLTatal.Location = new Point(25, 75);
+            rbtnSLTatal.Name = "rbtnSLTatal";
+            rbtnSLTatal.Size = new Size(85, 28);
+            rbtnSLTatal.TabIndex = 90;
+            rbtnSLTatal.TabStop = true;
+            rbtnSLTatal.Text = "銷售額";
+            rbtnSLTatal.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLQuantity
+            // 
+            rbtnSLQuantity.AutoSize = true;
+            rbtnSLQuantity.Location = new Point(25, 41);
+            rbtnSLQuantity.Name = "rbtnSLQuantity";
+            rbtnSLQuantity.Size = new Size(66, 28);
+            rbtnSLQuantity.TabIndex = 89;
+            rbtnSLQuantity.TabStop = true;
+            rbtnSLQuantity.Text = "數量";
+            rbtnSLQuantity.UseVisualStyleBackColor = true;
+            // 
+            // gbSaleX
+            // 
+            gbSaleX.Controls.Add(radioButton1);
+            gbSaleX.Controls.Add(radioButton2);
+            gbSaleX.Controls.Add(txbSLMember);
+            gbSaleX.Controls.Add(ckbSLTime1);
+            gbSaleX.Controls.Add(rbtnSLCategory);
+            gbSaleX.Controls.Add(rbtnSLOrigin);
+            gbSaleX.Controls.Add(rbtnSLMember);
+            gbSaleX.Controls.Add(rbtnSLProduct);
+            gbSaleX.Controls.Add(cbSLOrigin);
+            gbSaleX.Controls.Add(cbSLCategory);
+            gbSaleX.Controls.Add(label4);
+            gbSaleX.Controls.Add(cbSLProduct);
+            gbSaleX.Controls.Add(btnSLYear);
+            gbSaleX.Controls.Add(dtpSLTime1);
+            gbSaleX.Controls.Add(btnSLMonth);
+            gbSaleX.Controls.Add(lbSLTime2);
+            gbSaleX.Controls.Add(btnSLWeek);
+            gbSaleX.Controls.Add(dtpSLTime2);
+            gbSaleX.Controls.Add(btnSLToday);
+            gbSaleX.Location = new Point(6, 31);
+            gbSaleX.Name = "gbSaleX";
+            gbSaleX.Size = new Size(613, 211);
+            gbSaleX.TabIndex = 74;
+            gbSaleX.TabStop = false;
+            gbSaleX.Text = "X軸";
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(163, 138);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(66, 28);
+            radioButton1.TabIndex = 94;
+            radioButton1.Text = "名稱";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Checked = true;
+            radioButton2.Location = new Point(110, 138);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(47, 28);
+            radioButton2.TabIndex = 93;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "ID";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // txbSLMember
+            // 
+            txbSLMember.BackColor = SystemColors.Window;
+            txbSLMember.Location = new Point(110, 104);
+            txbSLMember.MaxLength = 30;
+            txbSLMember.Name = "txbSLMember";
+            txbSLMember.Size = new Size(185, 32);
+            txbSLMember.TabIndex = 92;
+            // 
+            // ckbSLTime1
+            // 
+            ckbSLTime1.AutoSize = true;
+            ckbSLTime1.Location = new Point(39, 31);
+            ckbSLTime1.Name = "ckbSLTime1";
+            ckbSLTime1.Size = new Size(67, 28);
+            ckbSLTime1.TabIndex = 90;
+            ckbSLTime1.Text = "時間";
+            ckbSLTime1.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLCategory
+            // 
+            rbtnSLCategory.AutoSize = true;
+            rbtnSLCategory.Location = new Point(311, 166);
+            rbtnSLCategory.Name = "rbtnSLCategory";
+            rbtnSLCategory.Size = new Size(66, 28);
+            rbtnSLCategory.TabIndex = 89;
+            rbtnSLCategory.TabStop = true;
+            rbtnSLCategory.Text = "種類";
+            rbtnSLCategory.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLOrigin
+            // 
+            rbtnSLOrigin.AutoSize = true;
+            rbtnSLOrigin.Location = new Point(311, 109);
+            rbtnSLOrigin.Name = "rbtnSLOrigin";
+            rbtnSLOrigin.Size = new Size(66, 28);
+            rbtnSLOrigin.TabIndex = 88;
+            rbtnSLOrigin.TabStop = true;
+            rbtnSLOrigin.Text = "產地";
+            rbtnSLOrigin.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLMember
+            // 
+            rbtnSLMember.AutoSize = true;
+            rbtnSLMember.Location = new Point(38, 108);
+            rbtnSLMember.Name = "rbtnSLMember";
+            rbtnSLMember.Size = new Size(66, 28);
+            rbtnSLMember.TabIndex = 87;
+            rbtnSLMember.TabStop = true;
+            rbtnSLMember.Text = "會員";
+            rbtnSLMember.UseVisualStyleBackColor = true;
+            // 
+            // rbtnSLProduct
+            // 
+            rbtnSLProduct.AutoSize = true;
+            rbtnSLProduct.Location = new Point(38, 166);
+            rbtnSLProduct.Name = "rbtnSLProduct";
+            rbtnSLProduct.Size = new Size(66, 28);
+            rbtnSLProduct.TabIndex = 86;
+            rbtnSLProduct.TabStop = true;
+            rbtnSLProduct.Text = "產品";
+            rbtnSLProduct.UseVisualStyleBackColor = true;
+            // 
+            // cbSLOrigin
+            // 
+            cbSLOrigin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSLOrigin.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbSLOrigin.FormattingEnabled = true;
+            cbSLOrigin.Location = new Point(384, 111);
+            cbSLOrigin.Name = "cbSLOrigin";
+            cbSLOrigin.Size = new Size(190, 28);
+            cbSLOrigin.TabIndex = 81;
+            // 
+            // cbSLCategory
+            // 
+            cbSLCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSLCategory.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbSLCategory.FormattingEnabled = true;
+            cbSLCategory.Location = new Point(384, 168);
+            cbSLCategory.Name = "cbSLCategory";
+            cbSLCategory.Size = new Size(190, 28);
+            cbSLCategory.TabIndex = 79;
+            // 
+            // label4
+            // 
+            label4.AutoEllipsis = true;
+            label4.AutoSize = true;
+            label4.Font = new Font("微軟正黑體", 14.25F);
+            label4.Location = new Point(52, 114);
+            label4.Name = "label4";
+            label4.Size = new Size(0, 24);
+            label4.TabIndex = 76;
+            // 
+            // cbSLProduct
+            // 
+            cbSLProduct.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSLProduct.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            cbSLProduct.FormattingEnabled = true;
+            cbSLProduct.Location = new Point(110, 168);
+            cbSLProduct.Name = "cbSLProduct";
+            cbSLProduct.Size = new Size(185, 28);
+            cbSLProduct.TabIndex = 75;
+            // 
+            // btnSLYear
+            // 
+            btnSLYear.Font = new Font("Microsoft JhengHei UI", 11.25F);
+            btnSLYear.Location = new Point(384, 58);
+            btnSLYear.Name = "btnSLYear";
+            btnSLYear.Size = new Size(63, 27);
+            btnSLYear.TabIndex = 73;
+            btnSLYear.Text = "今年";
+            btnSLYear.UseVisualStyleBackColor = true;
+            // 
+            // dtpSLTime1
+            // 
+            dtpSLTime1.Font = new Font("Microsoft JhengHei UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            dtpSLTime1.Location = new Point(110, 26);
+            dtpSLTime1.Name = "dtpSLTime1";
+            dtpSLTime1.Size = new Size(185, 27);
+            dtpSLTime1.TabIndex = 0;
+            dtpSLTime1.Value = new DateTime(2020, 1, 1, 0, 0, 0, 0);
+            // 
+            // btnSLMonth
+            // 
+            btnSLMonth.Font = new Font("Microsoft JhengHei UI", 11.25F);
+            btnSLMonth.Location = new Point(315, 58);
+            btnSLMonth.Name = "btnSLMonth";
+            btnSLMonth.Size = new Size(63, 27);
+            btnSLMonth.TabIndex = 72;
+            btnSLMonth.Text = "本月";
+            btnSLMonth.UseVisualStyleBackColor = true;
+            // 
+            // lbSLTime2
+            // 
+            lbSLTime2.AutoEllipsis = true;
+            lbSLTime2.AutoSize = true;
+            lbSLTime2.Font = new Font("微軟正黑體", 14.25F);
+            lbSLTime2.Location = new Point(77, 61);
+            lbSLTime2.Name = "lbSLTime2";
+            lbSLTime2.Size = new Size(29, 24);
+            lbSLTime2.TabIndex = 55;
+            lbSLTime2.Text = "至";
+            // 
+            // btnSLWeek
+            // 
+            btnSLWeek.Font = new Font("Microsoft JhengHei UI", 11.25F);
+            btnSLWeek.Location = new Point(384, 25);
+            btnSLWeek.Name = "btnSLWeek";
+            btnSLWeek.Size = new Size(63, 27);
+            btnSLWeek.TabIndex = 71;
+            btnSLWeek.Text = "本周";
+            btnSLWeek.UseVisualStyleBackColor = true;
+            // 
+            // dtpSLTime2
+            // 
+            dtpSLTime2.Font = new Font("Microsoft JhengHei UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            dtpSLTime2.Location = new Point(110, 59);
+            dtpSLTime2.Name = "dtpSLTime2";
+            dtpSLTime2.Size = new Size(185, 27);
+            dtpSLTime2.TabIndex = 56;
+            dtpSLTime2.Value = new DateTime(2024, 5, 19, 0, 0, 0, 0);
+            // 
+            // btnSLToday
+            // 
+            btnSLToday.Font = new Font("Microsoft JhengHei UI", 11.25F);
+            btnSLToday.Location = new Point(315, 25);
+            btnSLToday.Name = "btnSLToday";
+            btnSLToday.Size = new Size(63, 27);
+            btnSLToday.TabIndex = 70;
+            btnSLToday.Text = "今天";
+            btnSLToday.UseVisualStyleBackColor = true;
+            // 
+            // btnSLClear
+            // 
+            btnSLClear.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnSLClear.Location = new Point(846, 199);
+            btnSLClear.Name = "btnSLClear";
+            btnSLClear.Size = new Size(96, 43);
+            btnSLClear.TabIndex = 32;
+            btnSLClear.Text = "清除條件";
+            btnSLClear.UseVisualStyleBackColor = true;
+            btnSLClear.Click += btnSLClear_Click;
+            // 
+            // btnSLSearch
+            // 
+            btnSLSearch.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btnSLSearch.Location = new Point(948, 199);
+            btnSLSearch.Name = "btnSLSearch";
+            btnSLSearch.Size = new Size(96, 43);
+            btnSLSearch.TabIndex = 31;
+            btnSLSearch.Text = "搜尋";
+            btnSLSearch.UseVisualStyleBackColor = true;
+            btnSLSearch.Click += btnSLSearch_Click;
             // 
             // label1
             // 
@@ -2152,6 +2538,14 @@ namespace MarketPos
             gbOdrSearch.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ptbOdrSearch).EndInit();
             ((System.ComponentModel.ISupportInitialize)ptbMOdr).EndInit();
+            tbSale.ResumeLayout(false);
+            tbSale.PerformLayout();
+            gbSale.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)ptbSale).EndInit();
+            gbSaleY.ResumeLayout(false);
+            gbSaleY.PerformLayout();
+            gbSaleX.ResumeLayout(false);
+            gbSaleX.PerformLayout();
             tbAddProduct.ResumeLayout(false);
             tbAddProduct.PerformLayout();
             tbMemSerch.ResumeLayout(false);
@@ -2337,5 +2731,36 @@ namespace MarketPos
         private Button btnOdrToday;
         private ComboBox cbOdrSIsRead;
         private Label lbOdrSIsRead;
+        private TabPage tbSale;
+        private Label lbSale;
+        private GroupBox gbSale;
+        private Button btnSLYear;
+        private Button btnSLMonth;
+        private Button btnSLWeek;
+        private Button btnSLToday;
+        private DateTimePicker dtpSLTime2;
+        private Label lbSLTime2;
+        private Button btnSLClear;
+        private Button btnSLSearch;
+        private DateTimePicker dtpSLTime1;
+        private OxyPlot.WindowsForms.PlotView ptvSL;
+        private GroupBox gbSaleY;
+        private GroupBox gbSaleX;
+        private ComboBox cbSLCategory;
+        private Label label4;
+        private ComboBox cbSLProduct;
+        private ComboBox cbSLOrigin;
+        private PictureBox ptbSale;
+        private RadioButton rbtnSLOrderCount;
+        private RadioButton rbtnSLTatal;
+        private RadioButton rbtnSLQuantity;
+        private RadioButton rbtnSLCategory;
+        private RadioButton rbtnSLOrigin;
+        private RadioButton rbtnSLMember;
+        private RadioButton rbtnSLProduct;
+        private CheckBox ckbSLTime1;
+        private RadioButton radioButton1;
+        private RadioButton radioButton2;
+        private TextBox txbSLMember;
     }
 }

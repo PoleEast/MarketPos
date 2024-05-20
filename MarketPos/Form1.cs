@@ -1310,6 +1310,8 @@ namespace MarketPos
                 if (item is RadioButton radioButton) radioButton.Checked = false;
             }
 
+            string title=string.Empty;
+
 
             PlotModel plotModel = new PlotModel();
             plotModel.Title = "";

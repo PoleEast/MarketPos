@@ -1040,5 +1040,16 @@ namespace MarketPos
             }
             catch (Exception ex) { MessageBox.Show($"查尋訂單細節錯誤:\n{ex}"); return Orders; }
         }
+
+        //銷售資料表用
+        public async Task SALE_GetMemberSales()
+        {
+            if (!await DS_ConnectionSql()) return;
+            SqlConnection conn = new SqlConnection(ConnString);
+            string sql = @"SELECT memberID, SUM(OrderDetails.quantity) FROM OrderDetails
+                          JOIN Orders ON OrderDetails.orderID=Orders.id
+                          GROUP BY Orders.memberID
+                          ORDER BY SUM(OrderDetails.quantity) DESC";
+        }
     }
 }

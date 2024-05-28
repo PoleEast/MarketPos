@@ -1299,12 +1299,17 @@ namespace MarketPos
         }
 
         private async void btnSLSearch_Click(object sender, EventArgs e)
-        {                                                                                           
+        {
             bool hasTime = ckbSLTime1.Checked;
+            string XAxisStr = string.Empty;
+            string YAxisStr = string.Empty;
 
             foreach (var item in gbSaleX.Controls)
             {
-                if (item is RadioButton radioButton) radioButton.Checked = false;
+                if (item is RadioButton radioButton)
+                {
+                    radioButton.Checked = false;
+                }
             }
 
             foreach (var item in gbSaleY.Controls)
@@ -1316,49 +1321,32 @@ namespace MarketPos
 
             PlotModel plotModel = new PlotModel();
             plotModel.Title = "";
-            var results = await DataService.SALE_GetMemberSales();
+            var results = await DataService.SALE_GetMemberQuantity();
 
             BarSeries barSeries = new BarSeries();
 
             CategoryAxis categoryAxis = new CategoryAxis();
             categoryAxis.Title = "會員ID";
             categoryAxis.Position = AxisPosition.Left;
-            
+
             LinearAxis linearAxis = new LinearAxis();
             linearAxis.Position = AxisPosition.Bottom;
 
-            foreach(var item in results)
+            foreach (var item in results)
             {
                 barSeries.Items.Add(new BarItem { Value = item.Item2 });
-                categoryAxis.Labels.Add($"MemberID={item.Item1}");
+                categoryAxis.Labels.Add($"{item.Item1}");
             }
             plotModel.Series.Add(barSeries);
             plotModel.Axes.Add(categoryAxis);
             plotModel.Axes.Add(linearAxis);
+            plotModel.Transpose();
 
             ptvSL.Model = plotModel;
         }
 
         private void btn_test_Click(object sender, EventArgs e)
         {
-            var myModel = new PlotModel();
-
-            var lineSeries2 = new LineSeries
-            {
-                Title = "Line Series",
-                MarkerType = MarkerType.Circle
-            };
-
-            lineSeries2.Points.Add(new DataPoint(0, 10));
-            lineSeries2.Points.Add(new DataPoint(10, 12));
-            lineSeries2.Points.Add(new DataPoint(20, 11));
-            lineSeries2.Points.Add(new DataPoint(30, 18));
-            lineSeries2.Points.Add(new DataPoint(40, 1));
-
-            lineSeries2.Transform(0, 0);
-            myModel.Series.Add(lineSeries2);
-
-            ptvSL.Model = myModel;
         }
     }
 }

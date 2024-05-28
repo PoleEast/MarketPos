@@ -7,11 +7,8 @@ using System.Text;
 using MarketPos.Models;
 using MarketPos.FormPage.Manager;
 using OxyPlot;
-using OxyPlot.Axes;
 using OxyPlot.Series;
-using System.Drawing;
-using System.Xml.Linq;
-using OxyPlot.WindowsForms;
+using OxyPlot.Axes;
 
 
 namespace MarketPos
@@ -1301,8 +1298,8 @@ namespace MarketPos
             }
         }
 
-        private void btnSLSearch_Click(object sender, EventArgs e)
-        {
+        private async void btnSLSearch_Click(object sender, EventArgs e)
+        {                                                                                           
             bool hasTime = ckbSLTime1.Checked;
 
             foreach (var item in gbSaleX.Controls)
@@ -1319,6 +1316,27 @@ namespace MarketPos
 
             PlotModel plotModel = new PlotModel();
             plotModel.Title = "";
+            var results = await DataService.SALE_GetMemberSales();
+
+            BarSeries barSeries = new BarSeries();
+
+            CategoryAxis categoryAxis = new CategoryAxis();
+            categoryAxis.Title = "會員ID";
+            categoryAxis.Position = AxisPosition.Left;
+            
+            LinearAxis linearAxis = new LinearAxis();
+            linearAxis.Position = AxisPosition.Bottom;
+
+            foreach(var item in results)
+            {
+                barSeries.Items.Add(new BarItem { Value = item.Item2 });
+                categoryAxis.Labels.Add($"MemberID={item.Item1}");
+            }
+            plotModel.Series.Add(barSeries);
+            plotModel.Axes.Add(categoryAxis);
+            plotModel.Axes.Add(linearAxis);
+
+            ptvSL.Model = plotModel;
         }
 
         private void btn_test_Click(object sender, EventArgs e)

@@ -1042,14 +1042,32 @@ namespace MarketPos
         }
 
         //銷售資料表用
-        public async Task SALE_GetMemberSales()
+        public static async Task<List<(int,int)>> SALE_GetMemberSales()
         {
-            if (!await DS_ConnectionSql()) return;
+            List<(int,int)> results= new List<(int,int)> ();
+
+            if (!await DS_ConnectionSql()) return results;
             SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT memberID, SUM(OrderDetails.quantity) FROM OrderDetails
+            string sql = @"SELECT memberID, SUM(OrderDetails.quantity) as YAxis FROM OrderDetails
                           JOIN Orders ON OrderDetails.orderID=Orders.id
                           GROUP BY Orders.memberID
                           ORDER BY SUM(OrderDetails.quantity) DESC";
+            SqlCommand com = new SqlCommand(sql, conn);
+            try
+            {
+                conn.Open();
+                await using SqlDataReader reader = com.ExecuteReader();
+                while (reader.Read()) 
+                {
+                    (int, int) result = new();
+                    result.Item1 = (int)reader["memberID"];
+                    result.Item2 = (int)reader["YAxis"];
+
+                    results.Add(result);
+                }
+                return results;
+            }
+            catch(Exception ex) { MessageBox.Show($"獲取會員銷售金額失敗\n{ex}");return results; }
         }
     }
 }

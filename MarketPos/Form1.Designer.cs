@@ -115,6 +115,7 @@ namespace MarketPos
             lbMOdr_RAddress = new Label();
             txbMOdr_RAddress = new TextBox();
             tbSale = new TabPage();
+            btn_test = new Button();
             ptvSL = new OxyPlot.WindowsForms.PlotView();
             lbSale = new Label();
             gbSale = new GroupBox();
@@ -1222,6 +1223,7 @@ namespace MarketPos
             // 
             // tbSale
             // 
+            tbSale.Controls.Add(btn_test);
             tbSale.Controls.Add(ptvSL);
             tbSale.Controls.Add(lbSale);
             tbSale.Controls.Add(gbSale);
@@ -1232,6 +1234,17 @@ namespace MarketPos
             tbSale.TabIndex = 3;
             tbSale.Text = "銷售狀態";
             tbSale.UseVisualStyleBackColor = true;
+            // 
+            // btn_test
+            // 
+            btn_test.Font = new Font("Microsoft JhengHei UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            btn_test.Location = new Point(670, 34);
+            btn_test.Name = "btn_test";
+            btn_test.Size = new Size(96, 43);
+            btn_test.TabIndex = 32;
+            btn_test.Text = "搜尋";
+            btn_test.UseVisualStyleBackColor = true;
+            btn_test.Click += btn_test_Click;
             // 
             // ptvSL
             // 
@@ -2762,5 +2775,6 @@ namespace MarketPos
         private RadioButton radioButton1;
         private RadioButton radioButton2;
         private TextBox txbSLMember;
+        private Button btn_test;
     }
 }

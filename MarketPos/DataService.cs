@@ -942,7 +942,7 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"查尋訂單細節錯誤:\n{ex}"); return orderDetails; }
         }
         public static async Task<List<Order>> Odr_SelectOrders
-            (Order order, DateTime? starttime = null, DateTime? endtime = null, bool? isCancel = null, bool? isConfirmed = null,bool? isRead=null)
+            (Order order, DateTime? starttime = null, DateTime? endtime = null, bool? isCancel = null, bool? isConfirmed = null, bool? isRead = null)
         {
             List<Order> Orders = [];
             if (!await DS_ConnectionSql()) return Orders;
@@ -983,7 +983,7 @@ namespace MarketPos
                     sqlSelect += $" AND confirmed=@confirmed ";
                     cmd.Parameters.AddWithValue("@confirmed", isConfirmed);
                 }
-                if(isRead.HasValue)
+                if (isRead.HasValue)
                 {
                     sqlSelect += $" AND isRead=@isRead ";
                     cmd.Parameters.AddWithValue("@isRead", isRead);
@@ -1046,10 +1046,12 @@ namespace MarketPos
         {
             if (!await DS_ConnectionSql()) return;
             SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT memberID, SUM(OrderDetails.quantity) FROM OrderDetails
+            string sql = @"SELECT memberID, SUM(OrderDetails.quantity) AS Tatol FROM OrderDetails
                           JOIN Orders ON OrderDetails.orderID=Orders.id
                           GROUP BY Orders.memberID
                           ORDER BY SUM(OrderDetails.quantity) DESC";
+            SqlCommand com = new SqlCommand(sql, conn);
+
         }
     }
 }

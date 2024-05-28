@@ -7,6 +7,11 @@ using System.Text;
 using MarketPos.Models;
 using MarketPos.FormPage.Manager;
 using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using System.Drawing;
+using System.Xml.Linq;
+using OxyPlot.WindowsForms;
 
 
 namespace MarketPos
@@ -1310,11 +1315,32 @@ namespace MarketPos
                 if (item is RadioButton radioButton) radioButton.Checked = false;
             }
 
-            string title=string.Empty;
-
+            string title = string.Empty;
 
             PlotModel plotModel = new PlotModel();
             plotModel.Title = "";
+        }
+
+        private void btn_test_Click(object sender, EventArgs e)
+        {
+            var myModel = new PlotModel();
+
+            var lineSeries2 = new LineSeries
+            {
+                Title = "Line Series",
+                MarkerType = MarkerType.Circle
+            };
+
+            lineSeries2.Points.Add(new DataPoint(0, 10));
+            lineSeries2.Points.Add(new DataPoint(10, 12));
+            lineSeries2.Points.Add(new DataPoint(20, 11));
+            lineSeries2.Points.Add(new DataPoint(30, 18));
+            lineSeries2.Points.Add(new DataPoint(40, 1));
+
+            lineSeries2.Transform(0, 0);
+            myModel.Series.Add(lineSeries2);
+
+            ptvSL.Model = myModel;
         }
     }
 }

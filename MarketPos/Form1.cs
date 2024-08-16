@@ -1301,36 +1301,48 @@ namespace MarketPos
         private async void btnSLSearch_Click(object sender, EventArgs e)
         {
             bool hasTime = ckbSLTime1.Checked;
+            List<(string, int)> results = [];
             string XAxisStr = string.Empty;
             string YAxisStr = string.Empty;
+            string title = string.Empty;
+
+            //圖表設定
+            PlotModel plotModel = new PlotModel();
+            BarSeries barSeries = new BarSeries();
+            CategoryAxis categoryAxis = new CategoryAxis { Position = AxisPosition.Left};
+            LinearAxis linearAxis = new LinearAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false, IsPanEnabled = false };
 
             foreach (var item in gbSaleX.Controls)
             {
                 if (item is RadioButton radioButton)
                 {
-                    radioButton.Checked = false;
+                    if (radioButton.Checked) XAxisStr = radioButton.Name;
                 }
             }
 
             foreach (var item in gbSaleY.Controls)
             {
-                if (item is RadioButton radioButton) radioButton.Checked = false;
+                if (item is RadioButton radioButton)
+                    if (radioButton.Checked) YAxisStr = radioButton.Name;
             }
 
-            string title = string.Empty;
-
-            PlotModel plotModel = new PlotModel();
-            plotModel.Title = "";
-            var results = await DataService.SALE_GetMemberQuantity();
-
-            BarSeries barSeries = new BarSeries();
-
-            CategoryAxis categoryAxis = new CategoryAxis();
-            categoryAxis.Title = "會員ID";
-            categoryAxis.Position = AxisPosition.Left;
-
-            LinearAxis linearAxis = new LinearAxis();
-            linearAxis.Position = AxisPosition.Bottom;
+            switch (XAxisStr, YAxisStr)
+            {
+                case ("rbtnSLMember", "rbtnSLQuantity"):
+                    results = await DataService.SALE_GetMemberQuantity();
+                    title = "會員購買的數量";
+                    categoryAxis.Title = "會員ID";
+                    linearAxis.Title = "數量";
+                    break;
+                case ("rbtnSLProduct", "rbtnSLQuantity"):
+                    results = await DataService.SALE_GetProductQuantity();
+                    title = "商品販賣的數量";
+                    categoryAxis.Title = "商品";
+                    linearAxis.Title = "數量";
+                    break;
+                default:
+                    break;
+            }
 
             foreach (var item in results)
             {
@@ -1341,6 +1353,7 @@ namespace MarketPos
             plotModel.Axes.Add(categoryAxis);
             plotModel.Axes.Add(linearAxis);
             plotModel.Transpose();
+            plotModel.Title = title;
 
             ptvSL.Model = plotModel;
         }

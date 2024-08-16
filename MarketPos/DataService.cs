@@ -1042,9 +1042,9 @@ namespace MarketPos
         }
 
         //銷售資料表用
-        public static async Task<List<(int, int)>> SALE_GetMemberQuantity()
+        public static async Task<List<(string, int)>> SALE_GetMemberQuantity()
         {
-            List<(int, int)> results = new List<(int, int)>();
+            List<(string, int)> results = new List<(string, int)>();
 
             if (!await DS_ConnectionSql()) return results;
             SqlConnection conn = new SqlConnection(ConnString);
@@ -1059,8 +1059,8 @@ namespace MarketPos
                 await using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                 {
-                    (int, int) result = new();
-                    result.Item1 = (int)reader["memberID"];
+                    (string, int) result = new();
+                    result.Item1 = ((int)reader["memberID"]).ToString();
                     result.Item2 = (int)reader["YAxis"];
 
                     results.Add(result);
@@ -1070,15 +1070,16 @@ namespace MarketPos
             catch (Exception ex) { MessageBox.Show($"獲取會員銷售數量失敗\n{ex}"); return results; }
         }
 
-        public static async Task<List<(int, int)>> SALE_productQuantity()
+        public static async Task<List<(string, int)>> SALE_GetProductQuantity()
         {
-            List<(int, int)> results = new List<(int, int)>();
+            List<(string, int)> results = new List<(string, int)>();
 
             if (!await DS_ConnectionSql()) return results;
             SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT productID as Xaxis,SUM(OrderDetails.quantity) as YAxis
+            string sql = @"SELECT Products.name as Xaxis,SUM(OrderDetails.quantity) as YAxis
                             FROM OrderDetails
-                            GROUP BY OrderDetails.productID
+                            JOIN Products ON OrderDetails.productID=Products.id
+                            GROUP BY Products.name
                             ORDER BY SUM(OrderDetails.quantity) DESC";
             SqlCommand com = new SqlCommand(sql, conn);
             try
@@ -1087,8 +1088,8 @@ namespace MarketPos
                 await using SqlDataReader reader = com.ExecuteReader();
                 while (reader.Read())
                 {
-                    (int, int) result = new();
-                    result.Item1 = (int)reader["Xaxis"];
+                    (string, int) result = new();
+                    result.Item1 = (string)reader["Xaxis"];
                     result.Item2 = (int)reader["YAxis"];
 
                     results.Add(result);
@@ -1096,34 +1097,6 @@ namespace MarketPos
                 return results;
             }
             catch (Exception ex) { MessageBox.Show($"獲取商品銷售數量失敗\n{ex}"); return results; }
-        }
-
-        public static async Task<List<(int, int)>> SALE_GetMemberSaleTotal()
-        {
-            List<(int, int)> results = new List<(int, int)>();
-
-            if (!await DS_ConnectionSql()) return results;
-            SqlConnection conn = new SqlConnection(ConnString);
-            string sql = @"SELECT memberID as Xaxis, SUM(OrderDetails.quantity) as YAxis FROM OrderDetails
-                          JOIN Orders ON OrderDetails.orderID=Orders.id
-                          GROUP BY Orders.memberID
-                          ORDER BY SUM(OrderDetails.quantity) DESC";
-            SqlCommand com = new SqlCommand(sql, conn);
-            try
-            {
-                conn.Open();
-                await using SqlDataReader reader = com.ExecuteReader();
-                while (reader.Read())
-                {
-                    (int, int) result = new();
-                    result.Item1 = (int)reader["Xaxis"];
-                    result.Item2 = (int)reader["YAxis"];
-
-                    results.Add(result);
-                }
-                return results;
-            }
-            catch (Exception ex) { MessageBox.Show($"獲取會員銷售金額失敗\n{ex}"); return results; }
         }
     }
 }
